@@ -10,6 +10,17 @@ import urllib.request
 from datetime import datetime, timedelta
 from pathlib import Path
 
+from market_context import (
+    INVERSE_ETFS,
+    LEVERAGED_ETFS,
+    MANDATORY_CONTEXT_TICKERS,
+    SECTOR_ETFS,
+    build_market_regime,
+    build_sector_rotation,
+    classify_event_sensitivity,
+    event_calendar,
+)
+
 
 MIN_PRICE = 5.0
 MIN_DOLLAR_VOLUME = 10_000_000
@@ -31,8 +42,6 @@ HIGHLIGHT_ETFS = (
     "XLE",
     "ARKK",
 )
-LEVERAGED_ETFS = {"TQQQ", "SQQQ", "SOXL", "SOXS", "SPXL", "SPXS", "UPRO", "TMF", "TECL", "FAS", "LABU", "LABD"}
-INVERSE_ETFS = {"SQQQ", "SOXS", "SPXS", "SH", "PSQ", "RWM", "DOG", "SDS", "QID", "LABD"}
 
 
 def infer_etf_category(ticker: str, name: str) -> str:
@@ -101,6 +110,20 @@ def strategy_idea(setup: str, category: str, ticker: str) -> str:
     if setup == "Pullback":
         return "Best used after a controlled retracement into trend support with improving momentum."
     return "Use as a trend-following swing and trail risk under moving-average support."
+
+
+def category_benchmark_note(category: str, benchmark: str) -> str:
+    if benchmark == "QQQ":
+        return "Tech-heavy ETF. Relative strength versus QQQ matters more than SPY here."
+    if benchmark == "SPY":
+        return "Use SPY as the broad market check before committing capital."
+    if benchmark in {"TLT", "AGG"}:
+        return "Rates and inflation can overpower pure chart strength."
+    if benchmark in {"GLD", "DBC"}:
+        return "Macro catalysts and commodity trends matter as much as price structure."
+    if category == "International":
+        return "Dollar strength and foreign market leadership can change the trade quickly."
+    return "Use benchmark confirmation before sizing aggressively."
 
 
 def load_local_env(env_path: Path) -> None:
@@ -371,12 +394,25 @@ def classify_etf(
         "holdWindow": hold_window(setup, atr_pct, rs_vs_spy),
         "goodForSwing": setup != "Avoid" and score >= 55,
         "strategyIdea": strategy_idea(setup, category, ticker),
+        "benchmarkNote": category_benchmark_note(category, benchmark),
         "caution": "High decay / gap risk" if ticker in LEVERAGED_ETFS else ("Inverse fund, watch squeezes" if ticker in INVERSE_ETFS else ("Macro sensitive" if category in {"Fixed Income", "Commodity / Alternative", "International"} else "Standard swing risk")),
+        "trendAligned": trend_aligned,
+        "leveraged": ticker in LEVERAGED_ETFS,
+        "inverse": ticker in INVERSE_ETFS,
         "notes": "; ".join(notes[:7]),
     }
 
 
-def build_html(rows: list[dict], generated_at: datetime, coverage_note: str, featured_rows: list[dict]) -> str:
+def build_html(
+    rows: list[dict],
+    generated_at: datetime,
+    coverage_note: str,
+    featured_rows: list[dict],
+    regime: dict,
+    calendar: dict,
+    sector_rotation: dict,
+    top_ideas: list[dict],
+) -> str:
     featured_cards = "".join(
         f"""
         <article class="focus-card">
@@ -388,6 +424,58 @@ def build_html(rows: list[dict], generated_at: datetime, coverage_note: str, fea
         """
         for row in featured_rows
     )
+    event_cards = "".join(
+        f"""
+        <article class="event-card">
+          <div class="event-name">{event['name']}</div>
+          <div class="event-date">{event['date']} | {event['impact']} impact | {event['daysAway']} day(s)</div>
+          <div class="event-note">{event['notes']}</div>
+        </article>
+        """
+        for event in calendar["upcoming"][:4]
+    )
+    strongest_cards = "".join(
+        f"""
+        <article class="rotation-card">
+          <div class="rotation-ticker">{row['ticker']}</div>
+          <div class="rotation-title">{row['sectorLabel']}</div>
+          <div class="rotation-line">{row['setup']} | Score {row['score']} | RS {row['rsVsSpy20d']:.2f}%</div>
+        </article>
+        """
+        for row in sector_rotation["strongest"]
+    )
+    weakest_cards = "".join(
+        f"""
+        <article class="rotation-card weak">
+          <div class="rotation-ticker">{row['ticker']}</div>
+          <div class="rotation-title">{row['sectorLabel']}</div>
+          <div class="rotation-line">{row['setup']} | Score {row['score']} | RS {row['rsVsSpy20d']:.2f}%</div>
+        </article>
+        """
+        for row in sector_rotation["weakest"]
+    )
+    idea_cards = "".join(
+        f"""
+        <article class="idea-card">
+          <div class="idea-head">
+            <div class="idea-ticker">{row['ticker']}</div>
+            <div class="tag {('Trend' if row['setup'] == 'Trend Continuation' else row['setup'])}">{row['setup']}</div>
+          </div>
+          <div class="idea-line">{row['name']}</div>
+          <div class="idea-line">Category: {row['category']} | Hold: {row['holdWindow']}</div>
+          <div class="idea-line">Why now: {row['strategyIdea']}</div>
+          <div class="idea-line">Event risk: {row['eventRisk']} | {row['regimeNote']}</div>
+        </article>
+        """
+        for row in top_ideas
+    )
+    booming = sector_rotation["booming"]
+    booming_text = (
+        f"{booming['sectorLabel']} via {booming['ticker']} looks strongest right now with score {booming['score']} and RS vs SPY of {booming['rsVsSpy20d']:.2f}%."
+        if booming
+        else "No clear booming sector yet."
+    )
+    regime_notes = " | ".join(regime["notes"]) if regime["notes"] else "Trend confirmation is mixed."
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -416,6 +504,18 @@ def build_html(rows: list[dict], generated_at: datetime, coverage_note: str, fea
     .metric {{ padding:18px; }}
     .label {{ color:var(--muted); text-transform:uppercase; letter-spacing:.08em; font-size:.78rem; }}
     .value {{ font-size:1.8rem; margin-top:8px; }}
+    .panel {{ margin-top:20px; padding:18px; }}
+    .panel h2 {{ margin:0 0 10px; }}
+    .event-grid,.rotation-grid,.idea-grid {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; }}
+    .event-card,.rotation-card,.idea-card {{ background:#fffdf8; border:1px solid var(--line); border-radius:18px; padding:14px; }}
+    .rotation-card.weak {{ background:#fff8f7; }}
+    .event-name,.rotation-ticker,.idea-ticker {{ font-size:1.04rem; font-weight:700; }}
+    .event-date,.rotation-title,.idea-line,.event-note {{ margin-top:7px; font-size:.93rem; line-height:1.45; }}
+    .split-grid {{ display:grid; grid-template-columns:1.15fr .85fr; gap:18px; margin-top:20px; }}
+    .status-pill {{ display:inline-block; padding:5px 10px; border-radius:999px; font-size:.78rem; font-weight:700; }}
+    .status-high {{ background:rgba(163,66,63,.15); color:var(--red); }}
+    .status-medium {{ background:rgba(189,124,47,.16); color:#8a561a; }}
+    .status-low {{ background:rgba(11,122,104,.15); color:var(--green); }}
     .controls {{ margin-top:20px; padding:18px; }}
     .control-grid {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; }}
     label {{ font-size:.84rem; color:var(--muted); display:block; margin-bottom:6px; text-transform:uppercase; letter-spacing:.07em; }}
@@ -435,7 +535,7 @@ def build_html(rows: list[dict], generated_at: datetime, coverage_note: str, fea
   <div class="wrap">
     <section class="hero">
       <h1>US ETF Swing Report</h1>
-      <p>Interactive ETF swing scanner using your Massive data. This report covers liquid U.S.-listed ETFs, including broad-market, sector, leveraged, inverse, commodity, and thematic funds. It uses 20 EMA, 50 SMA, 200 SMA, RSI, MACD, ATR, volume ratio, and relative strength versus both SPY and QQQ. Generated {generated_at.strftime("%Y-%m-%d %H:%M")}.</p>
+      <p>Interactive ETF swing scanner using your Massive data. This report covers liquid U.S.-listed ETFs, including broad-market, sector, leveraged, inverse, commodity, and thematic funds. It now layers in regime filters, macro event risk, sector rotation, and benchmark-aware logic so you can tell not just what looks strong, but when the backdrop is actually supportive. Generated {generated_at.strftime("%Y-%m-%d %H:%M")}.</p>
       <div class="focus-grid">{featured_cards}</div>
     </section>
     <section class="metrics">
@@ -443,6 +543,42 @@ def build_html(rows: list[dict], generated_at: datetime, coverage_note: str, fea
       <article class="metric"><div class="label">Good ETF Setups</div><div class="value" id="goodCount">-</div><div>Score 55+ and not marked Avoid.</div></article>
       <article class="metric"><div class="label">Breakouts</div><div class="value" id="breakoutCount">-</div><div>Near 20-day highs with strong alignment.</div></article>
       <article class="metric"><div class="label">Pullbacks</div><div class="value" id="pullbackCount">-</div><div>Held the 20 EMA inside a larger uptrend.</div></article>
+    </section>
+    <section class="split-grid">
+      <article class="panel metric">
+        <div class="label">Market Regime</div>
+        <div class="value">{regime['regime']}</div>
+        <div>{regime['summary']}</div>
+        <div class="note" style="margin-top:10px;">{regime_notes}</div>
+        <div class="note" style="margin-top:10px;">Leveraged long gate: <strong>{"Open" if regime['leveragedLongsOk'] else "Closed / selective"}</strong></div>
+      </article>
+      <article class="panel metric">
+        <div class="label">Current Event Risk</div>
+        <div class="value">{calendar['level']}</div>
+        <div>{calendar['summary']}</div>
+        <div class="note" style="margin-top:10px;">Active windows: {", ".join(calendar['activeWindows']) if calendar['activeWindows'] else "None"}</div>
+      </article>
+    </section>
+    <section class="panel">
+      <h2>Upcoming Macro and Earnings Windows</h2>
+      <div class="event-grid">{event_cards}</div>
+    </section>
+    <section class="split-grid">
+      <article class="panel">
+        <h2>Sector Rotation</h2>
+        <div class="note">{booming_text}</div>
+        <div class="rotation-grid" style="margin-top:12px;">{strongest_cards}</div>
+      </article>
+      <article class="panel">
+        <h2>Weakest Sectors</h2>
+        <div class="note">These are the areas I would avoid forcing long swings unless trend improves.</div>
+        <div class="rotation-grid" style="margin-top:12px;">{weakest_cards}</div>
+      </article>
+    </section>
+    <section class="panel">
+      <h2>ETF Ideas Right Now</h2>
+      <div class="note">These names already clear the swing filter, but the notes below also show whether event risk or market regime should make you more selective.</div>
+      <div class="idea-grid" style="margin-top:12px;">{idea_cards}</div>
     </section>
     <section class="controls">
       <div class="control-grid">
@@ -455,7 +591,7 @@ def build_html(rows: list[dict], generated_at: datetime, coverage_note: str, fea
         <div><label for="sortBy">Sort</label><select id="sortBy"><option value="score">Score</option><option value="rsVsSpy20d">RS vs SPY</option><option value="rsVsQqq20d">RS vs QQQ</option><option value="volumeRatio">Volume Ratio</option><option value="atrPct">ATR %</option><option value="close">Price</option></select></div>
       </div>
     </section>
-    <section class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-sort="ticker">Ticker</th><th data-sort="name">Name</th><th data-sort="category">Category</th><th data-sort="benchmark">Benchmark</th><th data-sort="setup">Setup</th><th data-sort="goodForSwing">Good For Swing?</th><th data-sort="holdWindow">Hold Window</th><th data-sort="score">Score</th><th data-sort="close">Close</th><th data-sort="ema20">20 EMA</th><th data-sort="sma50">50 SMA</th><th data-sort="sma200">200 SMA</th><th data-sort="rsi14">RSI</th><th data-sort="macd">MACD</th><th data-sort="atrPct">ATR %</th><th data-sort="volumeRatio">Vol Ratio</th><th data-sort="rsVsSpy20d">RS vs SPY</th><th data-sort="rsVsQqq20d">RS vs QQQ</th><th data-sort="stopLoss">Stop</th><th data-sort="target1">T1</th><th data-sort="target2">T2</th><th data-sort="strategyIdea">Strategy</th><th data-sort="caution">Caution</th><th data-sort="notes">Notes</th></tr></thead><tbody id="reportBody"></tbody></table></div></section>
+    <section class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-sort="ticker">Ticker</th><th data-sort="name">Name</th><th data-sort="category">Category</th><th data-sort="benchmark">Benchmark</th><th data-sort="setup">Setup</th><th data-sort="goodForSwing">Good For Swing?</th><th data-sort="holdWindow">Hold Window</th><th data-sort="score">Score</th><th data-sort="close">Close</th><th data-sort="ema20">20 EMA</th><th data-sort="sma50">50 SMA</th><th data-sort="sma200">200 SMA</th><th data-sort="rsi14">RSI</th><th data-sort="macd">MACD</th><th data-sort="atrPct">ATR %</th><th data-sort="volumeRatio">Vol Ratio</th><th data-sort="rsVsSpy20d">RS vs SPY</th><th data-sort="rsVsQqq20d">RS vs QQQ</th><th data-sort="eventRisk">Event Risk</th><th data-sort="stopLoss">Stop</th><th data-sort="target1">T1</th><th data-sort="target2">T2</th><th data-sort="strategyIdea">Strategy</th><th data-sort="benchmarkNote">Benchmark Logic</th><th data-sort="caution">Caution</th><th data-sort="notes">Notes</th></tr></thead><tbody id="reportBody"></tbody></table></div></section>
   </div>
   <script>
     const rows = {json.dumps(rows)};
@@ -477,7 +613,7 @@ def build_html(rows: list[dict], generated_at: datetime, coverage_note: str, fea
     function compare(a,b,key) {{ const av=a[key], bv=b[key]; if (typeof av === "number" && typeof bv === "number") return av-bv; return String(av).localeCompare(String(bv)); }}
     function setupClass(setup) {{ return setup === "Trend Continuation" ? "Trend" : setup; }}
     function render(filtered) {{
-      els.body.innerHTML = filtered.map(row => `<tr><td><strong>${{row.ticker}}</strong><br><span style="color:var(--muted)">${{row.exchange}}</span></td><td>${{row.name}}</td><td>${{row.category}}</td><td>${{row.benchmark}}</td><td><span class="tag ${{setupClass(row.setup)}}">${{row.setup}}</span></td><td class="${{row.goodForSwing ? "yes" : "no"}}">${{row.goodForSwing ? "Yes" : "No"}}</td><td>${{row.holdWindow}}</td><td>${{row.score}}</td><td>${{row.close.toFixed(2)}}</td><td>${{row.ema20.toFixed(2)}}</td><td>${{row.sma50.toFixed(2)}}</td><td>${{row.sma200.toFixed(2)}}</td><td>${{row.rsi14.toFixed(1)}}</td><td>${{row.macd.toFixed(2)}} / ${{row.macdSignal.toFixed(2)}}</td><td>${{row.atrPct.toFixed(2)}}%</td><td>${{row.volumeRatio.toFixed(2)}}x</td><td>${{row.rsVsSpy20d.toFixed(2)}}%</td><td>${{row.rsVsQqq20d.toFixed(2)}}%</td><td>${{row.stopLoss.toFixed(2)}}</td><td>${{row.target1.toFixed(2)}}</td><td>${{row.target2.toFixed(2)}}</td><td>${{row.strategyIdea}}</td><td>${{row.caution}}</td><td>${{row.notes}}</td></tr>`).join("");
+      els.body.innerHTML = filtered.map(row => `<tr><td><strong>${{row.ticker}}</strong><br><span style="color:var(--muted)">${{row.exchange}}</span></td><td>${{row.name}}</td><td>${{row.category}}</td><td>${{row.benchmark}}</td><td><span class="tag ${{setupClass(row.setup)}}">${{row.setup}}</span></td><td class="${{row.goodForSwing ? "yes" : "no"}}">${{row.goodForSwing ? "Yes" : "No"}}</td><td>${{row.holdWindow}}</td><td>${{row.score}}</td><td>${{row.close.toFixed(2)}}</td><td>${{row.ema20.toFixed(2)}}</td><td>${{row.sma50.toFixed(2)}}</td><td>${{row.sma200.toFixed(2)}}</td><td>${{row.rsi14.toFixed(1)}}</td><td>${{row.macd.toFixed(2)}} / ${{row.macdSignal.toFixed(2)}}</td><td>${{row.atrPct.toFixed(2)}}%</td><td>${{row.volumeRatio.toFixed(2)}}x</td><td>${{row.rsVsSpy20d.toFixed(2)}}%</td><td>${{row.rsVsQqq20d.toFixed(2)}}%</td><td><span class="status-pill status-${{row.eventRisk.toLowerCase()}}">${{row.eventRisk}}</span><br><span style="color:var(--muted)">${{row.regimeNote}}</span></td><td>${{row.stopLoss.toFixed(2)}}</td><td>${{row.target1.toFixed(2)}}</td><td>${{row.target2.toFixed(2)}}</td><td>${{row.strategyIdea}}</td><td>${{row.benchmarkNote}}</td><td>${{row.caution}}</td><td>${{row.notes}}</td></tr>`).join("");
       els.coverageCount.textContent = `${{filtered.length}}`;
       els.goodCount.textContent = `${{filtered.filter(row => row.goodForSwing).length}}`;
       els.breakoutCount.textContent = `${{filtered.filter(row => row.setup === "Breakout").length}}`;
@@ -532,7 +668,7 @@ def generate_report() -> dict:
     candidates.sort(key=lambda item: item["dollar_volume"], reverse=True)
     candidates = candidates[:MAX_ETF_TICKERS]
     candidate_map = {item["ticker"]: item for item in candidates}
-    for ticker in HIGHLIGHT_ETFS:
+    for ticker in set((*HIGHLIGHT_ETFS, *MANDATORY_CONTEXT_TICKERS)):
         if ticker in metadata and ticker not in candidate_map:
             candidate_map[ticker] = {
                 "ticker": ticker,
@@ -554,10 +690,26 @@ def generate_report() -> dict:
             rows.append(row)
     rows.sort(key=lambda row: (row["score"], row["rsVsSpy20d"]), reverse=True)
 
+    rows_by_ticker = {row["ticker"]: row for row in rows}
+    regime = build_market_regime(rows_by_ticker)
+    calendar = event_calendar(datetime.now())
+    sector_rotation = build_sector_rotation(rows)
+
+    for row in rows:
+        event_view = classify_event_sensitivity(row, calendar, regime)
+        row["eventRisk"] = event_view["level"]
+        row["regimeNote"] = event_view["note"]
+        row["caution"] = f"{row['caution']}; {event_view['note']}"
+
     featured_rows = [row for row in rows if row["ticker"] in HIGHLIGHT_ETFS]
     featured_rows.sort(key=lambda row: HIGHLIGHT_ETFS.index(row["ticker"]) if row["ticker"] in HIGHLIGHT_ETFS else 999)
+    top_ideas = [
+        row
+        for row in rows
+        if row["goodForSwing"] and not row["inverse"] and row["setup"] != "Avoid"
+    ][:6]
     coverage_note = f"Top {MAX_ETF_TICKERS} liquid U.S. ETFs plus highlighted benchmark and leveraged funds, scanned on {latest_date}."
-    html = build_html(rows, datetime.now(), coverage_note, featured_rows[:8])
+    html = build_html(rows, datetime.now(), coverage_note, featured_rows[:8], regime, calendar, sector_rotation, top_ideas)
     output_path = Path(__file__).with_name(OUTPUT_FILENAME)
     output_path.write_text(html, encoding="utf-8")
     Path(__file__).with_name(PAGES_FILENAME).write_text(html, encoding="utf-8")
@@ -568,6 +720,9 @@ def generate_report() -> dict:
         "good_setups": sum(1 for row in rows if row["goodForSwing"]),
         "top_rows": rows[:10],
         "featured_rows": featured_rows,
+        "sector_rotation": sector_rotation,
+        "regime": regime,
+        "calendar": calendar,
     }
 
 

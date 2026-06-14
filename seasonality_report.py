@@ -11,6 +11,9 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 from pathlib import Path
 
+from etf_scanner import classify_etf, fetch_reference_tickers
+from market_context import SECTOR_ETFS, build_market_regime, build_sector_rotation, event_calendar
+
 
 OUTPUT_FILENAME = "qqq_tqqq_seasonality.html"
 PAGES_FILENAME = "seasonality.html"
@@ -167,6 +170,71 @@ def current_factor_summary(history: list[dict], symbol: str, monthly_stats: list
     }
 
 
+def timing_verdict(snapshot: dict, regime: dict, calendar: dict, leveraged: bool = False) -> dict:
+    score = 0
+    reasons: list[str] = []
+    if snapshot["trend"] == "Bullish":
+        score += 2
+        reasons.append("trend aligned")
+    elif snapshot["trend"] == "Mixed":
+        score += 1
+        reasons.append("trend not broken")
+    if snapshot["current_month_avg"] > 0:
+        score += 1
+        reasons.append("seasonality supportive")
+    if snapshot["ytd_return"] > 0:
+        score += 1
+        reasons.append("still positive YTD")
+    if regime["regime"] == "Risk-On":
+        score += 2
+        reasons.append("market regime risk-on")
+    elif regime["regime"] == "Balanced":
+        score += 1
+    if calendar["level"] == "High":
+        score -= 2
+        reasons.append("event risk elevated")
+    elif calendar["level"] == "Medium":
+        score -= 1
+    if leveraged and not regime["leveragedLongsOk"]:
+        score -= 2
+        reasons.append("leveraged long gate closed")
+
+    if score >= 5:
+        verdict = "Favorable"
+    elif score >= 2:
+        verdict = "Selective"
+    else:
+        verdict = "Wait"
+    return {"verdict": verdict, "reasons": reasons[:4]}
+
+
+def build_market_snapshot(api_key: str, end_date: datetime) -> tuple[dict, dict, list[dict], dict]:
+    metadata = fetch_reference_tickers(api_key)
+    start_date = (end_date - timedelta(days=420)).strftime("%Y-%m-%d")
+    end_str = end_date.strftime("%Y-%m-%d")
+    spy_history = fetch_history("SPY", start_date, end_str, api_key)
+    qqq_history = fetch_history("QQQ", start_date, end_str, api_key)
+    spy_closes = [float(row["c"]) for row in spy_history]
+    qqq_closes = [float(row["c"]) for row in qqq_history]
+    latest_date = datetime.fromtimestamp(qqq_history[-1]["t"] / 1000).strftime("%Y-%m-%d")
+
+    symbols = {"SPY", "QQQ", "TQQQ", "IWM", "RSP", "HYG", "TLT", "VXX", *SECTOR_ETFS.keys()}
+    rows: list[dict] = []
+    for ticker in symbols:
+        history = fetch_history(ticker, start_date, end_str, api_key)
+        meta = metadata.get(ticker, {"name": ticker, "exchange": ""})
+        row = classify_etf(ticker, meta, history, spy_closes, qqq_closes, latest_date)
+        if row:
+            rows.append(row)
+
+    rows_by_ticker = {row["ticker"]: row for row in rows}
+    regime = build_market_regime(rows_by_ticker)
+    sector_rotation = build_sector_rotation(rows)
+    top_ideas = [row for row in rows if row["ticker"] in SECTOR_ETFS and row["goodForSwing"]][:5]
+    calendar = event_calendar(datetime.now())
+    return regime, sector_rotation, top_ideas, calendar
+
+
 def build_table(rows: list[dict]) -> str:
     parts = []
     for row in rows:
@@ -176,11 +244,53 @@ def build_table(rows: list[dict]) -> str:
     return "".join(parts)
 
 
-def build_html(qqq_months: list[dict], tqqq_months: list[dict], qqq_now: dict, tqqq_now: dict, tqqq_start_year: int) -> str:
+def build_html(
+    qqq_months: list[dict],
+    tqqq_months: list[dict],
+    qqq_now: dict,
+    tqqq_now: dict,
+    tqqq_start_year: int,
+    regime: dict,
+    sector_rotation: dict,
+    top_ideas: list[dict],
+    calendar: dict,
+) -> str:
     qqq_best = max(qqq_months, key=lambda row: row["avg_return"])
     qqq_worst = min(qqq_months, key=lambda row: row["avg_return"])
     tqqq_best = max(tqqq_months, key=lambda row: row["avg_return"])
     tqqq_worst = min(tqqq_months, key=lambda row: row["avg_return"])
+    qqq_verdict = timing_verdict(qqq_now, regime, calendar, leveraged=False)
+    tqqq_verdict = timing_verdict(tqqq_now, regime, calendar, leveraged=True)
+    strongest_cards = "".join(
+        f"""
+        <article class="idea-card">
+          <div class="idea-head">{row['ticker']} | {row['name']}</div>
+          <div class="idea-line">{SECTOR_ETFS.get(row['ticker'], row['category'])} | {row['setup']} | Score {row['score']}</div>
+          <div class="idea-line">RS vs SPY {row['rsVsSpy20d']:.2f}% | Hold {row['holdWindow']}</div>
+        </article>
+        """
+        for row in sector_rotation["strongest"][:4]
+    )
+    etf_idea_cards = "".join(
+        f"""
+        <article class="idea-card">
+          <div class="idea-head">{row['ticker']} | {row['name']}</div>
+          <div class="idea-line">{row['strategyIdea']}</div>
+          <div class="idea-line">Close {row['close']} | Stop {row['stopLoss']} | Target 1 {row['target1']}</div>
+        </article>
+        """
+        for row in top_ideas[:4]
+    )
+    event_cards = "".join(
+        f"""
+        <article class="idea-card">
+          <div class="idea-head">{event['name']}</div>
+          <div class="idea-line">{event['date']} | {event['impact']} impact | {event['daysAway']} day(s)</div>
+          <div class="idea-line">{event['notes']}</div>
+        </article>
+        """
+        for event in calendar["upcoming"][:4]
+    )
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -206,19 +316,29 @@ def build_html(qqq_months: list[dict], tqqq_months: list[dict], qqq_now: dict, t
     th,td {{ padding:10px 8px; border-bottom:1px solid var(--line); text-align:left; }}
     th {{ background:#edf2f6; }}
     .note {{ margin-top:12px; color:var(--muted); line-height:1.5; }}
+    .idea-grid {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:12px; margin-top:14px; }}
+    .idea-card {{ background:#fffdf8; border:1px solid var(--line); border-radius:18px; padding:14px; }}
+    .idea-head {{ font-size:1rem; font-weight:700; }}
+    .idea-line {{ margin-top:8px; line-height:1.45; color:var(--ink); }}
   </style>
 </head>
 <body>
   <div class="wrap">
     <section class="hero">
       <h1>QQQ and TQQQ Seasonality</h1>
-      <p>This report looks at QQQ over the last 20 years and TQQQ from its inception in {tqqq_start_year}. It combines monthly seasonality with current trend and momentum factors, so you can judge whether this is historically a favorable time window to lean in or stay patient.</p>
+      <p>This report looks at QQQ over the last 20 years and TQQQ from its inception in {tqqq_start_year}. It now blends monthly seasonality with current trend, macro event pressure, market regime, and sector leadership, so you can judge whether this is really a good time to invest or whether patience is the better edge.</p>
     </section>
     <section class="grid">
       <article class="card"><div class="label">QQQ Best Month</div><div class="value">{qqq_best['name']} {qqq_best['avg_return']:.2f}%</div><div class="note">Worst: {qqq_worst['name']} {qqq_worst['avg_return']:.2f}%</div></article>
       <article class="card"><div class="label">TQQQ Best Month</div><div class="value">{tqqq_best['name']} {tqqq_best['avg_return']:.2f}%</div><div class="note">Worst: {tqqq_worst['name']} {tqqq_worst['avg_return']:.2f}%</div></article>
-      <article class="card"><div class="label">QQQ Current Read</div><div class="value">{qqq_now['trend']}</div><div class="note">{qqq_now['outlook']}</div></article>
-      <article class="card"><div class="label">TQQQ Current Read</div><div class="value">{tqqq_now['trend']}</div><div class="note">{tqqq_now['outlook']}</div></article>
+      <article class="card"><div class="label">QQQ Timing Verdict</div><div class="value">{qqq_verdict['verdict']}</div><div class="note">{qqq_now['outlook']} Reasons: {", ".join(qqq_verdict['reasons']) or "mixed inputs"}.</div></article>
+      <article class="card"><div class="label">TQQQ Timing Verdict</div><div class="value">{tqqq_verdict['verdict']}</div><div class="note">{tqqq_now['outlook']} Reasons: {", ".join(tqqq_verdict['reasons']) or "mixed inputs"}.</div></article>
+    </section>
+    <section class="grid">
+      <article class="card"><div class="label">Market Regime</div><div class="value">{regime['regime']}</div><div class="note">{regime['summary']}</div></article>
+      <article class="card"><div class="label">Event Risk Now</div><div class="value">{calendar['level']}</div><div class="note">{calendar['summary']}</div></article>
+      <article class="card"><div class="label">Booming Sector</div><div class="value">{sector_rotation['booming']['ticker'] if sector_rotation['booming'] else "None"}</div><div class="note">{sector_rotation['booming']['sectorLabel'] if sector_rotation['booming'] else "No clear leader"} {f"| RS vs SPY {sector_rotation['booming']['rsVsSpy20d']:.2f}%" if sector_rotation['booming'] else ""}</div></article>
+      <article class="card"><div class="label">Leveraged Long Gate</div><div class="value">{"Open" if regime['leveragedLongsOk'] else "Selective"}</div><div class="note">TQQQ works better when QQQ and SPY are both above short- and medium-term trend support.</div></article>
     </section>
     <section class="row">
       <article class="table-card">
@@ -242,6 +362,28 @@ def build_html(qqq_months: list[dict], tqqq_months: list[dict], qqq_now: dict, t
           <tr><th>YTD Return</th><td>{tqqq_now['ytd_return']}%</td></tr>
           <tr><th>Current Month Avg</th><td>{tqqq_now['current_month_avg']}%</td></tr>
         </table>
+      </article>
+    </section>
+    <section class="row">
+      <article class="table-card">
+        <h2>Upcoming Macro and Earnings Windows</h2>
+        <div class="idea-grid">{event_cards}</div>
+      </article>
+      <article class="table-card">
+        <h2>Sector Leadership Right Now</h2>
+        <div class="note">These are the sectors currently showing the strongest swing behavior versus SPY.</div>
+        <div class="idea-grid">{strongest_cards}</div>
+      </article>
+    </section>
+    <section class="row">
+      <article class="table-card">
+        <h2>ETF Ideas to Pair With the Seasonal Read</h2>
+        <div class="note">If seasonality is favorable but you still want stronger current charts than QQQ alone, these sector ETFs are the cleaner places to look first.</div>
+        <div class="idea-grid">{etf_idea_cards}</div>
+      </article>
+      <article class="table-card">
+        <h2>How to Use This Page</h2>
+        <div class="note">QQQ seasonality helps with timing bias, not exact entries. When the market regime is risk-on and the current month is historically strong, you can lean more constructive. When event risk is high or breadth is weak, treat even good seasonal windows more carefully. For TQQQ, seasonality is only a tailwind if the leveraged long gate is open and event risk is not elevated.</div>
       </article>
     </section>
     <section class="row">
@@ -276,7 +418,18 @@ def generate_report() -> dict:
     tqqq_months = compute_monthly_stats(tqqq_history)
     qqq_now = current_factor_summary(qqq_history, "QQQ", qqq_months)
     tqqq_now = current_factor_summary(tqqq_history, "TQQQ", tqqq_months)
-    html = build_html(qqq_months, tqqq_months, qqq_now, tqqq_now, datetime.fromtimestamp(tqqq_history[0]["t"] / 1000).year)
+    regime, sector_rotation, top_ideas, calendar = build_market_snapshot(api_key, end_date)
+    html = build_html(
+        qqq_months,
+        tqqq_months,
+        qqq_now,
+        tqqq_now,
+        datetime.fromtimestamp(tqqq_history[0]["t"] / 1000).year,
+        regime,
+        sector_rotation,
+        top_ideas,
+        calendar,
+    )
     output_path = Path(__file__).with_name(OUTPUT_FILENAME)
     output_path.write_text(html, encoding="utf-8")
     Path(__file__).with_name(PAGES_FILENAME).write_text(html, encoding="utf-8")
@@ -286,6 +439,8 @@ def generate_report() -> dict:
         "tqqq_latest_date": tqqq_now["latest_date"],
         "qqq_outlook": qqq_now["outlook"],
         "tqqq_outlook": tqqq_now["outlook"],
+        "regime": regime["regime"],
+        "event_level": calendar["level"],
     }
 
 
