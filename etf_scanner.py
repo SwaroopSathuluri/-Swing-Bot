@@ -31,6 +31,76 @@ HIGHLIGHT_ETFS = (
     "XLE",
     "ARKK",
 )
+LEVERAGED_ETFS = {"TQQQ", "SQQQ", "SOXL", "SOXS", "SPXL", "SPXS", "UPRO", "TMF", "TECL", "FAS", "LABU", "LABD"}
+INVERSE_ETFS = {"SQQQ", "SOXS", "SPXS", "SH", "PSQ", "RWM", "DOG", "SDS", "QID", "LABD"}
+
+
+def infer_etf_category(ticker: str, name: str) -> str:
+    upper = ticker.upper()
+    lowered = name.lower()
+    if upper in LEVERAGED_ETFS or "3x" in lowered or "2x" in lowered or "ultrapro" in lowered or "ultra" in lowered:
+        return "Leveraged"
+    if upper in INVERSE_ETFS or "inverse" in lowered or "short" in lowered or "bear" in lowered:
+        return "Inverse"
+    if any(token in lowered for token in ["treasury", "bond", "income", "municipal", "mortgage", "tips"]):
+        return "Fixed Income"
+    if any(token in lowered for token in ["gold", "silver", "oil", "commodity", "metals", "uranium", "bitcoin", "crypto"]):
+        return "Commodity / Alternative"
+    if any(token in lowered for token in ["technology", "semiconductor", "software", "cloud", "cyber"]):
+        return "Technology / Growth"
+    if any(token in lowered for token in ["financial", "bank", "insurance"]):
+        return "Financials"
+    if any(token in lowered for token in ["energy", "oil", "gas"]):
+        return "Energy"
+    if any(token in lowered for token in ["health", "biotech", "pharma", "medical"]):
+        return "Healthcare"
+    if any(token in lowered for token in ["real estate", "reit"]):
+        return "Real Estate"
+    if any(token in lowered for token in ["consumer", "retail", "discretionary", "staples"]):
+        return "Consumer"
+    if any(token in lowered for token in ["industrial", "infrastructure", "transport", "aerospace", "defense"]):
+        return "Industrials"
+    if any(token in lowered for token in ["china", "emerging", "europe", "japan", "international", "world", "developed", "foreign"]):
+        return "International"
+    if any(token in lowered for token in ["small cap", "mid cap", "russell", "s&p 500", "nasdaq", "dow", "total stock", "index"]):
+        return "Broad Equity"
+    if any(token in lowered for token in ["innovation", "robot", "ai", "genomic", "clean", "disruptive", "theme"]):
+        return "Thematic"
+    return "Other"
+
+
+def infer_benchmark(ticker: str, category: str, name: str) -> str:
+    upper = ticker.upper()
+    lowered = name.lower()
+    if upper in {"QQQ", "TQQQ", "SQQQ", "SOXX", "SMH", "XLK", "TECL", "SOXL", "SOXS"} or category == "Technology / Growth":
+        return "QQQ"
+    if category in {"Broad Equity", "Financials", "Energy", "Healthcare", "Consumer", "Industrials", "Real Estate", "Thematic"}:
+        return "SPY"
+    if category == "International":
+        return "ACWI"
+    if category == "Fixed Income":
+        return "TLT" if "treasury" in lowered else "AGG"
+    if category == "Commodity / Alternative":
+        return "GLD" if "gold" in lowered else "DBC"
+    return "SPY"
+
+
+def strategy_idea(setup: str, category: str, ticker: str) -> str:
+    if setup == "Avoid":
+        return "Wait for trend repair or a cleaner pullback."
+    if ticker in LEVERAGED_ETFS:
+        return "Use smaller size and shorter hold because leverage amplifies decay and gap risk."
+    if category == "Fixed Income":
+        return "Treat as a macro swing and watch rates plus risk-on/risk-off confirmation."
+    if category == "Commodity / Alternative":
+        return "Pair the chart with macro catalysts like dollar, yields, and commodity supply news."
+    if category == "International":
+        return "Check dollar trend and foreign-market leadership before entry."
+    if setup == "Breakout":
+        return "Favor breakout continuation only if volume confirms and the broad tape is supportive."
+    if setup == "Pullback":
+        return "Best used after a controlled retracement into trend support with improving momentum."
+    return "Use as a trend-following swing and trail risk under moving-average support."
 
 
 def load_local_env(env_path: Path) -> None:
@@ -200,6 +270,8 @@ def classify_etf(
     avg_dollar_volume = statistics.mean(c * v for c, v in zip(closes[-20:], volumes[-20:]))
     if latest_close < MIN_PRICE or avg_dollar_volume < MIN_DOLLAR_VOLUME:
         return None
+    category = infer_etf_category(ticker, meta["name"])
+    benchmark = infer_benchmark(ticker, category, meta["name"])
 
     ema20 = ema_series(closes, 20)[-1]
     sma50 = sma(closes, 50)
@@ -239,7 +311,7 @@ def classify_etf(
     score += 5 if atr_pct <= 4.5 else 0
     score -= 10 if extended_rsi else 0
     score -= 15 if latest_close < prev_20_low else 0
-    score -= 5 if ticker in {"TQQQ", "SQQQ", "SOXL", "SOXS", "SPXL", "SPXS"} and atr_pct > 6 else 0
+    score -= 5 if ticker in LEVERAGED_ETFS and atr_pct > 6 else 0
 
     notes: list[str] = []
     if trend_aligned:
@@ -258,7 +330,7 @@ def classify_etf(
         notes.append("beating SPY over 20 days")
     if rs_vs_qqq > 0:
         notes.append("beating QQQ over 20 days")
-    if ticker in {"TQQQ", "SQQQ", "SOXL", "SOXS", "SPXL", "SPXS"}:
+    if ticker in LEVERAGED_ETFS:
         notes.append("leveraged ETF, size smaller")
     if extended_rsi:
         notes.append("RSI extended")
@@ -277,6 +349,8 @@ def classify_etf(
         "ticker": ticker,
         "name": meta["name"],
         "exchange": meta["exchange"],
+        "category": category,
+        "benchmark": benchmark,
         "date": latest_date,
         "setup": setup,
         "score": score,
@@ -296,6 +370,8 @@ def classify_etf(
         "target2": round(latest_close + (3.0 * atr14), 2),
         "holdWindow": hold_window(setup, atr_pct, rs_vs_spy),
         "goodForSwing": setup != "Avoid" and score >= 55,
+        "strategyIdea": strategy_idea(setup, category, ticker),
+        "caution": "High decay / gap risk" if ticker in LEVERAGED_ETFS else ("Inverse fund, watch squeezes" if ticker in INVERSE_ETFS else ("Macro sensitive" if category in {"Fixed Income", "Commodity / Alternative", "International"} else "Standard swing risk")),
         "notes": "; ".join(notes[:7]),
     }
 
@@ -372,13 +448,14 @@ def build_html(rows: list[dict], generated_at: datetime, coverage_note: str, fea
       <div class="control-grid">
         <div><label for="search">Search</label><input id="search" type="text" placeholder="Ticker or ETF name"></div>
         <div><label for="setupFilter">Setup</label><select id="setupFilter"><option value="All">All</option><option value="Breakout">Breakout</option><option value="Pullback">Pullback</option><option value="Trend Continuation">Trend Continuation</option><option value="Avoid">Avoid</option></select></div>
+        <div><label for="categoryFilter">ETF Category</label><select id="categoryFilter"><option value="All">All</option><option value="Broad Equity">Broad Equity</option><option value="Technology / Growth">Technology / Growth</option><option value="Leveraged">Leveraged</option><option value="Inverse">Inverse</option><option value="Fixed Income">Fixed Income</option><option value="Commodity / Alternative">Commodity / Alternative</option><option value="International">International</option><option value="Financials">Financials</option><option value="Energy">Energy</option><option value="Healthcare">Healthcare</option><option value="Thematic">Thematic</option><option value="Other">Other</option></select></div>
         <div><label for="qualityFilter">Swing Quality</label><select id="qualityFilter"><option value="All">All</option><option value="Yes">Good for swing trade</option><option value="No">Not good right now</option></select></div>
         <div><label for="minScore">Minimum Score</label><input id="minScore" type="number" value="55" min="0" max="100" step="5"></div>
         <div><label for="maxAtr">Max ATR %</label><input id="maxAtr" type="number" value="8" min="1" max="30" step="0.5"></div>
         <div><label for="sortBy">Sort</label><select id="sortBy"><option value="score">Score</option><option value="rsVsSpy20d">RS vs SPY</option><option value="rsVsQqq20d">RS vs QQQ</option><option value="volumeRatio">Volume Ratio</option><option value="atrPct">ATR %</option><option value="close">Price</option></select></div>
       </div>
     </section>
-    <section class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-sort="ticker">Ticker</th><th data-sort="name">Name</th><th data-sort="setup">Setup</th><th data-sort="goodForSwing">Good For Swing?</th><th data-sort="holdWindow">Hold Window</th><th data-sort="score">Score</th><th data-sort="close">Close</th><th data-sort="ema20">20 EMA</th><th data-sort="sma50">50 SMA</th><th data-sort="sma200">200 SMA</th><th data-sort="rsi14">RSI</th><th data-sort="macd">MACD</th><th data-sort="atrPct">ATR %</th><th data-sort="volumeRatio">Vol Ratio</th><th data-sort="rsVsSpy20d">RS vs SPY</th><th data-sort="rsVsQqq20d">RS vs QQQ</th><th data-sort="stopLoss">Stop</th><th data-sort="target1">T1</th><th data-sort="target2">T2</th><th data-sort="notes">Notes</th></tr></thead><tbody id="reportBody"></tbody></table></div></section>
+    <section class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-sort="ticker">Ticker</th><th data-sort="name">Name</th><th data-sort="category">Category</th><th data-sort="benchmark">Benchmark</th><th data-sort="setup">Setup</th><th data-sort="goodForSwing">Good For Swing?</th><th data-sort="holdWindow">Hold Window</th><th data-sort="score">Score</th><th data-sort="close">Close</th><th data-sort="ema20">20 EMA</th><th data-sort="sma50">50 SMA</th><th data-sort="sma200">200 SMA</th><th data-sort="rsi14">RSI</th><th data-sort="macd">MACD</th><th data-sort="atrPct">ATR %</th><th data-sort="volumeRatio">Vol Ratio</th><th data-sort="rsVsSpy20d">RS vs SPY</th><th data-sort="rsVsQqq20d">RS vs QQQ</th><th data-sort="stopLoss">Stop</th><th data-sort="target1">T1</th><th data-sort="target2">T2</th><th data-sort="strategyIdea">Strategy</th><th data-sort="caution">Caution</th><th data-sort="notes">Notes</th></tr></thead><tbody id="reportBody"></tbody></table></div></section>
   </div>
   <script>
     const rows = {json.dumps(rows)};
@@ -387,6 +464,7 @@ def build_html(rows: list[dict], generated_at: datetime, coverage_note: str, fea
       body: document.getElementById("reportBody"),
       search: document.getElementById("search"),
       setupFilter: document.getElementById("setupFilter"),
+      categoryFilter: document.getElementById("categoryFilter"),
       qualityFilter: document.getElementById("qualityFilter"),
       minScore: document.getElementById("minScore"),
       maxAtr: document.getElementById("maxAtr"),
@@ -399,7 +477,7 @@ def build_html(rows: list[dict], generated_at: datetime, coverage_note: str, fea
     function compare(a,b,key) {{ const av=a[key], bv=b[key]; if (typeof av === "number" && typeof bv === "number") return av-bv; return String(av).localeCompare(String(bv)); }}
     function setupClass(setup) {{ return setup === "Trend Continuation" ? "Trend" : setup; }}
     function render(filtered) {{
-      els.body.innerHTML = filtered.map(row => `<tr><td><strong>${{row.ticker}}</strong><br><span style="color:var(--muted)">${{row.exchange}}</span></td><td>${{row.name}}</td><td><span class="tag ${{setupClass(row.setup)}}">${{row.setup}}</span></td><td class="${{row.goodForSwing ? "yes" : "no"}}">${{row.goodForSwing ? "Yes" : "No"}}</td><td>${{row.holdWindow}}</td><td>${{row.score}}</td><td>${{row.close.toFixed(2)}}</td><td>${{row.ema20.toFixed(2)}}</td><td>${{row.sma50.toFixed(2)}}</td><td>${{row.sma200.toFixed(2)}}</td><td>${{row.rsi14.toFixed(1)}}</td><td>${{row.macd.toFixed(2)}} / ${{row.macdSignal.toFixed(2)}}</td><td>${{row.atrPct.toFixed(2)}}%</td><td>${{row.volumeRatio.toFixed(2)}}x</td><td>${{row.rsVsSpy20d.toFixed(2)}}%</td><td>${{row.rsVsQqq20d.toFixed(2)}}%</td><td>${{row.stopLoss.toFixed(2)}}</td><td>${{row.target1.toFixed(2)}}</td><td>${{row.target2.toFixed(2)}}</td><td>${{row.notes}}</td></tr>`).join("");
+      els.body.innerHTML = filtered.map(row => `<tr><td><strong>${{row.ticker}}</strong><br><span style="color:var(--muted)">${{row.exchange}}</span></td><td>${{row.name}}</td><td>${{row.category}}</td><td>${{row.benchmark}}</td><td><span class="tag ${{setupClass(row.setup)}}">${{row.setup}}</span></td><td class="${{row.goodForSwing ? "yes" : "no"}}">${{row.goodForSwing ? "Yes" : "No"}}</td><td>${{row.holdWindow}}</td><td>${{row.score}}</td><td>${{row.close.toFixed(2)}}</td><td>${{row.ema20.toFixed(2)}}</td><td>${{row.sma50.toFixed(2)}}</td><td>${{row.sma200.toFixed(2)}}</td><td>${{row.rsi14.toFixed(1)}}</td><td>${{row.macd.toFixed(2)}} / ${{row.macdSignal.toFixed(2)}}</td><td>${{row.atrPct.toFixed(2)}}%</td><td>${{row.volumeRatio.toFixed(2)}}x</td><td>${{row.rsVsSpy20d.toFixed(2)}}%</td><td>${{row.rsVsQqq20d.toFixed(2)}}%</td><td>${{row.stopLoss.toFixed(2)}}</td><td>${{row.target1.toFixed(2)}}</td><td>${{row.target2.toFixed(2)}}</td><td>${{row.strategyIdea}}</td><td>${{row.caution}}</td><td>${{row.notes}}</td></tr>`).join("");
       els.coverageCount.textContent = `${{filtered.length}}`;
       els.goodCount.textContent = `${{filtered.filter(row => row.goodForSwing).length}}`;
       els.breakoutCount.textContent = `${{filtered.filter(row => row.setup === "Breakout").length}}`;
@@ -408,14 +486,15 @@ def build_html(rows: list[dict], generated_at: datetime, coverage_note: str, fea
     function applyFilters() {{
       const term = els.search.value.trim().toLowerCase();
       const setup = els.setupFilter.value;
+      const category = els.categoryFilter.value;
       const quality = els.qualityFilter.value;
       const minScoreValue = Number(els.minScore.value || 0);
       const maxAtrValue = Number(els.maxAtr.value || 99);
-      const filtered = rows.filter(row => (!term || row.ticker.toLowerCase().includes(term) || row.name.toLowerCase().includes(term)) && (setup === "All" || row.setup === setup) && !(quality === "Yes" && !row.goodForSwing) && !(quality === "No" && row.goodForSwing) && row.score >= minScoreValue && row.atrPct <= maxAtrValue).sort((a,b) => state.sortDir === "asc" ? compare(a,b,state.sortBy) : compare(b,a,state.sortBy));
+      const filtered = rows.filter(row => (!term || row.ticker.toLowerCase().includes(term) || row.name.toLowerCase().includes(term)) && (setup === "All" || row.setup === setup) && (category === "All" || row.category === category) && !(quality === "Yes" && !row.goodForSwing) && !(quality === "No" && row.goodForSwing) && row.score >= minScoreValue && row.atrPct <= maxAtrValue).sort((a,b) => state.sortDir === "asc" ? compare(a,b,state.sortBy) : compare(b,a,state.sortBy));
       render(filtered);
     }}
     document.querySelectorAll("th[data-sort]").forEach(th => th.addEventListener("click", () => {{ const key = th.dataset.sort; if (state.sortBy === key) state.sortDir = state.sortDir === "asc" ? "desc" : "asc"; else {{ state.sortBy = key; state.sortDir = "desc"; els.sortBy.value = key; }} applyFilters(); }}));
-    [els.search, els.setupFilter, els.qualityFilter, els.minScore, els.maxAtr].forEach(el => {{ el.addEventListener("input", applyFilters); el.addEventListener("change", applyFilters); }});
+    [els.search, els.setupFilter, els.categoryFilter, els.qualityFilter, els.minScore, els.maxAtr].forEach(el => {{ el.addEventListener("input", applyFilters); el.addEventListener("change", applyFilters); }});
     els.sortBy.addEventListener("change", () => {{ state.sortBy = els.sortBy.value; state.sortDir = "desc"; applyFilters(); }});
     applyFilters();
   </script>

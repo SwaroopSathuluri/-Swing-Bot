@@ -19,6 +19,7 @@ LOOKBACK_DAYS = 220
 OUTPUT_FILENAME = "swing_trading_mag7_report.html"
 PAGES_FILENAME = "index.html"
 MAX_MARKET_TICKERS = 100
+MARKET_CANDIDATE_BUFFER = 180
 
 
 def load_local_env(env_path: Path) -> None:
@@ -273,13 +274,13 @@ def classify_stock(ticker: str, meta: dict, history: list[dict], spy_closes: lis
     }
 
 
-def build_html(rows: list[dict], generated_at: datetime, coverage_note: str) -> str:
+def build_html(rows: list[dict], generated_at: datetime, coverage_note: str, page_title: str) -> str:
     return f"""<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Swing Trading Mag7</title>
+  <title>{page_title}</title>
   <style>
     :root {{ --bg:#f3efe4; --panel:rgba(255,252,246,.92); --ink:#1e2f39; --muted:#60717a; --line:#d8cfbf; --green:#0b7a68; --amber:#bd7c2f; --red:#a3423f; }}
     * {{ box-sizing:border-box; }}
@@ -318,7 +319,7 @@ def build_html(rows: list[dict], generated_at: datetime, coverage_note: str) -> 
 <body>
   <div class="wrap">
     <section class="hero">
-      <h1>Swing Trading Mag7</h1>
+      <h1>{page_title}</h1>
       <p>Daily swing-trade scanner using your Massive data. It ranks names by 20 EMA, 50 SMA, 200 SMA, RSI, MACD, ATR, volume ratio, and relative strength vs SPY. Generated {generated_at.strftime("%Y-%m-%d %H:%M")}.</p>
       <div class="hero-tools">
         <div class="stamp">Last Updated: {generated_at.strftime("%Y-%m-%d %H:%M")}</div>
@@ -426,7 +427,7 @@ def generate_report(universe: str = "qqq") -> dict:
 
     if selected_members is None:
         tradable_candidates.sort(key=lambda item: item["dollar_volume"], reverse=True)
-        tradable_candidates = tradable_candidates[:MAX_MARKET_TICKERS]
+        tradable_candidates = tradable_candidates[:MARKET_CANDIDATE_BUFFER]
 
     tradable = {
         item["ticker"]: {"name": item["name"], "exchange": item["exchange"]}
@@ -443,9 +444,11 @@ def generate_report(universe: str = "qqq") -> dict:
         if row:
             rows.append(row)
     rows.sort(key=lambda row: (row["score"], row["rsVsSpy20d"]), reverse=True)
+    if selected_members is None:
+        rows = rows[:MAX_MARKET_TICKERS]
 
     coverage_note = f"{universe_config['label']} scanned on {latest_date}. {universe_config['description']}"
-    html = build_html(rows, datetime.now(), coverage_note)
+    html = build_html(rows, datetime.now(), coverage_note, universe_config["label"])
     output_path = Path(__file__).with_name(OUTPUT_FILENAME)
     output_path.write_text(html, encoding="utf-8")
     Path(__file__).with_name(PAGES_FILENAME).write_text(html, encoding="utf-8")

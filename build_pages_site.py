@@ -5,16 +5,17 @@ from pathlib import Path
 
 from etf_scanner import generate_report as generate_etf_report
 from mag7_scanner import generate_report as generate_stock_report
+from seasonality_report import generate_report as generate_seasonality_report
 
 
 PROJECT_DIR = Path(__file__).parent
 PAGES_INDEX = PROJECT_DIR / "index.html"
+STOCKS_INDEX = PROJECT_DIR / "stocks.html"
+ETFS_INDEX = PROJECT_DIR / "etfs.html"
 
 
-def build_home_page(stock_result: dict, etf_result: dict) -> str:
+def build_home_page(stock_result: dict, etf_result: dict, seasonality_result: dict) -> str:
     generated_at = datetime.now().strftime("%Y-%m-%d %H:%M")
-    stock_report = "swing_trading_mag7_report.html"
-    etf_report = "swing_trading_etf_report.html"
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -60,52 +61,24 @@ def build_home_page(stock_result: dict, etf_result: dict) -> str:
       color: rgba(248,251,253,.88);
       font-size: .95rem;
     }}
-    .metrics {{
+    .metrics, .links {{
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 14px;
       margin-top: 18px;
     }}
-    .metric, .panel {{
+    .metric, .panel, .link-card {{
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 20px;
       box-shadow: var(--shadow);
     }}
     .metric {{ padding: 18px; }}
+    .link-card {{ padding: 20px; text-decoration: none; color: var(--ink); }}
+    .link-card h2 {{ margin: 0 0 10px; }}
+    .link-card p {{ margin: 0; line-height: 1.5; color: var(--muted); }}
     .label {{ color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-size: .78rem; }}
     .value {{ font-size: 1.8rem; margin-top: 8px; }}
-    .tabs {{
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 18px;
-    }}
-    .tab-btn {{
-      padding: 12px 16px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      background: #fffdf8;
-      color: var(--ink);
-      cursor: pointer;
-      font-weight: 700;
-    }}
-    .tab-btn.active {{
-      background: var(--blue);
-      color: white;
-      border-color: var(--blue);
-    }}
-    .panel {{
-      margin-top: 18px;
-      overflow: hidden;
-      background: white;
-    }}
-    iframe {{
-      width: 100%;
-      min-height: 82vh;
-      border: none;
-      background: white;
-    }}
     .note {{
       margin-top: 16px;
       color: var(--muted);
@@ -123,6 +96,7 @@ def build_home_page(stock_result: dict, etf_result: dict) -> str:
         <div>Published: {generated_at}</div>
         <div>Stock market date: {stock_result['latest_date']}</div>
         <div>ETF market date: {etf_result['latest_date']}</div>
+        <div>Seasonality snapshot: {seasonality_result['qqq_latest_date']}</div>
       </div>
     </section>
     <section class="metrics">
@@ -131,23 +105,22 @@ def build_home_page(stock_result: dict, etf_result: dict) -> str:
       <article class="metric"><div class="label">ETF Universe</div><div class="value">{etf_result['universe_size']}</div></article>
       <article class="metric"><div class="label">ETF Setups</div><div class="value">{etf_result['good_setups']}</div></article>
     </section>
-    <section class="tabs">
-      <button class="tab-btn active" data-src="{stock_report}">Stocks</button>
-      <button class="tab-btn" data-src="{etf_report}">ETFs</button>
+    <section class="links">
+      <a class="link-card" href="stocks.html">
+        <h2>Stocks</h2>
+        <p>Top 100 U.S. stocks with trend, momentum, and relative strength scoring. Separate page so you can evolve stock logic independently.</p>
+      </a>
+      <a class="link-card" href="etfs.html">
+        <h2>ETFs</h2>
+        <p>Liquid U.S. ETFs with category filters, benchmark context, leveraged/inverse warnings, and ETF-specific strategy notes.</p>
+      </a>
+      <a class="link-card" href="seasonality.html">
+        <h2>QQQ / TQQQ Seasonality</h2>
+        <p>20-year QQQ seasonality, TQQQ since inception, and a timing view that blends historical month tendencies with current trend factors.</p>
+      </a>
     </section>
-    <section class="panel">
-      <iframe id="reportFrame" src="{stock_report}" title="Swing report"></iframe>
-    </section>
-    <p class="note">If you want an on-demand rerun, trigger the GitHub Action manually. If you want true refresh-on-open behavior, that requires a server-backed deployment rather than static GitHub Pages.</p>
+    <p class="note">These are static GitHub Pages reports. For on-demand fresh runs, trigger the GitHub Action manually. For true refresh-on-open behavior, use the server-backed live dashboard version.</p>
   </div>
-  <script>
-    const frame = document.getElementById("reportFrame");
-    const buttons = Array.from(document.querySelectorAll(".tab-btn"));
-    buttons.forEach(btn => btn.addEventListener("click", () => {{
-      buttons.forEach(item => item.classList.toggle("active", item === btn));
-      frame.src = btn.dataset.src;
-    }}));
-  </script>
 </body>
 </html>"""
 
@@ -155,7 +128,10 @@ def build_home_page(stock_result: dict, etf_result: dict) -> str:
 def main() -> int:
     stock_result = generate_stock_report("market")
     etf_result = generate_etf_report()
-    PAGES_INDEX.write_text(build_home_page(stock_result, etf_result), encoding="utf-8")
+    seasonality_result = generate_seasonality_report()
+    PAGES_INDEX.write_text(build_home_page(stock_result, etf_result, seasonality_result), encoding="utf-8")
+    STOCKS_INDEX.write_text((PROJECT_DIR / "swing_trading_mag7_report.html").read_text(encoding="utf-8"), encoding="utf-8")
+    ETFS_INDEX.write_text((PROJECT_DIR / "swing_trading_etf_report.html").read_text(encoding="utf-8"), encoding="utf-8")
     print(f"Built {PAGES_INDEX}")
     return 0
 
