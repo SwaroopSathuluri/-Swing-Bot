@@ -2,11 +2,6 @@ name: Publish Swing Report
 
 on:
   workflow_dispatch:
-    inputs:
-      universe:
-        description: "Universe to scan"
-        required: false
-        default: "market"
   schedule:
     - cron: "0 13,18,23 * * 1-5"
 
@@ -24,7 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
-      REPORT_UNIVERSE: ${{ github.event.inputs.universe || 'market' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -34,14 +28,15 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Generate report
-        run: python mag7_scanner.py "${REPORT_UNIVERSE}"
+      - name: Generate reports and home page
+        run: python build_pages_site.py
 
       - name: Prepare Pages artifact
         run: |
           mkdir site
           cp index.html site/index.html
           cp swing_trading_mag7_report.html site/swing_trading_mag7_report.html
+          cp swing_trading_etf_report.html site/swing_trading_etf_report.html
           touch site/.nojekyll
 
       - name: Configure Pages
