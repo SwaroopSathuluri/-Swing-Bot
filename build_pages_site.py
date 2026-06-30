@@ -16,10 +16,14 @@ ETFS_INDEX = PROJECT_DIR / "etfs.html"
 
 def build_home_page(stock_result: dict, etf_result: dict, seasonality_result: dict) -> str:
     generated_at = datetime.now().strftime("%Y-%m-%d %H:%M")
+    asset_version = datetime.now().strftime("%Y%m%d%H%M")
     return f"""<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Swing Bot Reports</title>
   <style>
@@ -106,15 +110,15 @@ def build_home_page(stock_result: dict, etf_result: dict, seasonality_result: di
       <article class="metric"><div class="label">ETF Setups</div><div class="value">{etf_result['good_setups']}</div></article>
     </section>
     <section class="links">
-      <a class="link-card" href="stocks.html">
+      <a class="link-card" href="stocks.html?v={asset_version}">
         <h2>Stocks</h2>
         <p>Top 100 U.S. stocks with trend, momentum, and relative strength scoring. Separate page so you can evolve stock logic independently.</p>
       </a>
-      <a class="link-card" href="etfs.html">
+      <a class="link-card" href="etfs.html?v={asset_version}">
         <h2>ETFs</h2>
         <p>Liquid U.S. ETFs with category filters, benchmark context, leveraged/inverse warnings, and ETF-specific strategy notes.</p>
       </a>
-      <a class="link-card" href="seasonality.html">
+      <a class="link-card" href="seasonality.html?v={asset_version}">
         <h2>QQQ / TQQQ Seasonality</h2>
         <p>20-year QQQ seasonality, TQQQ since inception, and a timing view that blends historical month tendencies with current trend factors.</p>
       </a>
