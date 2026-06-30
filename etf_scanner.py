@@ -7,7 +7,7 @@ import sys
 import urllib.error
 import urllib.parse
 import urllib.request
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from market_context import (
@@ -25,6 +25,7 @@ from market_context import (
 MIN_PRICE = 5.0
 MIN_DOLLAR_VOLUME = 10_000_000
 LOOKBACK_DAYS = 220
+HISTORY_DAYS = 520
 OUTPUT_FILENAME = "swing_trading_etf_report.html"
 PAGES_FILENAME = "etf_index.html"
 MAX_ETF_TICKERS = 150
@@ -159,8 +160,8 @@ def fetch_spy_dates(api_key: str) -> list[str]:
         f"{start_date:%Y-%m-%d}/{end_date:%Y-%m-%d}?adjusted=true&sort=asc&limit=5000&apiKey={urllib.parse.quote(api_key)}"
     )
     payload = fetch_json(url)
-    dates = [datetime.fromtimestamp(row["t"] / 1000).strftime("%Y-%m-%d") for row in payload.get("results", [])]
-    return dates[-LOOKBACK_DAYS:]
+    dates = [datetime.fromtimestamp(row["t"] / 1000, UTC).strftime("%Y-%m-%d") for row in payload.get("results", [])]
+    return dates[-HISTORY_DAYS:]
 
 
 def fetch_reference_tickers(api_key: str) -> dict[str, dict]:
@@ -273,6 +274,93 @@ def hold_window(setup: str, atr_pct: float, rs_value: float) -> str:
         low = max(2, low - 1)
         high = max(low + 2, high - 2)
     return f"{low}-{high} trading days"
+
+
+def max_hold_days(setup: str, atr_pct: float, rs_value: float) -> int:
+    if setup == "Avoid":
+        return 0
+    _low, high = {"Breakout": (5, 12), "Pullback": (4, 10), "Trend Continuation": (7, 15)}.get(setup, (3, 8))
+    if atr_pct > 5:
+        high -= 2
+    if atr_pct > 8:
+        high -= 2
+    if rs_value > 5:
+        high += 2
+    if rs_value < 0:
+        high = max(4, high - 2)
+    return max(2, high)
+
+
+def setup_outcome(signal: dict, future_history: list[dict]) -> str:
+    for bar in future_history[: max_hold_days(signal["setup"], signal["atrPct"], signal["rsVsSpy20d"])]:
+        high = float(bar["h"])
+        low = float(bar["l"])
+        if low <= signal["stopLoss"]:
+            return "loss"
+        if high >= signal["target1"]:
+            return "win"
+    return "neutral"
+
+
+def enrich_signal_context(
+    row: dict,
+    history: list[dict],
+    spy_closes: list[float],
+    qqq_closes: list[float],
+    meta: dict,
+) -> dict:
+    signal_points: list[tuple[int, dict]] = []
+    for idx in range(LOOKBACK_DAYS - 1, len(history)):
+        date = datetime.fromtimestamp(history[idx]["t"] / 1000, UTC).strftime("%Y-%m-%d")
+        signal = classify_etf(row["ticker"], meta, history[: idx + 1], spy_closes[: idx + 1], qqq_closes[: idx + 1], date)
+        if signal and signal["goodForSwing"]:
+            signal_points.append((idx, signal))
+
+    current_setup = row["setup"]
+    current_idx = len(history) - 1
+    entry_idx = current_idx
+    matching_points = {idx: signal for idx, signal in signal_points}
+    if entry_idx in matching_points:
+        while entry_idx in matching_points and matching_points[entry_idx]["setup"] == current_setup:
+            entry_idx -= 1
+        entry_idx += 1
+    entry_close = float(history[entry_idx]["c"]) if entry_idx < len(history) else row["close"]
+    first_seen = datetime.fromtimestamp(history[entry_idx]["t"] / 1000, UTC).strftime("%Y-%m-%d")
+    days_in_list = current_idx - entry_idx + 1
+
+    wins = losses = neutral = previous = 0
+    last_event_idx = -999
+    for idx, signal in signal_points:
+        if idx >= entry_idx or signal["setup"] != current_setup:
+            continue
+        if idx <= last_event_idx + max_hold_days(signal["setup"], signal["atrPct"], signal["rsVsSpy20d"]):
+            continue
+        previous += 1
+        last_event_idx = idx
+        outcome = setup_outcome(signal, history[idx + 1 :])
+        if outcome == "win":
+            wins += 1
+        elif outcome == "loss":
+            losses += 1
+        else:
+            neutral += 1
+
+    decided = wins + losses
+    confidence = round((wins / decided) * 100, 1) if decided else None
+    row.update(
+        {
+            "firstSeenDate": first_seen,
+            "daysInList": days_in_list,
+            "entryChangePct": round(pct_change(row["close"], entry_close), 2),
+            "similarSetups": previous,
+            "setupWins": wins,
+            "setupLosses": losses,
+            "setupNeutral": neutral,
+            "setupConfidence": confidence,
+            "confidenceLabel": f"{confidence:.1f}%" if confidence is not None else "N/A",
+        }
+    )
+    return row
 
 
 def classify_etf(
@@ -587,11 +675,13 @@ def build_html(
         <div><label for="categoryFilter">ETF Category</label><select id="categoryFilter"><option value="All">All</option><option value="Broad Equity">Broad Equity</option><option value="Technology / Growth">Technology / Growth</option><option value="Leveraged">Leveraged</option><option value="Inverse">Inverse</option><option value="Fixed Income">Fixed Income</option><option value="Commodity / Alternative">Commodity / Alternative</option><option value="International">International</option><option value="Financials">Financials</option><option value="Energy">Energy</option><option value="Healthcare">Healthcare</option><option value="Thematic">Thematic</option><option value="Other">Other</option></select></div>
         <div><label for="qualityFilter">Swing Quality</label><select id="qualityFilter"><option value="All">All</option><option value="Yes">Good for swing trade</option><option value="No">Not good right now</option></select></div>
         <div><label for="minScore">Minimum Score</label><input id="minScore" type="number" value="55" min="0" max="100" step="5"></div>
+        <div><label for="minConfidence">Min Confidence %</label><input id="minConfidence" type="number" value="0" min="0" max="100" step="5"></div>
+        <div><label for="maxDaysInList">Max Days In List</label><input id="maxDaysInList" type="number" value="99" min="1" max="260" step="1"></div>
         <div><label for="maxAtr">Max ATR %</label><input id="maxAtr" type="number" value="8" min="1" max="30" step="0.5"></div>
-        <div><label for="sortBy">Sort</label><select id="sortBy"><option value="score">Score</option><option value="rsVsSpy20d">RS vs SPY</option><option value="rsVsQqq20d">RS vs QQQ</option><option value="volumeRatio">Volume Ratio</option><option value="atrPct">ATR %</option><option value="close">Price</option></select></div>
+        <div><label for="sortBy">Sort</label><select id="sortBy"><option value="score">Score</option><option value="setupConfidence">Backtest Win Rate</option><option value="similarSetups">Prior Setups</option><option value="entryChangePct">% Since Entry</option><option value="daysInList">Days In List</option><option value="rsVsSpy20d">RS vs SPY</option><option value="rsVsQqq20d">RS vs QQQ</option><option value="volumeRatio">Volume Ratio</option><option value="atrPct">ATR %</option><option value="close">Price</option></select></div>
       </div>
     </section>
-    <section class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-sort="ticker">Ticker</th><th data-sort="name">Name</th><th data-sort="category">Category</th><th data-sort="benchmark">Benchmark</th><th data-sort="setup">Setup</th><th data-sort="goodForSwing">Good For Swing?</th><th data-sort="holdWindow">Hold Window</th><th data-sort="score">Score</th><th data-sort="close">Close</th><th data-sort="ema20">20 EMA</th><th data-sort="sma50">50 SMA</th><th data-sort="sma200">200 SMA</th><th data-sort="rsi14">RSI</th><th data-sort="macd">MACD</th><th data-sort="atrPct">ATR %</th><th data-sort="volumeRatio">Vol Ratio</th><th data-sort="rsVsSpy20d">RS vs SPY</th><th data-sort="rsVsQqq20d">RS vs QQQ</th><th data-sort="eventRisk">Event Risk</th><th data-sort="stopLoss">Stop</th><th data-sort="target1">T1</th><th data-sort="target2">T2</th><th data-sort="strategyIdea">Strategy</th><th data-sort="benchmarkNote">Benchmark Logic</th><th data-sort="caution">Caution</th><th data-sort="notes">Notes</th></tr></thead><tbody id="reportBody"></tbody></table></div></section>
+    <section class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-sort="ticker">Ticker</th><th data-sort="name">Name</th><th data-sort="category">Category</th><th data-sort="benchmark">Benchmark</th><th data-sort="setup">Setup</th><th data-sort="goodForSwing">Good For Swing?</th><th data-sort="firstSeenDate">First In List</th><th data-sort="daysInList">Days In List</th><th data-sort="entryChangePct">% Since Entry</th><th data-sort="setupConfidence">Backtest Win Rate</th><th data-sort="similarSetups">Prior Setups</th><th data-sort="setupWins">Wins</th><th data-sort="setupLosses">Losses</th><th data-sort="setupNeutral">Neutral</th><th data-sort="holdWindow">Hold Window</th><th data-sort="score">Score</th><th data-sort="close">Close</th><th data-sort="ema20">20 EMA</th><th data-sort="sma50">50 SMA</th><th data-sort="sma200">200 SMA</th><th data-sort="rsi14">RSI</th><th data-sort="macd">MACD</th><th data-sort="atrPct">ATR %</th><th data-sort="volumeRatio">Vol Ratio</th><th data-sort="rsVsSpy20d">RS vs SPY</th><th data-sort="rsVsQqq20d">RS vs QQQ</th><th data-sort="eventRisk">Event Risk</th><th data-sort="stopLoss">Stop</th><th data-sort="target1">T1</th><th data-sort="target2">T2</th><th data-sort="strategyIdea">Strategy</th><th data-sort="benchmarkNote">Benchmark Logic</th><th data-sort="caution">Caution</th><th data-sort="notes">Notes</th></tr></thead><tbody id="reportBody"></tbody></table></div></section>
   </div>
   <script>
     const rows = {json.dumps(rows)};
@@ -603,6 +693,8 @@ def build_html(
       categoryFilter: document.getElementById("categoryFilter"),
       qualityFilter: document.getElementById("qualityFilter"),
       minScore: document.getElementById("minScore"),
+      minConfidence: document.getElementById("minConfidence"),
+      maxDaysInList: document.getElementById("maxDaysInList"),
       maxAtr: document.getElementById("maxAtr"),
       sortBy: document.getElementById("sortBy"),
       coverageCount: document.getElementById("coverageCount"),
@@ -610,10 +702,10 @@ def build_html(
       breakoutCount: document.getElementById("breakoutCount"),
       pullbackCount: document.getElementById("pullbackCount")
     }};
-    function compare(a,b,key) {{ const av=a[key], bv=b[key]; if (typeof av === "number" && typeof bv === "number") return av-bv; return String(av).localeCompare(String(bv)); }}
+    function compare(a,b,key) {{ const av=a[key], bv=b[key]; if (av === null || av === undefined) return -1; if (bv === null || bv === undefined) return 1; if (typeof av === "number" && typeof bv === "number") return av-bv; return String(av).localeCompare(String(bv)); }}
     function setupClass(setup) {{ return setup === "Trend Continuation" ? "Trend" : setup; }}
     function render(filtered) {{
-      els.body.innerHTML = filtered.map(row => `<tr><td><strong>${{row.ticker}}</strong><br><span style="color:var(--muted)">${{row.exchange}}</span></td><td>${{row.name}}</td><td>${{row.category}}</td><td>${{row.benchmark}}</td><td><span class="tag ${{setupClass(row.setup)}}">${{row.setup}}</span></td><td class="${{row.goodForSwing ? "yes" : "no"}}">${{row.goodForSwing ? "Yes" : "No"}}</td><td>${{row.holdWindow}}</td><td>${{row.score}}</td><td>${{row.close.toFixed(2)}}</td><td>${{row.ema20.toFixed(2)}}</td><td>${{row.sma50.toFixed(2)}}</td><td>${{row.sma200.toFixed(2)}}</td><td>${{row.rsi14.toFixed(1)}}</td><td>${{row.macd.toFixed(2)}} / ${{row.macdSignal.toFixed(2)}}</td><td>${{row.atrPct.toFixed(2)}}%</td><td>${{row.volumeRatio.toFixed(2)}}x</td><td>${{row.rsVsSpy20d.toFixed(2)}}%</td><td>${{row.rsVsQqq20d.toFixed(2)}}%</td><td><span class="status-pill status-${{row.eventRisk.toLowerCase()}}">${{row.eventRisk}}</span><br><span style="color:var(--muted)">${{row.regimeNote}}</span></td><td>${{row.stopLoss.toFixed(2)}}</td><td>${{row.target1.toFixed(2)}}</td><td>${{row.target2.toFixed(2)}}</td><td>${{row.strategyIdea}}</td><td>${{row.benchmarkNote}}</td><td>${{row.caution}}</td><td>${{row.notes}}</td></tr>`).join("");
+      els.body.innerHTML = filtered.map(row => `<tr><td><strong>${{row.ticker}}</strong><br><span style="color:var(--muted)">${{row.exchange}}</span></td><td>${{row.name}}</td><td>${{row.category}}</td><td>${{row.benchmark}}</td><td><span class="tag ${{setupClass(row.setup)}}">${{row.setup}}</span></td><td class="${{row.goodForSwing ? "yes" : "no"}}">${{row.goodForSwing ? "Yes" : "No"}}</td><td>${{row.firstSeenDate || "-"}}</td><td>${{row.daysInList || "-"}}</td><td>${{Number(row.entryChangePct || 0).toFixed(2)}}%</td><td>${{row.confidenceLabel || "N/A"}}</td><td>${{row.similarSetups || 0}}</td><td class="yes">${{row.setupWins || 0}}</td><td class="no">${{row.setupLosses || 0}}</td><td>${{row.setupNeutral || 0}}</td><td>${{row.holdWindow}}</td><td>${{row.score}}</td><td>${{row.close.toFixed(2)}}</td><td>${{row.ema20.toFixed(2)}}</td><td>${{row.sma50.toFixed(2)}}</td><td>${{row.sma200.toFixed(2)}}</td><td>${{row.rsi14.toFixed(1)}}</td><td>${{row.macd.toFixed(2)}} / ${{row.macdSignal.toFixed(2)}}</td><td>${{row.atrPct.toFixed(2)}}%</td><td>${{row.volumeRatio.toFixed(2)}}x</td><td>${{row.rsVsSpy20d.toFixed(2)}}%</td><td>${{row.rsVsQqq20d.toFixed(2)}}%</td><td><span class="status-pill status-${{row.eventRisk.toLowerCase()}}">${{row.eventRisk}}</span><br><span style="color:var(--muted)">${{row.regimeNote}}</span></td><td>${{row.stopLoss.toFixed(2)}}</td><td>${{row.target1.toFixed(2)}}</td><td>${{row.target2.toFixed(2)}}</td><td>${{row.strategyIdea}}</td><td>${{row.benchmarkNote}}</td><td>${{row.caution}}</td><td>${{row.notes}}</td></tr>`).join("");
       els.coverageCount.textContent = `${{filtered.length}}`;
       els.goodCount.textContent = `${{filtered.filter(row => row.goodForSwing).length}}`;
       els.breakoutCount.textContent = `${{filtered.filter(row => row.setup === "Breakout").length}}`;
@@ -625,12 +717,14 @@ def build_html(
       const category = els.categoryFilter.value;
       const quality = els.qualityFilter.value;
       const minScoreValue = Number(els.minScore.value || 0);
+      const minConfidenceValue = Number(els.minConfidence.value || 0);
+      const maxDaysValue = Number(els.maxDaysInList.value || 999);
       const maxAtrValue = Number(els.maxAtr.value || 99);
-      const filtered = rows.filter(row => (!term || row.ticker.toLowerCase().includes(term) || row.name.toLowerCase().includes(term)) && (setup === "All" || row.setup === setup) && (category === "All" || row.category === category) && !(quality === "Yes" && !row.goodForSwing) && !(quality === "No" && row.goodForSwing) && row.score >= minScoreValue && row.atrPct <= maxAtrValue).sort((a,b) => state.sortDir === "asc" ? compare(a,b,state.sortBy) : compare(b,a,state.sortBy));
+      const filtered = rows.filter(row => (!term || row.ticker.toLowerCase().includes(term) || row.name.toLowerCase().includes(term)) && (setup === "All" || row.setup === setup) && (category === "All" || row.category === category) && !(quality === "Yes" && !row.goodForSwing) && !(quality === "No" && row.goodForSwing) && row.score >= minScoreValue && (row.setupConfidence === null || row.setupConfidence >= minConfidenceValue) && (row.daysInList || 999) <= maxDaysValue && row.atrPct <= maxAtrValue).sort((a,b) => state.sortDir === "asc" ? compare(a,b,state.sortBy) : compare(b,a,state.sortBy));
       render(filtered);
     }}
     document.querySelectorAll("th[data-sort]").forEach(th => th.addEventListener("click", () => {{ const key = th.dataset.sort; if (state.sortBy === key) state.sortDir = state.sortDir === "asc" ? "desc" : "asc"; else {{ state.sortBy = key; state.sortDir = "desc"; els.sortBy.value = key; }} applyFilters(); }}));
-    [els.search, els.setupFilter, els.categoryFilter, els.qualityFilter, els.minScore, els.maxAtr].forEach(el => {{ el.addEventListener("input", applyFilters); el.addEventListener("change", applyFilters); }});
+    [els.search, els.setupFilter, els.categoryFilter, els.qualityFilter, els.minScore, els.minConfidence, els.maxDaysInList, els.maxAtr].forEach(el => {{ el.addEventListener("input", applyFilters); el.addEventListener("change", applyFilters); }});
     els.sortBy.addEventListener("change", () => {{ state.sortBy = els.sortBy.value; state.sortDir = "desc"; applyFilters(); }});
     applyFilters();
   </script>
@@ -687,7 +781,7 @@ def generate_report() -> dict:
         history = fetch_history(ticker, start_date, latest_date, api_key)
         row = classify_etf(ticker, payload, history, spy_closes, qqq_closes, latest_date)
         if row:
-            rows.append(row)
+            rows.append(enrich_signal_context(row, history, spy_closes, qqq_closes, payload))
     rows.sort(key=lambda row: (row["score"], row["rsVsSpy20d"]), reverse=True)
 
     rows_by_ticker = {row["ticker"]: row for row in rows}
