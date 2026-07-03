@@ -46,9 +46,9 @@
   <div class="wrap">
     <section class="hero">
       <h1>Top 100 U.S. Stocks</h1>
-      <p>Daily swing-trade scanner using your Massive data. It ranks names by 20 EMA, 50 SMA, 200 SMA, RSI, MACD, ATR, volume ratio, and relative strength vs SPY. Edge Score mode applies the learned filters from the historical top-5 test. Generated 2026-07-03 15:42.</p>
+      <p>Daily swing-trade scanner using your Massive data. It ranks names by 20 EMA, 50 SMA, 200 SMA, RSI, MACD, ATR, volume ratio, and relative strength vs SPY. Edge Score mode applies the learned filters from the historical top-5 test. Generated 2026-07-03 16:15.</p>
       <div class="hero-tools">
-        <div class="stamp">Last Updated: 2026-07-03 15:42</div>
+        <div class="stamp">Last Updated: 2026-07-03 16:15</div>
         <button class="refresh-btn" type="button" onclick="window.location.reload()">Refresh View</button>
       </div>
     </section>
@@ -63,11 +63,11 @@
         <div><label for="search">Search</label><input id="search" type="text" placeholder="Ticker or company name"></div>
         <div><label for="setupFilter">Setup</label><select id="setupFilter"><option value="All">All</option><option value="Breakout">Breakout</option><option value="Pullback">Pullback</option><option value="Trend Continuation">Trend Continuation</option><option value="Avoid">Avoid</option></select></div>
         <div><label for="qualityFilter">Swing Quality</label><select id="qualityFilter"><option value="All">All</option><option value="Yes">Good for swing trade</option><option value="No">Not good right now</option></select></div>
-        <div><label for="minScore">Minimum Score</label><input id="minScore" type="number" value="55" min="0" max="100" step="5"></div>
-        <div><label for="minEdge">Min Edge Score</label><input id="minEdge" type="number" value="55" min="-100" max="120" step="5"></div>
+        <div><label for="minScore">Minimum Score</label><input id="minScore" type="number" value="75" min="0" max="100" step="5"></div>
+        <div><label for="minEdge">Min Edge Score</label><input id="minEdge" type="number" value="45" min="-100" max="120" step="5"></div>
         <div><label for="minConfidence">Min Confidence %</label><input id="minConfidence" type="number" value="0" min="0" max="100" step="5"></div>
         <div><label for="maxDaysInList">Max Days In List</label><input id="maxDaysInList" type="number" value="99" min="1" max="260" step="1"></div>
-        <div><label for="maxAtr">Max ATR %</label><input id="maxAtr" type="number" value="6" min="1" max="20" step="0.5"></div>
+        <div><label for="maxAtr">Max ATR %</label><input id="maxAtr" type="number" value="8" min="1" max="20" step="0.5"></div>
         <div><label for="sortBy">Sort</label><select id="sortBy"><option value="edgeScore">Edge Score</option><option value="score">Technical Score</option><option value="setupConfidence">Backtest Win Rate</option><option value="similarSetups">Prior Setups</option><option value="entryChangePct">% Since Entry</option><option value="daysInList">Days In List</option><option value="rsVsSpy20d">Relative Strength</option><option value="volumeRatio">Volume Ratio</option><option value="atrPct">ATR %</option><option value="close">Price</option></select></div>
       </div>
     </section>

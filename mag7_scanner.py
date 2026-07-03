@@ -455,7 +455,7 @@ def build_html(rows: list[dict], generated_at: datetime, coverage_note: str, pag
         else ""
     )
     edge_control = (
-        '<div><label for="minEdge">Min Edge Score</label><input id="minEdge" type="number" value="55" min="-100" max="120" step="5"></div>'
+        '<div><label for="minEdge">Min Edge Score</label><input id="minEdge" type="number" value="45" min="-100" max="120" step="5"></div>'
         if include_edge
         else ""
     )
@@ -467,6 +467,8 @@ def build_html(rows: list[dict], generated_at: datetime, coverage_note: str, pag
     edge_header = '<th data-sort="edgeScore">Edge Score</th>' if include_edge else ""
     edge_cell = '<td><strong>${row.edgeScore ?? 0}</strong></td>' if include_edge else ""
     initial_sort = "edgeScore" if include_edge else "score"
+    min_score_default = 75 if include_edge else 55
+    max_atr_default = 8 if include_edge else 6
     edge_ref = '      minEdge: document.getElementById("minEdge"),\n' if include_edge else ""
     edge_value = '      const minEdgeValue = Number(els.minEdge.value || -999);\n' if include_edge else ""
     edge_filter = " && (row.edgeScore ?? 0) >= minEdgeValue" if include_edge else ""
@@ -540,11 +542,11 @@ def build_html(rows: list[dict], generated_at: datetime, coverage_note: str, pag
         <div><label for="search">Search</label><input id="search" type="text" placeholder="Ticker or company name"></div>
         <div><label for="setupFilter">Setup</label><select id="setupFilter"><option value="All">All</option><option value="Breakout">Breakout</option><option value="Pullback">Pullback</option><option value="Trend Continuation">Trend Continuation</option><option value="Avoid">Avoid</option></select></div>
         <div><label for="qualityFilter">Swing Quality</label><select id="qualityFilter"><option value="All">All</option><option value="Yes">Good for swing trade</option><option value="No">Not good right now</option></select></div>
-        <div><label for="minScore">Minimum Score</label><input id="minScore" type="number" value="55" min="0" max="100" step="5"></div>
+        <div><label for="minScore">Minimum Score</label><input id="minScore" type="number" value="{min_score_default}" min="0" max="100" step="5"></div>
         {edge_control}
         <div><label for="minConfidence">Min Confidence %</label><input id="minConfidence" type="number" value="0" min="0" max="100" step="5"></div>
         <div><label for="maxDaysInList">Max Days In List</label><input id="maxDaysInList" type="number" value="99" min="1" max="260" step="1"></div>
-        <div><label for="maxAtr">Max ATR %</label><input id="maxAtr" type="number" value="6" min="1" max="20" step="0.5"></div>
+        <div><label for="maxAtr">Max ATR %</label><input id="maxAtr" type="number" value="{max_atr_default}" min="1" max="20" step="0.5"></div>
         <div><label for="sortBy">Sort</label><select id="sortBy">{sort_options}<option value="setupConfidence">Backtest Win Rate</option><option value="similarSetups">Prior Setups</option><option value="entryChangePct">% Since Entry</option><option value="daysInList">Days In List</option><option value="rsVsSpy20d">Relative Strength</option><option value="volumeRatio">Volume Ratio</option><option value="atrPct">ATR %</option><option value="close">Price</option></select></div>
       </div>
     </section>
