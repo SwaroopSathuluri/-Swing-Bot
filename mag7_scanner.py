@@ -448,7 +448,33 @@ def classify_stock(ticker: str, meta: dict, history: list[dict], spy_closes: lis
     }
 
 
-def build_html(rows: list[dict], generated_at: datetime, coverage_note: str, page_title: str) -> str:
+def build_html(rows: list[dict], generated_at: datetime, coverage_note: str, page_title: str, include_edge: bool = False) -> str:
+    mode_note = (
+        " Edge Score mode applies the learned filters from the historical top-5 test."
+        if include_edge
+        else ""
+    )
+    edge_control = (
+        '<div><label for="minEdge">Min Edge Score</label><input id="minEdge" type="number" value="55" min="-100" max="120" step="5"></div>'
+        if include_edge
+        else ""
+    )
+    sort_options = (
+        '<option value="edgeScore">Edge Score</option><option value="score">Technical Score</option>'
+        if include_edge
+        else '<option value="score">Score</option>'
+    )
+    edge_header = '<th data-sort="edgeScore">Edge Score</th>' if include_edge else ""
+    edge_cell = '<td><strong>${row.edgeScore ?? 0}</strong></td>' if include_edge else ""
+    initial_sort = "edgeScore" if include_edge else "score"
+    edge_ref = '      minEdge: document.getElementById("minEdge"),\n' if include_edge else ""
+    edge_value = '      const minEdgeValue = Number(els.minEdge.value || -999);\n' if include_edge else ""
+    edge_filter = " && (row.edgeScore ?? 0) >= minEdgeValue" if include_edge else ""
+    filter_inputs = (
+        "[els.search, els.setupFilter, els.qualityFilter, els.minScore, els.minEdge, els.minConfidence, els.maxDaysInList, els.maxAtr]"
+        if include_edge
+        else "[els.search, els.setupFilter, els.qualityFilter, els.minScore, els.minConfidence, els.maxDaysInList, els.maxAtr]"
+    )
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -497,7 +523,7 @@ def build_html(rows: list[dict], generated_at: datetime, coverage_note: str, pag
   <div class="wrap">
     <section class="hero">
       <h1>{page_title}</h1>
-      <p>Daily swing-trade scanner using your Massive data. It ranks names by 20 EMA, 50 SMA, 200 SMA, RSI, MACD, ATR, volume ratio, and relative strength vs SPY. Generated {generated_at.strftime("%Y-%m-%d %H:%M")}.</p>
+      <p>Daily swing-trade scanner using your Massive data. It ranks names by 20 EMA, 50 SMA, 200 SMA, RSI, MACD, ATR, volume ratio, and relative strength vs SPY.{mode_note} Generated {generated_at.strftime("%Y-%m-%d %H:%M")}.</p>
       <div class="hero-tools">
         <div class="stamp">Last Updated: {generated_at.strftime("%Y-%m-%d %H:%M")}</div>
         <button class="refresh-btn" type="button" onclick="window.location.reload()">Refresh View</button>
@@ -515,25 +541,25 @@ def build_html(rows: list[dict], generated_at: datetime, coverage_note: str, pag
         <div><label for="setupFilter">Setup</label><select id="setupFilter"><option value="All">All</option><option value="Breakout">Breakout</option><option value="Pullback">Pullback</option><option value="Trend Continuation">Trend Continuation</option><option value="Avoid">Avoid</option></select></div>
         <div><label for="qualityFilter">Swing Quality</label><select id="qualityFilter"><option value="All">All</option><option value="Yes">Good for swing trade</option><option value="No">Not good right now</option></select></div>
         <div><label for="minScore">Minimum Score</label><input id="minScore" type="number" value="55" min="0" max="100" step="5"></div>
-        <div><label for="minEdge">Min Edge Score</label><input id="minEdge" type="number" value="55" min="-100" max="120" step="5"></div>
+        {edge_control}
         <div><label for="minConfidence">Min Confidence %</label><input id="minConfidence" type="number" value="0" min="0" max="100" step="5"></div>
         <div><label for="maxDaysInList">Max Days In List</label><input id="maxDaysInList" type="number" value="99" min="1" max="260" step="1"></div>
         <div><label for="maxAtr">Max ATR %</label><input id="maxAtr" type="number" value="6" min="1" max="20" step="0.5"></div>
-        <div><label for="sortBy">Sort</label><select id="sortBy"><option value="edgeScore">Edge Score</option><option value="score">Technical Score</option><option value="setupConfidence">Backtest Win Rate</option><option value="similarSetups">Prior Setups</option><option value="entryChangePct">% Since Entry</option><option value="daysInList">Days In List</option><option value="rsVsSpy20d">Relative Strength</option><option value="volumeRatio">Volume Ratio</option><option value="atrPct">ATR %</option><option value="close">Price</option></select></div>
+        <div><label for="sortBy">Sort</label><select id="sortBy">{sort_options}<option value="setupConfidence">Backtest Win Rate</option><option value="similarSetups">Prior Setups</option><option value="entryChangePct">% Since Entry</option><option value="daysInList">Days In List</option><option value="rsVsSpy20d">Relative Strength</option><option value="volumeRatio">Volume Ratio</option><option value="atrPct">ATR %</option><option value="close">Price</option></select></div>
       </div>
     </section>
-    <section class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-sort="ticker">Ticker</th><th data-sort="name">Name</th><th data-sort="setup">Setup</th><th data-sort="goodForSwing">Good For Swing?</th><th data-sort="edgeScore">Edge Score</th><th data-sort="firstSeenDate">First In List</th><th data-sort="daysInList">Days In List</th><th data-sort="entryChangePct">% Since Entry</th><th data-sort="setupConfidence">Backtest Win Rate</th><th data-sort="similarSetups">Prior Setups</th><th data-sort="setupWins">Wins</th><th data-sort="setupLosses">Losses</th><th data-sort="setupNeutral">Neutral</th><th data-sort="holdWindow">Hold Window</th><th data-sort="score">Tech Score</th><th data-sort="close">Close</th><th data-sort="ema20">20 EMA</th><th data-sort="sma50">50 SMA</th><th data-sort="sma200">200 SMA</th><th data-sort="rsi14">RSI</th><th data-sort="macd">MACD</th><th data-sort="atrPct">ATR %</th><th data-sort="volumeRatio">Vol Ratio</th><th data-sort="rsVsSpy20d">RS vs SPY</th><th data-sort="stopLoss">Stop</th><th data-sort="target1">T1</th><th data-sort="target2">T2</th><th data-sort="notes">Notes</th></tr></thead><tbody id="reportBody"></tbody></table></div></section>
+    <section class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-sort="ticker">Ticker</th><th data-sort="name">Name</th><th data-sort="setup">Setup</th><th data-sort="goodForSwing">Good For Swing?</th>{edge_header}<th data-sort="firstSeenDate">First In List</th><th data-sort="daysInList">Days In List</th><th data-sort="entryChangePct">% Since Entry</th><th data-sort="setupConfidence">Backtest Win Rate</th><th data-sort="similarSetups">Prior Setups</th><th data-sort="setupWins">Wins</th><th data-sort="setupLosses">Losses</th><th data-sort="setupNeutral">Neutral</th><th data-sort="holdWindow">Hold Window</th><th data-sort="score">Tech Score</th><th data-sort="close">Close</th><th data-sort="ema20">20 EMA</th><th data-sort="sma50">50 SMA</th><th data-sort="sma200">200 SMA</th><th data-sort="rsi14">RSI</th><th data-sort="macd">MACD</th><th data-sort="atrPct">ATR %</th><th data-sort="volumeRatio">Vol Ratio</th><th data-sort="rsVsSpy20d">RS vs SPY</th><th data-sort="stopLoss">Stop</th><th data-sort="target1">T1</th><th data-sort="target2">T2</th><th data-sort="notes">Notes</th></tr></thead><tbody id="reportBody"></tbody></table></div></section>
   </div>
   <script>
     const rows = {json.dumps(rows)};
-    const state = {{ sortBy: "edgeScore", sortDir: "desc" }};
+    const state = {{ sortBy: "{initial_sort}", sortDir: "desc" }};
     const els = {{
       body: document.getElementById("reportBody"),
       search: document.getElementById("search"),
       setupFilter: document.getElementById("setupFilter"),
       qualityFilter: document.getElementById("qualityFilter"),
       minScore: document.getElementById("minScore"),
-      minEdge: document.getElementById("minEdge"),
+{edge_ref.rstrip()}
       minConfidence: document.getElementById("minConfidence"),
       maxDaysInList: document.getElementById("maxDaysInList"),
       maxAtr: document.getElementById("maxAtr"),
@@ -546,7 +572,7 @@ def build_html(rows: list[dict], generated_at: datetime, coverage_note: str, pag
     function compare(a,b,key) {{ const av=a[key], bv=b[key]; if (av === null || av === undefined) return -1; if (bv === null || bv === undefined) return 1; if (typeof av === "number" && typeof bv === "number") return av-bv; return String(av).localeCompare(String(bv)); }}
     function setupClass(setup) {{ return setup === "Trend Continuation" ? "Trend" : setup; }}
     function render(filtered) {{
-      els.body.innerHTML = filtered.map(row => `<tr><td><strong>${{row.ticker}}</strong><br><span style="color:var(--muted)">${{row.exchange}}</span></td><td>${{row.name}}</td><td><span class="tag ${{setupClass(row.setup)}}">${{row.setup}}</span></td><td class="${{row.goodForSwing ? "yes" : "no"}}">${{row.goodForSwing ? "Yes" : "No"}}</td><td><strong>${{row.edgeScore ?? 0}}</strong></td><td>${{row.firstSeenDate || "-"}}</td><td>${{row.daysInList || "-"}}</td><td>${{Number(row.entryChangePct || 0).toFixed(2)}}%</td><td>${{row.confidenceLabel || "N/A"}}</td><td>${{row.similarSetups || 0}}</td><td class="yes">${{row.setupWins || 0}}</td><td class="no">${{row.setupLosses || 0}}</td><td>${{row.setupNeutral || 0}}</td><td>${{row.holdWindow}}</td><td>${{row.score}}</td><td>${{row.close.toFixed(2)}}</td><td>${{row.ema20.toFixed(2)}}</td><td>${{row.sma50.toFixed(2)}}</td><td>${{row.sma200.toFixed(2)}}</td><td>${{row.rsi14.toFixed(1)}}</td><td>${{row.macd.toFixed(2)}} / ${{row.macdSignal.toFixed(2)}}</td><td>${{row.atrPct.toFixed(2)}}%</td><td>${{row.volumeRatio.toFixed(2)}}x</td><td>${{row.rsVsSpy20d.toFixed(2)}}%</td><td>${{row.stopLoss.toFixed(2)}}</td><td>${{row.target1.toFixed(2)}}</td><td>${{row.target2.toFixed(2)}}</td><td>${{row.notes}}</td></tr>`).join("");
+      els.body.innerHTML = filtered.map(row => `<tr><td><strong>${{row.ticker}}</strong><br><span style="color:var(--muted)">${{row.exchange}}</span></td><td>${{row.name}}</td><td><span class="tag ${{setupClass(row.setup)}}">${{row.setup}}</span></td><td class="${{row.goodForSwing ? "yes" : "no"}}">${{row.goodForSwing ? "Yes" : "No"}}</td>{edge_cell}<td>${{row.firstSeenDate || "-"}}</td><td>${{row.daysInList || "-"}}</td><td>${{Number(row.entryChangePct || 0).toFixed(2)}}%</td><td>${{row.confidenceLabel || "N/A"}}</td><td>${{row.similarSetups || 0}}</td><td class="yes">${{row.setupWins || 0}}</td><td class="no">${{row.setupLosses || 0}}</td><td>${{row.setupNeutral || 0}}</td><td>${{row.holdWindow}}</td><td>${{row.score}}</td><td>${{row.close.toFixed(2)}}</td><td>${{row.ema20.toFixed(2)}}</td><td>${{row.sma50.toFixed(2)}}</td><td>${{row.sma200.toFixed(2)}}</td><td>${{row.rsi14.toFixed(1)}}</td><td>${{row.macd.toFixed(2)}} / ${{row.macdSignal.toFixed(2)}}</td><td>${{row.atrPct.toFixed(2)}}%</td><td>${{row.volumeRatio.toFixed(2)}}x</td><td>${{row.rsVsSpy20d.toFixed(2)}}%</td><td>${{row.stopLoss.toFixed(2)}}</td><td>${{row.target1.toFixed(2)}}</td><td>${{row.target2.toFixed(2)}}</td><td>${{row.notes}}</td></tr>`).join("");
       els.coverageCount.textContent = `${{filtered.length}}`;
       els.goodCount.textContent = `${{filtered.filter(row => row.goodForSwing).length}}`;
       els.breakoutCount.textContent = `${{filtered.filter(row => row.setup === "Breakout").length}}`;
@@ -557,15 +583,15 @@ def build_html(rows: list[dict], generated_at: datetime, coverage_note: str, pag
       const setup = els.setupFilter.value;
       const quality = els.qualityFilter.value;
       const minScoreValue = Number(els.minScore.value || 0);
-      const minEdgeValue = Number(els.minEdge.value || -999);
+{edge_value.rstrip()}
       const minConfidenceValue = Number(els.minConfidence.value || 0);
       const maxDaysValue = Number(els.maxDaysInList.value || 999);
       const maxAtrValue = Number(els.maxAtr.value || 99);
-      const filtered = rows.filter(row => (!term || row.ticker.toLowerCase().includes(term) || row.name.toLowerCase().includes(term)) && (setup === "All" || row.setup === setup) && !(quality === "Yes" && !row.goodForSwing) && !(quality === "No" && row.goodForSwing) && row.score >= minScoreValue && (row.edgeScore ?? 0) >= minEdgeValue && (row.setupConfidence === null || row.setupConfidence >= minConfidenceValue) && (row.daysInList || 999) <= maxDaysValue && row.atrPct <= maxAtrValue).sort((a,b) => state.sortDir === "asc" ? compare(a,b,state.sortBy) : compare(b,a,state.sortBy));
+      const filtered = rows.filter(row => (!term || row.ticker.toLowerCase().includes(term) || row.name.toLowerCase().includes(term)) && (setup === "All" || row.setup === setup) && !(quality === "Yes" && !row.goodForSwing) && !(quality === "No" && row.goodForSwing) && row.score >= minScoreValue{edge_filter} && (row.setupConfidence === null || row.setupConfidence >= minConfidenceValue) && (row.daysInList || 999) <= maxDaysValue && row.atrPct <= maxAtrValue).sort((a,b) => state.sortDir === "asc" ? compare(a,b,state.sortBy) : compare(b,a,state.sortBy));
       render(filtered);
     }}
     document.querySelectorAll("th[data-sort]").forEach(th => th.addEventListener("click", () => {{ const key = th.dataset.sort; if (state.sortBy === key) state.sortDir = state.sortDir === "asc" ? "desc" : "asc"; else {{ state.sortBy = key; state.sortDir = "desc"; els.sortBy.value = key; }} applyFilters(); }}));
-    [els.search, els.setupFilter, els.qualityFilter, els.minScore, els.minEdge, els.minConfidence, els.maxDaysInList, els.maxAtr].forEach(el => {{ el.addEventListener("input", applyFilters); el.addEventListener("change", applyFilters); }});
+    {filter_inputs}.forEach(el => {{ el.addEventListener("input", applyFilters); el.addEventListener("change", applyFilters); }});
     els.sortBy.value = state.sortBy;
     els.sortBy.addEventListener("change", () => {{ state.sortBy = els.sortBy.value; state.sortDir = "desc"; applyFilters(); }});
     applyFilters();
@@ -581,7 +607,12 @@ def resolve_universe(universe: str) -> tuple[str, dict]:
     return key, UNIVERSE_CONFIG[key]
 
 
-def generate_report(universe: str = "qqq") -> dict:
+def generate_report(
+    universe: str = "qqq",
+    include_edge: bool = False,
+    output_filename: str = OUTPUT_FILENAME,
+    pages_filename: str | None = PAGES_FILENAME,
+) -> dict:
     universe_key, universe_config = resolve_universe(universe)
     api_key = get_api_key()
     trading_dates = fetch_spy_dates(api_key)
@@ -630,15 +661,19 @@ def generate_report(universe: str = "qqq") -> dict:
         row = classify_stock(ticker, payload, history, spy_closes, latest_date)
         if row:
             rows.append(add_edge_score(enrich_signal_context(row, history, spy_closes, payload)))
-    rows.sort(key=lambda row: (row["edgeScore"], row["score"], row["rsVsSpy20d"]), reverse=True)
+    if include_edge:
+        rows.sort(key=lambda row: (row["edgeScore"], row["score"], row["rsVsSpy20d"]), reverse=True)
+    else:
+        rows.sort(key=lambda row: (row["score"], row["rsVsSpy20d"]), reverse=True)
     if selected_members is None:
         rows = rows[:MAX_MARKET_TICKERS]
 
     coverage_note = f"{universe_config['label']} scanned on {latest_date}. {universe_config['description']}"
-    html = build_html(rows, datetime.now(), coverage_note, universe_config["label"])
-    output_path = Path(__file__).with_name(OUTPUT_FILENAME)
+    html = build_html(rows, datetime.now(), coverage_note, universe_config["label"], include_edge=include_edge)
+    output_path = Path(__file__).with_name(output_filename)
     output_path.write_text(html, encoding="utf-8")
-    Path(__file__).with_name(PAGES_FILENAME).write_text(html, encoding="utf-8")
+    if pages_filename:
+        Path(__file__).with_name(pages_filename).write_text(html, encoding="utf-8")
     return {
         "output_path": str(output_path),
         "latest_date": latest_date,

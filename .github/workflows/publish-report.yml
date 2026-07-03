@@ -39,9 +39,11 @@ jobs:
           mkdir site
           cp index.html site/index.html
           cp stocks.html site/stocks.html
+          cp stocks-edge.html site/stocks-edge.html
           cp etfs.html site/etfs.html
           cp seasonality.html site/seasonality.html
           cp swing_trading_mag7_report.html site/swing_trading_mag7_report.html
+          cp swing_trading_stock_edge_report.html site/swing_trading_stock_edge_report.html
           cp swing_trading_etf_report.html site/swing_trading_etf_report.html
           cp qqq_tqqq_seasonality.html site/qqq_tqqq_seasonality.html
           touch site/.nojekyll

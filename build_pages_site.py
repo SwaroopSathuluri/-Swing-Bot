@@ -11,6 +11,7 @@ from seasonality_report import generate_report as generate_seasonality_report
 PROJECT_DIR = Path(__file__).parent
 PAGES_INDEX = PROJECT_DIR / "index.html"
 STOCKS_INDEX = PROJECT_DIR / "stocks.html"
+STOCKS_EDGE_INDEX = PROJECT_DIR / "stocks-edge.html"
 ETFS_INDEX = PROJECT_DIR / "etfs.html"
 
 
@@ -111,8 +112,12 @@ def build_home_page(stock_result: dict, etf_result: dict, seasonality_result: di
     </section>
     <section class="links">
       <a class="link-card" href="stocks.html?v={asset_version}">
-        <h2>Stocks</h2>
-        <p>Top 100 U.S. stocks with trend, momentum, and relative strength scoring. Separate page so you can evolve stock logic independently.</p>
+        <h2>Stocks Classic</h2>
+        <p>Original stock scanner link with the classic technical score ranking kept intact for comparison.</p>
+      </a>
+      <a class="link-card" href="stocks-edge.html?v={asset_version}">
+        <h2>Stocks Edge Score</h2>
+        <p>New iteration using the historical win/loss lessons: Edge Score ranking, stricter ATR control, and stronger relative-strength filters.</p>
       </a>
       <a class="link-card" href="etfs.html?v={asset_version}">
         <h2>ETFs</h2>
@@ -130,11 +135,13 @@ def build_home_page(stock_result: dict, etf_result: dict, seasonality_result: di
 
 
 def main() -> int:
-    stock_result = generate_stock_report("market")
+    stock_result = generate_stock_report("market", include_edge=False, output_filename="swing_trading_mag7_report.html", pages_filename=None)
+    stock_edge_result = generate_stock_report("market", include_edge=True, output_filename="swing_trading_stock_edge_report.html", pages_filename=None)
     etf_result = generate_etf_report()
     seasonality_result = generate_seasonality_report()
     PAGES_INDEX.write_text(build_home_page(stock_result, etf_result, seasonality_result), encoding="utf-8")
     STOCKS_INDEX.write_text((PROJECT_DIR / "swing_trading_mag7_report.html").read_text(encoding="utf-8"), encoding="utf-8")
+    STOCKS_EDGE_INDEX.write_text((PROJECT_DIR / "swing_trading_stock_edge_report.html").read_text(encoding="utf-8"), encoding="utf-8")
     ETFS_INDEX.write_text((PROJECT_DIR / "swing_trading_etf_report.html").read_text(encoding="utf-8"), encoding="utf-8")
     print(f"Built {PAGES_INDEX}")
     return 0
