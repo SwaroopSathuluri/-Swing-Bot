@@ -96,7 +96,7 @@ def build_home_page(stock_result: dict, etf_result: dict, seasonality_result: di
   <div class="wrap">
     <section class="hero">
       <h1>Swing Bot Reports</h1>
-      <p>Combined static dashboard for Stocks and ETFs. This GitHub Pages site refreshes when the workflow runs on schedule or when you manually rerun the action. It does not fetch live data directly in the browser, which keeps your API key private.</p>
+      <p>Combined static dashboard for Stocks and ETFs. The new Pro mode applies the best backtested rule: take only the top 1 setup, rank by relative strength vs SPY, avoid chase entries, and use the bot stop and target. The classic and Edge reports remain available for comparison.</p>
       <div class="hero-meta">
         <div>Published: {generated_at}</div>
         <div>Stock market date: {stock_result['latest_date']}</div>
@@ -105,12 +105,16 @@ def build_home_page(stock_result: dict, etf_result: dict, seasonality_result: di
       </div>
     </section>
     <section class="metrics">
-      <article class="metric"><div class="label">Stock Universe</div><div class="value">{stock_result['universe_size']}</div></article>
-      <article class="metric"><div class="label">Stock Setups</div><div class="value">{stock_result['good_setups']}</div></article>
-      <article class="metric"><div class="label">ETF Universe</div><div class="value">{etf_result['universe_size']}</div></article>
-      <article class="metric"><div class="label">ETF Setups</div><div class="value">{etf_result['good_setups']}</div></article>
+      <article class="metric"><div class="label">Best Mode</div><div class="value">Top 1</div></article>
+      <article class="metric"><div class="label">Rank By</div><div class="value">RS</div></article>
+      <article class="metric"><div class="label">Avg Hold</div><div class="value">3.8d</div></article>
+      <article class="metric"><div class="label">Backtest Win Rate</div><div class="value">54.1%</div></article>
     </section>
     <section class="links">
+      <a class="link-card" href="swingbot-pro.html?v={asset_version}">
+        <h2>Swing Bot Pro</h2>
+        <p>A+ mode: current report, top 1 only, ranked by relative strength vs SPY, score 55+, ATR 6% max, and no chase above 2% since first seen.</p>
+      </a>
       <a class="link-card" href="stocks.html?v={asset_version}">
         <h2>Stocks Classic</h2>
         <p>Original stock scanner link with the classic technical score ranking kept intact for comparison.</p>

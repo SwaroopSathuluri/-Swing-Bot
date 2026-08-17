@@ -38,6 +38,7 @@ jobs:
         run: |
           mkdir site
           cp index.html site/index.html
+          cp swingbot-pro.html site/swingbot-pro.html
           cp stocks.html site/stocks.html
           cp stocks-edge.html site/stocks-edge.html
           cp etfs.html site/etfs.html
