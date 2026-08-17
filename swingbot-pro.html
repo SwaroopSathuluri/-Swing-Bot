@@ -145,7 +145,7 @@
   <div class="wrap">
     <section class="hero">
       <h1>Swing Bot Pro</h1>
-      <p>Top 1 relative-strength mode. This page reads the current stock report, filters out chase entries, ranks by RS vs SPY, and shows the single strongest setup. Options/OI confirmation is reserved for the next data-backed upgrade.</p>
+      <p>Top 1 relative-strength mode. This page reads the current stock report, filters out chase entries and broken pullbacks, ranks by RS vs SPY, and shows the single strongest setup. Options/OI confirmation is reserved for the next data-backed upgrade.</p>
       <div class="hero-tools">
         <span class="pill" id="reportDate">Report date: loading</span>
         <span class="pill">Mode: Top 1 RS</span>
@@ -175,7 +175,7 @@
         <ul class="rules">
           <li><strong>Take only top 1.</strong> More positions diluted return in the sweep.</li>
           <li><strong>Rank by RS vs SPY.</strong> Use score and Edge as secondary tie-breakers.</li>
-          <li><strong>No chase.</strong> Skip anything already up more than 2% since first seen.</li>
+          <li><strong>No chase or broken pullback.</strong> Require since first seen between -3% and +2%.</li>
           <li><strong>ATR cap 6%.</strong> Higher ATR names are too unstable for this version.</li>
           <li><strong>Exit plan.</strong> Use target 1, stop, or manual exit by day 10.</li>
           <li><strong>Risk control.</strong> Risk 0.5% to 1.0% of account per trade.</li>
@@ -203,6 +203,7 @@
     const RULES = {
       minScore: 55,
       maxAtr: 6,
+      minEntryChange: -3,
       maxEntryChange: 2
     };
 
@@ -230,6 +231,7 @@
       return row.goodForSwing &&
         num(row.score) >= RULES.minScore &&
         num(row.atrPct, 99) <= RULES.maxAtr &&
+        num(row.entryChangePct, 99) >= RULES.minEntryChange &&
         num(row.entryChangePct, 99) <= RULES.maxEntryChange &&
         row.setup !== "Avoid";
     }

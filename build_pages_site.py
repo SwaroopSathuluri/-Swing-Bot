@@ -113,7 +113,7 @@ def build_home_page(stock_result: dict, etf_result: dict, seasonality_result: di
     <section class="links">
       <a class="link-card" href="swingbot-pro.html?v={asset_version}">
         <h2>Swing Bot Pro</h2>
-        <p>A+ mode: current report, top 1 only, ranked by relative strength vs SPY, score 55+, ATR 6% max, and no chase above 2% since first seen.</p>
+        <p>A+ mode: current report, top 1 only, ranked by relative strength vs SPY, score 55+, ATR 6% max, and since-entry between -3% and +2%.</p>
       </a>
       <a class="link-card" href="stocks.html?v={asset_version}">
         <h2>Stocks Classic</h2>
