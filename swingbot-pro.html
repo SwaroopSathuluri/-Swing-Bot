@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Swing Bot Pro</title>
+  <style>
+    :root {
+      --bg: #f4f7f3;
+      --panel: rgba(255,255,255,.96);
+      --ink: #162a32;
+      --muted: #64727a;
+      --line: #d8e1dc;
+      --green: #0b7a68;
+      --blue: #1f5f8b;
+      --amber: #a66a1f;
+      --red: #a3423f;
+      --shadow: 0 14px 34px rgba(22,42,50,.11);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+      background:
+        radial-gradient(circle at top left, rgba(11,122,104,.12), transparent 28%),
+        radial-gradient(circle at top right, rgba(31,95,139,.12), transparent 26%),
+        linear-gradient(180deg, #fbfcf8 0%, var(--bg) 100%);
+    }
+    .wrap { max-width: 1420px; margin: 0 auto; padding: 24px 16px 42px; }
+    .hero {
+      background: linear-gradient(135deg, rgba(13,49,55,.98), rgba(11,122,104,.92));
+      color: #fbfcf8;
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 20px 45px rgba(22,42,50,.18);
+    }
+    .hero h1 { margin: 0 0 10px; font-size: clamp(2rem, 4vw, 3.5rem); }
+    .hero p { margin: 0; line-height: 1.55; max-width: 1040px; color: rgba(251,252,248,.9); }
+    .hero-tools { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 8px 13px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.14);
+      color: #fbfcf8;
+      font-size: .94rem;
+    }
+    .button {
+      border: 0;
+      border-radius: 999px;
+      padding: 10px 15px;
+      background: #fbfcf8;
+      color: #0d3137;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(320px, .85fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+    .panel, .metric, .trade-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+    }
+    .panel { padding: 18px; }
+    .panel h2, .trade-card h2 { margin: 0 0 12px; font-size: 1.35rem; }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .metric { padding: 16px; }
+    .label { color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-size: .76rem; }
+    .value { font-size: 1.7rem; margin-top: 7px; }
+    .trade-card { padding: 22px; }
+    .ticker { font-size: clamp(2rem, 5vw, 4rem); line-height: .95; margin: 4px 0; }
+    .sub { color: var(--muted); line-height: 1.45; }
+    .tag {
+      display: inline-block;
+      padding: 5px 11px;
+      border-radius: 999px;
+      background: rgba(11,122,104,.14);
+      color: var(--green);
+      font-weight: 700;
+      font-size: .82rem;
+    }
+    .trade-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .stat {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+      background: #fff;
+    }
+    .rules {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .rules li {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+      background: #fff;
+      line-height: 1.4;
+    }
+    .status {
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(31,95,139,.1);
+      color: var(--blue);
+      line-height: 1.45;
+    }
+    .warn { background: rgba(166,106,31,.12); color: var(--amber); }
+    .bad { background: rgba(163,66,63,.12); color: var(--red); }
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { color: var(--muted); text-transform: uppercase; letter-spacing: .06em; font-size: .74rem; }
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+      .hero { padding: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>Swing Bot Pro</h1>
+      <p>Top 1 relative-strength mode. This page reads the current stock report, filters out chase entries, ranks by RS vs SPY, and shows the single strongest setup. Options/OI confirmation is reserved for the next data-backed upgrade.</p>
+      <div class="hero-tools">
+        <span class="pill" id="reportDate">Report date: loading</span>
+        <span class="pill">Mode: Top 1 RS</span>
+        <a class="button" href="stocks.html?v=pro">Classic Report</a>
+        <a class="button" href="stocks-edge.html?v=pro">Edge Report</a>
+        <button class="button" type="button" onclick="window.location.reload()">Refresh</button>
+      </div>
+    </section>
+
+    <section class="metrics">
+      <article class="metric"><div class="label">Candidates</div><div class="value" id="candidateCount">-</div></article>
+      <article class="metric"><div class="label">Qualified</div><div class="value" id="qualifiedCount">-</div></article>
+      <article class="metric"><div class="label">Backtest Avg Hold</div><div class="value">3.8d</div></article>
+      <article class="metric"><div class="label">Backtest Win Rate</div><div class="value">54.1%</div></article>
+    </section>
+
+    <div class="grid">
+      <section class="trade-card">
+        <h2>Today's A+ Trade</h2>
+        <div id="topTrade">
+          <div class="sub">Loading current report data.</div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Execution Rules</h2>
+        <ul class="rules">
+          <li><strong>Take only top 1.</strong> More positions diluted return in the sweep.</li>
+          <li><strong>Rank by RS vs SPY.</strong> Use score and Edge as secondary tie-breakers.</li>
+          <li><strong>No chase.</strong> Skip anything already up more than 2% since first seen.</li>
+          <li><strong>ATR cap 6%.</strong> Higher ATR names are too unstable for this version.</li>
+          <li><strong>Exit plan.</strong> Use target 1, stop, or manual exit by day 10.</li>
+          <li><strong>Risk control.</strong> Risk 0.5% to 1.0% of account per trade.</li>
+        </ul>
+        <div class="status warn">OI confirmation is not active on this static page yet. The next upgrade should add call/put OI, option volume, IV, liquidity, and earnings-risk filters from Massive.</div>
+      </section>
+    </div>
+
+    <section class="panel" style="margin-top:16px">
+      <h2>Qualified Watchlist</h2>
+      <div class="sub">These passed the Top 1 RS filters. Only the first row is the trade candidate.</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th><th>Ticker</th><th>Setup</th><th>Score</th><th>Edge</th><th>RS vs SPY</th><th>Since Entry</th><th>ATR</th><th>Stop</th><th>Target 1</th><th>Hold</th>
+          </tr>
+        </thead>
+        <tbody id="watchlist"></tbody>
+      </table>
+      <div id="loadStatus" class="status">Loading.</div>
+    </section>
+  </div>
+
+  <script>
+    const RULES = {
+      minScore: 55,
+      maxAtr: 6,
+      maxEntryChange: 2
+    };
+
+    function num(value, fallback = 0) {
+      const parsed = Number(value);
+      return Number.isFinite(parsed) ? parsed : fallback;
+    }
+
+    function fmt(value, digits = 2) {
+      return num(value).toFixed(digits);
+    }
+
+    function extractRows(html) {
+      const match = html.match(/const rows = (\[.*?\]);\n\s*const state/s);
+      if (!match) throw new Error("Could not find report rows in stocks page.");
+      return JSON.parse(match[1]);
+    }
+
+    function extractUpdated(html) {
+      const match = html.match(/Last Updated: ([^<]+)/);
+      return match ? match[1] : "unknown";
+    }
+
+    function qualify(row) {
+      return row.goodForSwing &&
+        num(row.score) >= RULES.minScore &&
+        num(row.atrPct, 99) <= RULES.maxAtr &&
+        num(row.entryChangePct, 99) <= RULES.maxEntryChange &&
+        row.setup !== "Avoid";
+    }
+
+    function rankRows(rows) {
+      return rows
+        .filter(qualify)
+        .sort((a, b) =>
+          num(b.rsVsSpy20d) - num(a.rsVsSpy20d) ||
+          num(b.score) - num(a.score) ||
+          num(b.edgeScore) - num(a.edgeScore) ||
+          num(b.volumeRatio) - num(a.volumeRatio)
+        );
+    }
+
+    function renderTop(row) {
+      const node = document.getElementById("topTrade");
+      if (!row) {
+        node.innerHTML = '<div class="status bad">No A+ trade today. Do not force a trade.</div>';
+        return;
+      }
+      node.innerHTML = `
+        <span class="tag">${row.setup}</span>
+        <div class="ticker">${row.ticker}</div>
+        <div class="sub">${row.name || ""}</div>
+        <div class="trade-grid">
+          <div class="stat"><div class="label">Score</div><div class="value">${row.score}</div></div>
+          <div class="stat"><div class="label">Edge</div><div class="value">${row.edgeScore ?? 0}</div></div>
+          <div class="stat"><div class="label">RS vs SPY</div><div class="value">${fmt(row.rsVsSpy20d)}%</div></div>
+          <div class="stat"><div class="label">Since Entry</div><div class="value">${fmt(row.entryChangePct)}%</div></div>
+          <div class="stat"><div class="label">ATR</div><div class="value">${fmt(row.atrPct)}%</div></div>
+          <div class="stat"><div class="label">Win Rate</div><div class="value">${row.confidenceLabel || "N/A"}</div></div>
+          <div class="stat"><div class="label">Stop</div><div class="value">${fmt(row.stopLoss)}</div></div>
+          <div class="stat"><div class="label">Target 1</div><div class="value">${fmt(row.target1)}</div></div>
+        </div>
+        <div class="status">Plan: enter only if price is still near report close, use stop ${fmt(row.stopLoss)}, target 1 ${fmt(row.target1)}, and exit by day 10 if unresolved. Expected average hold from backtest: 3-4 trading days.</div>
+      `;
+    }
+
+    function renderWatchlist(rows) {
+      const body = document.getElementById("watchlist");
+      body.innerHTML = rows.slice(0, 10).map((row, index) => `
+        <tr>
+          <td>${index + 1}</td>
+          <td><strong>${row.ticker}</strong></td>
+          <td>${row.setup}</td>
+          <td>${row.score}</td>
+          <td>${row.edgeScore ?? 0}</td>
+          <td>${fmt(row.rsVsSpy20d)}%</td>
+          <td>${fmt(row.entryChangePct)}%</td>
+          <td>${fmt(row.atrPct)}%</td>
+          <td>${fmt(row.stopLoss)}</td>
+          <td>${fmt(row.target1)}</td>
+          <td>${row.holdWindow || "3-10d"}</td>
+        </tr>
+      `).join("");
+    }
+
+    async function boot() {
+      const status = document.getElementById("loadStatus");
+      try {
+        const response = await fetch(`stocks-edge.html?v=${Date.now()}`, { cache: "no-store" });
+        if (!response.ok) throw new Error(`Report fetch failed: ${response.status}`);
+        const html = await response.text();
+        const rows = extractRows(html);
+        const updated = extractUpdated(html);
+        const qualified = rankRows(rows);
+        document.getElementById("reportDate").textContent = `Report updated: ${updated}`;
+        document.getElementById("candidateCount").textContent = rows.length;
+        document.getElementById("qualifiedCount").textContent = qualified.length;
+        renderTop(qualified[0]);
+        renderWatchlist(qualified);
+        status.textContent = qualified.length ? "Current report loaded. Only rank 1 is the A+ candidate." : "Current report loaded. No trade passed the A+ filter today.";
+      } catch (error) {
+        status.className = "status bad";
+        status.textContent = error.message;
+        renderTop(null);
+      }
+    }
+
+    boot();
+  </script>
+</body>
+</html>
