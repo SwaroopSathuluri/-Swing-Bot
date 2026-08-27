@@ -5,6 +5,7 @@ from pathlib import Path
 
 from etf_scanner import generate_report as generate_etf_report
 from mag7_scanner import generate_report as generate_stock_report
+from pro_v2_enrichment import build as build_pro_v2_data
 from seasonality_report import generate_report as generate_seasonality_report
 
 
@@ -115,6 +116,10 @@ def build_home_page(stock_result: dict, etf_result: dict, seasonality_result: di
         <h2>Swing Bot Pro</h2>
         <p>A+ mode: current report, top 1 only, ranked by relative strength vs SPY, score 55+, ATR 6% max, and since-entry between -3% and +2%.</p>
       </a>
+      <a class="link-card" href="swingbot-pro-v2.html?v={asset_version}">
+        <h2>Swing Bot Pro v2</h2>
+        <p>Interactive conviction mode: Top 2 by default, with technicals, relative strength, history, entry discipline, risk penalties, and optional Massive news/options enrichment.</p>
+      </a>
       <a class="link-card" href="stocks.html?v={asset_version}">
         <h2>Stocks Classic</h2>
         <p>Original stock scanner link with the classic technical score ranking kept intact for comparison.</p>
@@ -141,6 +146,7 @@ def build_home_page(stock_result: dict, etf_result: dict, seasonality_result: di
 def main() -> int:
     stock_result = generate_stock_report("market", include_edge=False, output_filename="swing_trading_mag7_report.html", pages_filename=None)
     stock_edge_result = generate_stock_report("market", include_edge=True, output_filename="swing_trading_stock_edge_report.html", pages_filename=None)
+    build_pro_v2_data(stock_edge_result["top_rows"], limit=25)
     etf_result = generate_etf_report()
     seasonality_result = generate_seasonality_report()
     PAGES_INDEX.write_text(build_home_page(stock_result, etf_result, seasonality_result), encoding="utf-8")

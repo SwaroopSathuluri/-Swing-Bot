@@ -39,6 +39,8 @@ jobs:
           mkdir site
           cp index.html site/index.html
           cp swingbot-pro.html site/swingbot-pro.html
+          cp swingbot-pro-v2.html site/swingbot-pro-v2.html
+          cp swingbot-pro-v2-data.json site/swingbot-pro-v2-data.json
           cp stocks.html site/stocks.html
           cp stocks-edge.html site/stocks-edge.html
           cp etfs.html site/etfs.html

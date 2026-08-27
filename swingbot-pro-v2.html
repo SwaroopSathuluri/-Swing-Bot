@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Swing Bot Pro v2</title>
+  <style>
+    :root {
+      --bg: #f6f4ee;
+      --panel: #fffdf8;
+      --ink: #14272d;
+      --muted: #66757b;
+      --line: #ded7c9;
+      --green: #087865;
+      --blue: #245a96;
+      --amber: #9a641d;
+      --red: #a13d3d;
+      --shadow: 0 16px 36px rgba(20, 39, 45, .1);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        linear-gradient(135deg, rgba(8, 120, 101, .10), transparent 34%),
+        linear-gradient(225deg, rgba(36, 90, 150, .10), transparent 30%),
+        var(--bg);
+    }
+    .wrap { max-width: 1500px; margin: 0 auto; padding: 22px 16px 40px; }
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(300px, .85fr);
+      gap: 18px;
+      align-items: stretch;
+      background: linear-gradient(135deg, #102f35, #087865 58%, #245a96);
+      color: #fffdf8;
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+    h1 { margin: 0; font-size: clamp(2rem, 4vw, 4.1rem); line-height: .98; letter-spacing: 0; }
+    .hero p { margin: 12px 0 0; max-width: 840px; color: rgba(255,253,248,.88); line-height: 1.5; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .btn, button {
+      border: 1px solid transparent;
+      border-radius: 10px;
+      padding: 10px 13px;
+      min-height: 40px;
+      background: var(--panel);
+      color: var(--ink);
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn.secondary { background: rgba(255,253,248,.12); color: #fffdf8; border-color: rgba(255,253,248,.24); }
+    .pulse {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .pulse div {
+      border: 1px solid rgba(255,253,248,.22);
+      border-radius: 12px;
+      padding: 12px;
+      background: rgba(255,253,248,.12);
+    }
+    .k { display:block; color: rgba(255,253,248,.72); font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; }
+    .v { display:block; margin-top: 4px; font-size: 1.45rem; font-weight: 800; }
+    .grid {
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr);
+      gap: 16px;
+      margin-top: 16px;
+      align-items: start;
+    }
+    .panel, .trade, .metric {
+      background: rgba(255,253,248,.94);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+    }
+    .panel { padding: 16px; }
+    .panel h2 { margin: 0 0 12px; font-size: 1rem; }
+    .filters { display: grid; gap: 13px; }
+    label { display: grid; gap: 6px; color: var(--muted); font-size: .74rem; text-transform: uppercase; letter-spacing: .08em; }
+    input, select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 11px;
+      background: #fff;
+      color: var(--ink);
+      font-size: .96rem;
+    }
+    input[type="range"] { padding: 0; }
+    .toggles { display: grid; gap: 8px; }
+    .toggle {
+      display: grid;
+      grid-template-columns: 18px 1fr;
+      gap: 8px;
+      align-items: center;
+      color: var(--ink);
+      text-transform: none;
+      letter-spacing: 0;
+      font-size: .92rem;
+    }
+    .toggle input { width: 18px; height: 18px; }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .metric { padding: 14px; }
+    .metric .label { color: var(--muted); font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; }
+    .metric .value { margin-top: 6px; font-size: 1.7rem; font-weight: 800; }
+    .top-zone {
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .trade { padding: 18px; }
+    .ticker { font-size: clamp(2.4rem, 6vw, 5rem); line-height: .9; font-weight: 900; margin: 8px 0; }
+    .sub { color: var(--muted); line-height: 1.45; }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: .76rem;
+      font-weight: 800;
+      background: rgba(8,120,101,.13);
+      color: var(--green);
+    }
+    .tag.warn { background: rgba(154,100,29,.14); color: var(--amber); }
+    .tag.bad { background: rgba(161,61,61,.13); color: var(--red); }
+    .scorebar { height: 10px; border-radius: 999px; background: #e8e1d2; overflow: hidden; margin: 12px 0; }
+    .scorebar span { display: block; height: 100%; background: linear-gradient(90deg, var(--amber), var(--green)); }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .chip { border: 1px solid var(--line); background: #fff; border-radius: 999px; padding: 7px 10px; font-size: .84rem; }
+    .table-wrap { margin-top: 14px; overflow: hidden; }
+    .scroll { overflow: auto; max-height: 68vh; }
+    table { width: 100%; min-width: 1180px; border-collapse: collapse; }
+    th, td { padding: 10px 9px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; font-size: .9rem; }
+    th { position: sticky; top: 0; background: #ebe4d5; z-index: 1; color: #485a61; font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; }
+    tr:hover td { background: rgba(8,120,101,.05); }
+    .reason { max-width: 360px; color: var(--muted); }
+    .empty { padding: 18px; color: var(--red); }
+    @media (max-width: 1050px) {
+      .hero, .grid, .top-zone { grid-template-columns: 1fr; }
+      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 640px) {
+      .pulse, .metrics { grid-template-columns: 1fr; }
+      .wrap { padding: 12px; }
+      .hero { border-radius: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div>
+        <h1>Swing Bot Pro v2</h1>
+        <p>Conviction dashboard for the current stock report. It combines technical strength, relative strength, historical setup quality, entry discipline, news/event risk, options/OI confirmation, and quality/risk penalties. It can also say no-trade when the evidence is not clean.</p>
+        <div class="hero-actions">
+          <button type="button" onclick="window.location.reload()">Refresh</button>
+          <a class="btn secondary" href="swingbot-pro.html?v=v2">Pro v1</a>
+          <a class="btn secondary" href="stocks-edge.html?v=v2">Edge Report</a>
+          <a class="btn secondary" href="etfs.html?v=v2">ETF Report</a>
+        </div>
+      </div>
+      <div class="pulse">
+        <div><span class="k">Report</span><span class="v" id="reportDate">Loading</span></div>
+        <div><span class="k">Mode</span><span class="v" id="modeLabel">Top 2</span></div>
+        <div><span class="k">Enrichment</span><span class="v" id="enrichmentStatus">Loading</span></div>
+        <div><span class="k">Decision</span><span class="v" id="decisionLabel">Wait</span></div>
+      </div>
+    </section>
+
+    <div class="grid">
+      <aside class="panel">
+        <h2>Controls</h2>
+        <div class="filters">
+          <label>Portfolio Mode
+            <select id="topN">
+              <option value="1">Top 1</option>
+              <option value="2" selected>Top 2</option>
+              <option value="3">Top 3</option>
+              <option value="5">Top 5</option>
+            </select>
+          </label>
+          <label>Minimum Conviction <span id="convictionValue">70</span>
+            <input id="minConviction" type="range" min="45" max="90" step="1" value="70">
+          </label>
+          <label>Minimum Backtest Win Rate
+            <input id="minWinRate" type="number" min="0" max="100" step="5" value="45">
+          </label>
+          <label>Max ATR %
+            <input id="maxAtr" type="number" min="1" max="15" step=".5" value="6">
+          </label>
+          <label>Entry Window
+            <select id="entryWindow">
+              <option value="strict" selected>-3% to +2%</option>
+              <option value="normal">-5% to +4%</option>
+              <option value="open">Open</option>
+            </select>
+          </label>
+          <label>Search
+            <input id="search" type="text" placeholder="Ticker or company">
+          </label>
+          <div class="toggles">
+            <label class="toggle"><input id="requireNews" type="checkbox"> Require non-negative news</label>
+            <label class="toggle"><input id="requireOptions" type="checkbox"> Require bullish/mixed options</label>
+            <label class="toggle"><input id="hideNoHistory" type="checkbox" checked> Hide no-history names</label>
+          </div>
+        </div>
+      </aside>
+
+      <main>
+        <section class="metrics">
+          <article class="metric"><div class="label">Candidates</div><div class="value" id="candidateCount">-</div></article>
+          <article class="metric"><div class="label">Qualified</div><div class="value" id="qualifiedCount">-</div></article>
+          <article class="metric"><div class="label">A+ Count</div><div class="value" id="aplusCount">-</div></article>
+          <article class="metric"><div class="label">Avg Conviction</div><div class="value" id="avgConviction">-</div></article>
+        </section>
+
+        <section class="top-zone">
+          <article class="trade" id="bestTrade"></article>
+          <article class="trade" id="tradePlan"></article>
+        </section>
+
+        <section class="panel table-wrap">
+          <div class="scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Rank</th><th>Ticker</th><th>Setup</th><th>Conviction</th><th>Tech</th><th>RS</th><th>History</th><th>News</th><th>Options/OI</th><th>Risk</th><th>Entry</th><th>Stop</th><th>T1</th><th>Hold</th><th>Why</th>
+                </tr>
+              </thead>
+              <tbody id="body"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const state = { rows: [], enrichment: { items: {} }, scored: [] };
+    const els = {
+      reportDate: document.getElementById("reportDate"),
+      modeLabel: document.getElementById("modeLabel"),
+      enrichmentStatus: document.getElementById("enrichmentStatus"),
+      decisionLabel: document.getElementById("decisionLabel"),
+      topN: document.getElementById("topN"),
+      minConviction: document.getElementById("minConviction"),
+      convictionValue: document.getElementById("convictionValue"),
+      minWinRate: document.getElementById("minWinRate"),
+      maxAtr: document.getElementById("maxAtr"),
+      entryWindow: document.getElementById("entryWindow"),
+      search: document.getElementById("search"),
+      requireNews: document.getElementById("requireNews"),
+      requireOptions: document.getElementById("requireOptions"),
+      hideNoHistory: document.getElementById("hideNoHistory"),
+      candidateCount: document.getElementById("candidateCount"),
+      qualifiedCount: document.getElementById("qualifiedCount"),
+      aplusCount: document.getElementById("aplusCount"),
+      avgConviction: document.getElementById("avgConviction"),
+      bestTrade: document.getElementById("bestTrade"),
+      tradePlan: document.getElementById("tradePlan"),
+      body: document.getElementById("body")
+    };
+
+    function num(value, fallback = 0) {
+      const parsed = Number(value);
+      return Number.isFinite(parsed) ? parsed : fallback;
+    }
+    function clamp(value, min, max) { return Math.max(min, Math.min(max, value)); }
+    function fmt(value, digits = 2) { return num(value).toFixed(digits); }
+    function rowsFromReport(html) {
+      const match = html.match(/const rows = (\[.*?\]);\n\s*const state/s);
+      if (!match) throw new Error("Could not read stock report rows.");
+      return JSON.parse(match[1]);
+    }
+    function updatedFromReport(html) {
+      const match = html.match(/Last Updated: ([^<]+)/);
+      return match ? match[1] : "unknown";
+    }
+    function entryBounds() {
+      if (els.entryWindow.value === "strict") return [-3, 2];
+      if (els.entryWindow.value === "normal") return [-5, 4];
+      return [-100, 100];
+    }
+    function componentScores(row, extra) {
+      const technical = clamp(num(row.score) / 115 * 100, 0, 100);
+      const rs = clamp(50 + num(row.rsVsSpy20d) * 2, 0, 100);
+      const confidence = row.setupConfidence == null ? 45 : num(row.setupConfidence);
+      const sampleBonus = clamp(num(row.similarSetups) * 5, 0, 20);
+      const history = clamp(confidence * .8 + sampleBonus, 0, 100);
+      const news = extra.news?.available ? clamp(50 + num(extra.news.score) * 5, 0, 100) : 50;
+      const options = extra.options?.available ? clamp(50 + num(extra.options.score) * 5, 0, 100) : 50;
+      const quality = extra.quality?.available ? clamp(50 + num(extra.quality.score) * 5, 0, 100) : 50;
+      let risk = 100;
+      if (num(row.atrPct) > 6) risk -= 28;
+      if (num(row.entryChangePct) > 2) risk -= 24;
+      if (num(row.entryChangePct) < -3) risk -= 24;
+      if (num(row.rsi14) > 72) risk -= 18;
+      if (num(row.daysInList) > 5) risk -= 12;
+      return { technical, rs, history, news, options, quality, risk: clamp(risk, 0, 100) };
+    }
+    function conviction(row) {
+      const extra = state.enrichment.items?.[row.ticker] || {};
+      const c = componentScores(row, extra);
+      const value =
+        c.technical * .28 +
+        c.rs * .18 +
+        c.history * .18 +
+        c.news * .12 +
+        c.options * .14 +
+        c.quality * .06 +
+        c.risk * .04;
+      const reasons = [];
+      if (row.score >= 90) reasons.push("strong technical score");
+      if (row.rsVsSpy20d >= 7) reasons.push("beating SPY");
+      if (row.setupConfidence != null && row.setupConfidence >= 60) reasons.push("prior setup history is favorable");
+      if (extra.news?.label === "Positive") reasons.push("news tone positive");
+      if (extra.options?.label === "Bullish") reasons.push("options/OI bullish");
+      if (row.entryChangePct > 2) reasons.push("extended from first entry");
+      if (row.entryChangePct < -3) reasons.push("broken pullback risk");
+      if (row.atrPct > 6) reasons.push("ATR risk elevated");
+      return { value: Math.round(value), components: c, extra, reasons };
+    }
+    function scoreRows() {
+      state.scored = state.rows
+        .filter(row => row.goodForSwing && row.setup !== "Avoid")
+        .map(row => ({ ...row, pro2: conviction(row) }))
+        .sort((a, b) => b.pro2.value - a.pro2.value || num(b.edgeScore) - num(a.edgeScore) || num(b.rsVsSpy20d) - num(a.rsVsSpy20d));
+    }
+    function passes(row) {
+      const [minEntry, maxEntry] = entryBounds();
+      const term = els.search.value.trim().toLowerCase();
+      if (term && !row.ticker.toLowerCase().includes(term) && !(row.name || "").toLowerCase().includes(term)) return false;
+      if (row.pro2.value < num(els.minConviction.value)) return false;
+      if (row.atrPct > num(els.maxAtr.value)) return false;
+      if (row.entryChangePct < minEntry || row.entryChangePct > maxEntry) return false;
+      if (els.hideNoHistory.checked && row.setupConfidence == null) return false;
+      if (row.setupConfidence != null && row.setupConfidence < num(els.minWinRate.value)) return false;
+      if (els.requireNews.checked && row.pro2.extra.news?.label === "Negative") return false;
+      if (els.requireOptions.checked && row.pro2.extra.options?.label === "Bearish") return false;
+      return true;
+    }
+    function labelFor(row) {
+      if (!row) return "No Trade";
+      if (row.pro2.value >= 80) return "A+";
+      if (row.pro2.value >= 70) return "A";
+      return "Watch";
+    }
+    function renderBest(rows) {
+      const top = rows[0];
+      if (!top) {
+        els.bestTrade.innerHTML = '<span class="tag bad">No trade</span><div class="ticker">CASH</div><div class="sub">No setup passed the active filters. Do not force a swing entry.</div>';
+        els.tradePlan.innerHTML = '<h2>Plan</h2><p class="sub">Stay in cash or use ETF/core allocation until a cleaner A/A+ setup appears.</p>';
+        return;
+      }
+      const label = labelFor(top);
+      els.bestTrade.innerHTML = `
+        <span class="tag ${label === "A+" ? "" : "warn"}">${label} ${top.setup}</span>
+        <div class="ticker">${top.ticker}</div>
+        <div class="sub">${top.name || ""}</div>
+        <div class="scorebar"><span style="width:${top.pro2.value}%"></span></div>
+        <div class="chips">
+          <span class="chip">Conviction ${top.pro2.value}</span>
+          <span class="chip">Edge ${top.edgeScore ?? 0}</span>
+          <span class="chip">RS ${fmt(top.rsVsSpy20d)}%</span>
+          <span class="chip">Win ${top.confidenceLabel || "N/A"}</span>
+          <span class="chip">Entry ${fmt(top.entryChangePct)}%</span>
+        </div>`;
+      const picks = rows.slice(0, num(els.topN.value));
+      const risk = picks.length ? 100 / picks.length : 0;
+      els.tradePlan.innerHTML = `
+        <h2>Execution Plan</h2>
+        <p class="sub">Mode is top ${els.topN.value}. Split planned swing capital equally across the qualified picks. Suggested allocation view: ${fmt(risk, 0)}% of swing sleeve per pick, while still risking only 0.5%-1.0% of account to each stop.</p>
+        <div class="chips">
+          <span class="chip">Stop ${fmt(top.stopLoss)}</span>
+          <span class="chip">Target 1 ${fmt(top.target1)}</span>
+          <span class="chip">Target 2 ${fmt(top.target2)}</span>
+          <span class="chip">${top.holdWindow}</span>
+        </div>
+        <p class="sub" style="margin-top:12px">${top.pro2.reasons.join("; ") || "Balanced setup, but no standout reason tag."}</p>`;
+    }
+    function render() {
+      els.convictionValue.textContent = els.minConviction.value;
+      els.modeLabel.textContent = `Top ${els.topN.value}`;
+      const rows = state.scored.filter(passes);
+      const selected = rows.slice(0, num(els.topN.value));
+      els.candidateCount.textContent = state.scored.length;
+      els.qualifiedCount.textContent = rows.length;
+      els.aplusCount.textContent = rows.filter(r => r.pro2.value >= 80).length;
+      els.avgConviction.textContent = selected.length ? Math.round(selected.reduce((s, r) => s + r.pro2.value, 0) / selected.length) : "-";
+      els.decisionLabel.textContent = selected.length ? `${selected.length} setup${selected.length > 1 ? "s" : ""}` : "No Trade";
+      renderBest(rows);
+      els.body.innerHTML = rows.length ? rows.slice(0, 30).map((row, index) => `
+        <tr>
+          <td>${index + 1}</td>
+          <td><strong>${row.ticker}</strong><br><span class="sub">${row.name || ""}</span></td>
+          <td><span class="tag">${row.setup}</span></td>
+          <td><strong>${row.pro2.value}</strong></td>
+          <td>${Math.round(row.pro2.components.technical)}</td>
+          <td>${Math.round(row.pro2.components.rs)}<br><span class="sub">${fmt(row.rsVsSpy20d)}%</span></td>
+          <td>${Math.round(row.pro2.components.history)}<br><span class="sub">${row.confidenceLabel || "N/A"} ${row.setupWins || 0}W/${row.setupLosses || 0}L/${row.setupNeutral || 0}N</span></td>
+          <td>${row.pro2.extra.news?.label || "Unavailable"}</td>
+          <td>${row.pro2.extra.options?.label || "Unavailable"}<br><span class="sub">OI ${row.pro2.extra.options?.callPutOi ?? "-"}</span></td>
+          <td>${Math.round(row.pro2.components.risk)}<br><span class="sub">ATR ${fmt(row.atrPct)}%</span></td>
+          <td>${fmt(row.entryChangePct)}%</td>
+          <td>${fmt(row.stopLoss)}</td>
+          <td>${fmt(row.target1)}</td>
+          <td>${row.holdWindow}</td>
+          <td class="reason">${row.pro2.reasons.join("; ")}</td>
+        </tr>`).join("") : '<tr><td colspan="15" class="empty">No setup passed the active filters.</td></tr>';
+    }
+    async function boot() {
+      try {
+        const report = await fetch(`stocks-edge.html?v=${Date.now()}`, { cache: "no-store" });
+        if (!report.ok) throw new Error(`Stock report fetch failed: ${report.status}`);
+        const html = await report.text();
+        state.rows = rowsFromReport(html);
+        els.reportDate.textContent = updatedFromReport(html);
+        try {
+          const enriched = await fetch(`swingbot-pro-v2-data.json?v=${Date.now()}`, { cache: "no-store" });
+          state.enrichment = enriched.ok ? await enriched.json() : { items: {} };
+        } catch (_) {
+          state.enrichment = { items: {} };
+        }
+        const source = state.enrichment.source || "technical-only";
+        els.enrichmentStatus.textContent = source === "massive" ? "News/OI" : "Technical";
+        scoreRows();
+        render();
+      } catch (error) {
+        els.bestTrade.innerHTML = `<span class="tag bad">Load error</span><p class="sub">${error.message}</p>`;
+      }
+    }
+    [els.topN, els.minConviction, els.minWinRate, els.maxAtr, els.entryWindow, els.search, els.requireNews, els.requireOptions, els.hideNoHistory]
+      .forEach(el => { el.addEventListener("input", render); el.addEventListener("change", render); });
+    boot();
+  </script>
+</body>
+</html>

@@ -1,0 +1,456 @@
+{
+  "generatedAt": "2026-08-27T23:16:02+00:00",
+  "source": "technical-only",
+  "items": {
+    "HOOD": {
+      "quality": {
+        "available": true,
+        "score": 6,
+        "label": "Strong"
+      },
+      "news": {
+        "available": false,
+        "score": 0,
+        "label": "No API key",
+        "headlines": []
+      },
+      "options": {
+        "available": false,
+        "score": 0,
+        "label": "No API key"
+      }
+    },
+    "ROKU": {
+      "quality": {
+        "available": true,
+        "score": 9,
+        "label": "Strong"
+      },
+      "news": {
+        "available": false,
+        "score": 0,
+        "label": "No API key",
+        "headlines": []
+      },
+      "options": {
+        "available": false,
+        "score": 0,
+        "label": "No API key"
+      }
+    },
+    "AMAT": {
+      "quality": {
+        "available": true,
+        "score": 2,
+        "label": "Neutral"
+      },
+      "news": {
+        "available": false,
+        "score": 0,
+        "label": "No API key",
+        "headlines": []
+      },
+      "options": {
+        "available": false,
+        "score": 0,
+        "label": "No API key"
+      }
+    },
+    "GPC": {
+      "quality": {
+        "available": true,
+        "score": 4,
+        "label": "Neutral"
+      },
+      "news": {
+        "available": false,
+        "score": 0,
+        "label": "No API key",
+        "headlines": []
+      },
+      "options": {
+        "available": false,
+        "score": 0,
+        "label": "No API key"
+      }
+    },
+    "ELV": {
+      "quality": {
+        "available": true,
+        "score": 9,
+        "label": "Strong"
+      },
+      "news": {
+        "available": false,
+        "score": 0,
+        "label": "No API key",
+        "headlines": []
+      },
+      "options": {
+        "available": false,
+        "score": 0,
+        "label": "No API key"
+      }
+    },
+    "AEP": {
+      "quality": {
+        "available": true,
+        "score": 10,
+        "label": "Strong"
+      },
+      "news": {
+        "available": false,
+        "score": 0,
+        "label": "No API key",
+        "headlines": []
+      },
+      "options": {
+        "available": false,
+        "score": 0,
+        "label": "No API key"
+      }
+    },
+    "DUK": {
+      "quality": {
+        "available": true,
+        "score": 10,
+        "label": "Strong"
+      },
+      "news": {
+        "available": false,
+        "score": 0,
+        "label": "No API key",
+        "headlines": []
+      },
+      "options": {
+        "available": false,
+        "score": 0,
+        "label": "No API key"
+      }
+    },
+    "TMO": {
+      "quality": {
+        "available": true,
+        "score": 6,
+        "label": "Strong"
+      },
+      "news": {
+        "available": false,
+        "score": 0,
+        "label": "No API key",
+        "headlines": []
+      },
+      "options": {
+        "available": false,
+        "score": 0,
+        "label": "No API key"
+      }
+    },
+    "ALAB": {
+      "quality": {
+        "available": true,
+        "score": 2,
+        "label": "Neutral"
+      },
+      "news": {
+        "available": false,
+        "score": 0,
+        "label": "No API key",
+        "headlines": []
+      },
+      "options": {
+        "available": false,
+        "score": 0,
+        "label": "No API key"
+      }
+    },
+    "FTNT": {
+      "quality": {
+        "available": true,
+        "score": 5,
+        "label": "Neutral"
+      },
+      "news": {
+        "available": false,
+        "score": 0,
+        "label": "No API key",
+        "headlines": []
+      },
+      "options": {
+        "available": false,
+        "score": 0,
+        "label": "No API key"
+      }
+    },
+    "PANW": {
+      "quality": {
+        "available": true,
+        "score": 4,
+        "label": "Neutral"
+      },
+      "news": {
+        "available": false,
+        "score": 0,
+        "label": "No API key",
+        "headlines": []
+      },
+      "options": {
+        "available": false,
+        "score": 0,
+        "label": "No API key"
+      }
+    },
+    "AAPL": {
+      "quality": {
+        "available": true,
+        "score": 3,
+        "label": "Neutral"
+      },
+      "news": {
+        "available": false,
+        "score": 0,
+        "label": "No API key",
+        "headlines": []
+      },
+      "options": {
+        "available": false,
+        "score": 0,
+        "label": "No API key"
+      }
+    },
+    "RDDT": {
+      "quality": {
+        "available": true,
+        "score": 1,
+        "label": "Weak"
+      },
+      "news": {
+        "available": false,
+        "score": 0,
+        "label": "No API key",
+        "headlines": []
+      },
+      "options": {
+        "available": false,
+        "score": 0,
+        "label": "No API key"
+      }
+    },
+    "DHR": {
+      "quality": {
+        "available": true,
+        "score": 1,
+        "label": "Weak"
+      },
+      "news": {
+        "available": false,
+        "score": 0,
+        "label": "No API key",
+        "headlines": []
+      },
+      "options": {
+        "available": false,
+        "score": 0,
+        "label": "No API key"
+      }
+    },
+    "CSX": {
+      "quality": {
+        "available": true,
+        "score": 7,
+        "label": "Strong"
+      },
+      "news": {
+        "available": false,
+        "score": 0,
+        "label": "No API key",
+        "headlines": []
+      },
+      "options": {
+        "available": false,
+        "score": 0,
+        "label": "No API key"
+      }
+    },
+    "RTX": {
+      "quality": {
+        "available": true,
+        "score": 3,
+        "label": "Neutral"
+      },
+      "news": {
+        "available": false,
+        "score": 0,
+        "label": "No API key",
+        "headlines": []
+      },
+      "options": {
+        "available": false,
+        "score": 0,
+        "label": "No API key"
+      }
+    },
+    "NU": {
+      "quality": {
+        "available": true,
+        "score": 6,
+        "label": "Strong"
+      },
+      "news": {
+        "available": false,
+        "score": 0,
+        "label": "No API key",
+        "headlines": []
+      },
+      "options": {
+        "available": false,
+        "score": 0,
+        "label": "No API key"
+      }
+    },
+    "WFC": {
+      "quality": {
+        "available": true,
+        "score": 5,
+        "label": "Neutral"
+      },
+      "news": {
+        "available": false,
+        "score": 0,
+        "label": "No API key",
+        "headlines": []
+      },
+      "options": {
+        "available": false,
+        "score": 0,
+        "label": "No API key"
+      }
+    },
+    "MRK": {
+      "quality": {
+        "available": true,
+        "score": 9,
+        "label": "Strong"
+      },
+      "news": {
+        "available": false,
+        "score": 0,
+        "label": "No API key",
+        "headlines": []
+      },
+      "options": {
+        "available": false,
+        "score": 0,
+        "label": "No API key"
+      }
+    },
+    "JPM": {
+      "quality": {
+        "available": true,
+        "score": 9,
+        "label": "Strong"
+      },
+      "news": {
+        "available": false,
+        "score": 0,
+        "label": "No API key",
+        "headlines": []
+      },
+      "options": {
+        "available": false,
+        "score": 0,
+        "label": "No API key"
+      }
+    },
+    "BAC": {
+      "quality": {
+        "available": true,
+        "score": 7,
+        "label": "Strong"
+      },
+      "news": {
+        "available": false,
+        "score": 0,
+        "label": "No API key",
+        "headlines": []
+      },
+      "options": {
+        "available": false,
+        "score": 0,
+        "label": "No API key"
+      }
+    },
+    "BKNG": {
+      "quality": {
+        "available": true,
+        "score": 6,
+        "label": "Strong"
+      },
+      "news": {
+        "available": false,
+        "score": 0,
+        "label": "No API key",
+        "headlines": []
+      },
+      "options": {
+        "available": false,
+        "score": 0,
+        "label": "No API key"
+      }
+    },
+    "LLY": {
+      "quality": {
+        "available": true,
+        "score": 5,
+        "label": "Neutral"
+      },
+      "news": {
+        "available": false,
+        "score": 0,
+        "label": "No API key",
+        "headlines": []
+      },
+      "options": {
+        "available": false,
+        "score": 0,
+        "label": "No API key"
+      }
+    },
+    "BA": {
+      "quality": {
+        "available": true,
+        "score": 6,
+        "label": "Strong"
+      },
+      "news": {
+        "available": false,
+        "score": 0,
+        "label": "No API key",
+        "headlines": []
+      },
+      "options": {
+        "available": false,
+        "score": 0,
+        "label": "No API key"
+      }
+    },
+    "V": {
+      "quality": {
+        "available": true,
+        "score": 4,
+        "label": "Neutral"
+      },
+      "news": {
+        "available": false,
+        "score": 0,
+        "label": "No API key",
+        "headlines": []
+      },
+      "options": {
+        "available": false,
+        "score": 0,
+        "label": "No API key"
+      }
+    }
+  }
+}
