@@ -104,7 +104,7 @@
     }
     .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
     .tab.active { background: var(--green); }
-    .metrics { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+    .metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
     .metric { padding: 13px; }
     .label { color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-size: .72rem; }
     .value { font-size: 1.55rem; font-weight: 850; margin-top: 5px; }
@@ -129,6 +129,15 @@
     .row-actions { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
     .scorebar { height: 8px; border-radius: 999px; background: #e8e1d2; overflow: hidden; margin: 10px 0; }
     .scorebar span { display:block; height:100%; background: linear-gradient(90deg, var(--amber), var(--green)); }
+    .capital-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+    .mini {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      background: #fff;
+    }
+    .mini strong { display: block; font-size: 1.1rem; margin-top: 4px; }
+    .signal-line { display: flex; gap: 7px; flex-wrap: wrap; margin: 9px 0; }
     .tablewrap { overflow: auto; max-height: 66vh; border-radius: 12px; border: 1px solid var(--line); background: var(--panel); }
     table { width: 100%; min-width: 1100px; border-collapse: collapse; }
     th, td { padding: 9px 8px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; font-size: .88rem; }
@@ -212,8 +221,18 @@
           <label>Risk Per Trade %
             <input id="riskPct" type="number" min=".1" max="5" step=".1" value="1">
           </label>
-          <label>Swing Capital %
-            <input id="swingCapitalPct" type="number" min="1" max="100" step="1" value="60">
+          <label>Current Account Swing %
+            <input id="swingCapitalPct" type="number" min="1" max="100" step="1" value="100">
+          </label>
+          <label>Monthly Contribution
+            <input id="monthlyContribution" type="number" min="0" step="100" value="5000">
+          </label>
+          <label>Deployment Mode
+            <select id="deployPct">
+              <option value="100" selected>All-in 100%</option>
+              <option value="80">Aggressive 80%</option>
+              <option value="60">Balanced 60%</option>
+            </select>
           </label>
           <button type="button" onclick="saveSettings()">Save Rules</button>
           <button class="secondary" type="button" onclick="exportJournal()">Export Journal</button>
@@ -235,9 +254,17 @@
           <article class="metric"><div class="label">Closed P/L</div><div class="value" id="closedPnl">$0</div></article>
           <article class="metric"><div class="label">Win Rate</div><div class="value" id="winRate">-</div></article>
           <article class="metric"><div class="label">Cash Slots</div><div class="value" id="cashSlots">0</div></article>
+          <article class="metric"><div class="label">Monthly Add</div><div class="value" id="monthlyAdd">$0</div></article>
+          <article class="metric"><div class="label">Swing Sleeve</div><div class="value" id="swingSleeve">$0</div></article>
+          <article class="metric"><div class="label">Position Budget</div><div class="value" id="positionBudget">$0</div></article>
+          <article class="metric"><div class="label">Risk / Trade</div><div class="value" id="riskBudget">$0</div></article>
         </section>
 
         <section id="view-plan" class="view">
+          <section class="panel" style="margin-top:12px">
+            <h2>Capital Plan</h2>
+            <div class="capital-grid" id="capitalPlan"></div>
+          </section>
           <div class="split">
             <div class="panel">
               <h2>Monday Core List</h2>
@@ -252,7 +279,7 @@
             <h2>Ignore / Chased / Weak</h2>
             <div class="tablewrap">
               <table>
-                <thead><tr><th>Ticker</th><th>Setup</th><th>Conviction</th><th>Reason</th><th>Since Entry</th><th>ATR</th></tr></thead>
+                <thead><tr><th>Ticker</th><th>Setup</th><th>Conviction</th><th>Reason</th><th>Options/OI</th><th>Since Entry</th><th>ATR</th></tr></thead>
                 <tbody id="ignoreRows"></tbody>
               </table>
             </div>
@@ -264,7 +291,7 @@
             <h2>Open Position Tracker</h2>
             <div class="tablewrap">
               <table>
-                <thead><tr><th>Ticker</th><th>Status</th><th>Entry</th><th>Current</th><th>Shares</th><th>P/L</th><th>Stop</th><th>T1</th><th>T2</th><th>Hold</th><th>Actions</th></tr></thead>
+                <thead><tr><th>Ticker</th><th>Status</th><th>Exit Plan</th><th>Entry</th><th>Current</th><th>Shares</th><th>P/L</th><th>Stop</th><th>T1</th><th>T2</th><th>Hold</th><th>Actions</th></tr></thead>
                 <tbody id="positionRows"></tbody>
               </table>
             </div>
@@ -329,6 +356,7 @@
             <option>Hold Window Expired</option>
             <option>Manual Risk Cut</option>
             <option>Setup Broken</option>
+            <option>Options/OI Turned Bearish</option>
           </select>
         </label>
       </div>
@@ -363,7 +391,9 @@
         maxAtr: 6,
         accountSize: 15000,
         riskPct: 1,
-        swingCapitalPct: 60
+        swingCapitalPct: 100,
+        monthlyContribution: 5000,
+        deployPct: 100
       }),
       positions: loadJson(STORAGE.positions, []),
       journal: loadJson(STORAGE.journal, []),
@@ -438,6 +468,61 @@
       if (row.atrPct > 6) reasons.push("high ATR");
       return { value, reasons, extra, components: c };
     }
+    function enriched(row) {
+      return state.enrichment.items?.[row.ticker] || {};
+    }
+    function ratioLabel(value) {
+      return Number.isFinite(Number(value)) ? fmt(value, 2) : "N/A";
+    }
+    function optionsGrade(row) {
+      const options = enriched(row).options || {};
+      if (!options.available) {
+        return { label: "No OI", cls: "warn", score: 0, reason: "Options/OI unavailable; use smaller size or wait for confirmation." };
+      }
+      const score = Number(options.score || 0);
+      const callPutOi = Number(options.callPutOi || 0);
+      const callPutVolume = Number(options.callPutVolume || 0);
+      const bullish = score >= 2 || callPutOi >= 1.25 || callPutVolume >= 1.25;
+      const bearish = score <= -2 || (callPutOi > 0 && callPutOi < .8) || (callPutVolume > 0 && callPutVolume < .8);
+      if (bullish && !bearish) {
+        return { label: "Strong OI", cls: "", score, reason: `Calls lead puts: OI ${ratioLabel(callPutOi)}, volume ${ratioLabel(callPutVolume)}.` };
+      }
+      if (bearish && !bullish) {
+        return { label: "Bearish OI", cls: "bad", score, reason: `Options flow disagrees: OI ${ratioLabel(callPutOi)}, volume ${ratioLabel(callPutVolume)}.` };
+      }
+      return { label: "Mixed OI", cls: "warn", score, reason: `Options signal is mixed: OI ${ratioLabel(callPutOi)}, volume ${ratioLabel(callPutVolume)}.` };
+    }
+    function newsGrade(row) {
+      const news = enriched(row).news || {};
+      return news.available ? (news.label || "Neutral") : "No News";
+    }
+    function entryDecision(row) {
+      const opt = optionsGrade(row);
+      const news = newsGrade(row);
+      if (!row.goodForSwing || row.setup === "Avoid") return { label: "Avoid", cls: "bad", reason: "Not a valid swing setup." };
+      if (row.entryChangePct > 2) return { label: "Do Not Chase", cls: "bad", reason: "Already extended from list entry." };
+      if (row.entryChangePct < -3) return { label: "Broken Setup", cls: "bad", reason: "The move has already failed from entry." };
+      if (row.atrPct > state.settings.maxAtr) return { label: "Too Volatile", cls: "warn", reason: "ATR is above the rule limit." };
+      if (news === "Negative") return { label: "News Risk", cls: "bad", reason: "News tone is negative." };
+      if (opt.label === "Bearish OI") return { label: "Wait", cls: "bad", reason: opt.reason };
+      if (row.conviction >= 75 && row.passCore && opt.label === "Strong OI") return { label: "Best Entry", cls: "", reason: "Technical, history, risk, and options/OI are aligned." };
+      if (row.passCore) return { label: "Valid Entry", cls: "warn", reason: "Core rules pass, but size normally unless confirmation improves." };
+      return { label: "Watch Only", cls: "warn", reason: "One or more filters failed." };
+    }
+    function capitalPlan() {
+      const account = Number(state.settings.accountSize || 0);
+      const monthly = Number(state.settings.monthlyContribution || 0);
+      const swingPct = Number(state.settings.swingCapitalPct || 100);
+      const deployPct = Number(state.settings.deployPct || 100);
+      const maxOpen = Math.max(1, Number(state.settings.maxOpen || 1));
+      const swingSleeve = account * swingPct / 100;
+      const reserve = Math.max(0, account - swingSleeve);
+      const perSlot = swingSleeve / maxOpen;
+      const monthlySwing = monthly * deployPct / 100;
+      const monthlyReserve = Math.max(0, monthly - monthlySwing);
+      const riskDollars = account * Number(state.settings.riskPct || 0) / 100;
+      return { account, monthly, deployPct, maxOpen, swingSleeve, reserve, perSlot, monthlySwing, monthlyReserve, riskDollars };
+    }
     function settingsFromInputs() {
       return {
         planSize: Number(document.getElementById("planSize").value),
@@ -447,7 +532,9 @@
         maxAtr: Number(document.getElementById("maxAtr").value),
         accountSize: Number(document.getElementById("accountSize").value),
         riskPct: Number(document.getElementById("riskPct").value),
-        swingCapitalPct: Number(document.getElementById("swingCapitalPct").value)
+        swingCapitalPct: Number(document.getElementById("swingCapitalPct").value),
+        monthlyContribution: Number(document.getElementById("monthlyContribution").value),
+        deployPct: Number(document.getElementById("deployPct").value)
       };
     }
     function applySettingsToInputs() {
@@ -480,13 +567,15 @@
     }
     function passesCore(row) {
       const s = state.settings;
+      const opt = optionsGrade(row);
+      const news = newsGrade(row);
       if (!row.goodForSwing || row.setup === "Avoid") return false;
       if (row.conviction < s.minConviction) return false;
       if (row.atrPct > s.maxAtr) return false;
       if (row.setupConfidence == null) return false;
       if (row.setupConfidence < s.minWin) return false;
       if (row.entryChangePct < -3 || row.entryChangePct > 2) return false;
-      if (row.newsLabel === "Negative" || row.optionsLabel === "Bearish") return false;
+      if (news === "Negative" || opt.label === "Bearish OI") return false;
       return true;
     }
     function buildCandidates() {
@@ -501,6 +590,7 @@
             reasons: pro.reasons,
             newsLabel: pro.extra.news?.label || "Neutral",
             optionsLabel: pro.extra.options?.label || "Mixed",
+            optionGrade: optionsGrade(row),
             passCore: false
           };
         })
@@ -531,11 +621,17 @@
     function cashSlots() { return Math.max(0, state.settings.maxOpen - openTickers().size); }
     function candidateCard(row, mode) {
       const size = suggestedShares(row);
+      const entry = entryDecision(row);
+      const opt = optionsGrade(row);
+      const dollars = size.shares * Number(row.close || 0);
       return `<article class="card">
-        <div class="ticker-line"><div><div class="ticker">${row.ticker}</div><div class="sub">${row.name || ""}</div></div><span class="tag ${row.passCore ? "" : "warn"}">${mode}</span></div>
+        <div class="ticker-line"><div><div class="ticker">${row.ticker}</div><div class="sub">${row.name || ""}</div></div><span class="tag ${entry.cls}">${entry.label}</span></div>
         <div class="scorebar"><span style="width:${row.conviction}%"></span></div>
+        <div class="signal-line"><span class="tag ${row.passCore ? "" : "warn"}">${mode}</span><span class="tag ${opt.cls}">${opt.label}</span><span class="tag ${newsGrade(row) === "Negative" ? "bad" : newsGrade(row) === "Positive" ? "" : "warn"}">News ${newsGrade(row)}</span></div>
         <div class="sub">Conviction ${row.conviction} | ${row.setup} | Win ${row.confidenceLabel || "N/A"} | Edge ${row.edgeScore ?? 0} | Entry ${fmt(row.entryChangePct)}%</div>
         <div class="sub">Stop ${fmt(row.stopLoss)} | T1 ${fmt(row.target1)} | T2 ${fmt(row.target2)} | ${row.holdWindow}</div>
+        <div class="sub">Suggested ${size.shares} shares (${money(dollars)}), max trade risk ${money(size.tradeRisk)}. ${entry.reason}</div>
+        <div class="sub">${opt.reason}</div>
         <div class="sub">${row.reasons.join("; ") || "balanced setup"}</div>
         <div class="row-actions">
           <button class="good" type="button" onclick="openPositionDialog('${row.ticker}', ${size.shares})">Add Position</button>
@@ -544,12 +640,13 @@
       </article>`;
     }
     function suggestedShares(row) {
-      const riskDollars = state.settings.accountSize * (state.settings.riskPct / 100);
+      const plan = capitalPlan();
+      const riskDollars = plan.riskDollars;
       const perShareRisk = Math.max(.01, row.close - row.stopLoss);
       const byRisk = Math.floor(riskDollars / perShareRisk);
-      const sleeve = state.settings.accountSize * (state.settings.swingCapitalPct / 100);
-      const byCapital = Math.floor((sleeve / Math.max(1, state.settings.maxOpen)) / row.close);
-      return { shares: Math.max(1, Math.min(byRisk || 1, byCapital || 1)), riskDollars, perShareRisk };
+      const byCapital = Math.floor(plan.perSlot / row.close);
+      const shares = Math.max(1, Math.min(byRisk || 1, byCapital || 1));
+      return { shares, riskDollars, perShareRisk, tradeRisk: shares * perShareRisk, capital: shares * Number(row.close || 0) };
     }
     function openPositionDialog(ticker, shares = 1) {
       const row = state.candidates.find(c => c.ticker === ticker) || {};
@@ -638,15 +735,30 @@
       if (row && !row.passCore && row.entryChangePct < -3) return { label: "Broken", cls: "bad-text" };
       return { label: "Hold", cls: "ok" };
     }
+    function exitPlan(p) {
+      const row = state.candidates.find(c => c.ticker === p.ticker);
+      const current = row?.close || p.entryPrice;
+      const opt = row ? optionsGrade(row) : null;
+      if (current <= p.stop) return { label: "Exit", cls: "bad-text", note: `Close is at or below stop ${fmt(p.stop)}.` };
+      if (current >= p.target2) return { label: "Sell Remainder", cls: "ok", note: `Target 2 reached at ${fmt(p.target2)}.` };
+      if (current >= p.target1) return { label: "Take Partial", cls: "ok", note: "Take profit on part of the position and raise stop near entry." };
+      if (opt?.label === "Bearish OI") return { label: "Reduce / Review", cls: "bad-text", note: opt.reason };
+      if (p.maxHoldDate && todayIso() >= p.maxHoldDate) return { label: "Time Exit", cls: "warn-text", note: "Hold window expired; exit unless setup is still improving." };
+      if (row && !row.passCore) return { label: "Tighten Stop", cls: "warn-text", note: "Ticker no longer passes core filters." };
+      return { label: "Hold", cls: "ok", note: "No stop, target, time, or options/OI exit signal." };
+    }
     function createAlerts() {
       for (const p of state.positions.filter(p => p.status === "open")) {
         const row = state.candidates.find(c => c.ticker === p.ticker);
         if (!row) continue;
+        const exit = exitPlan(p);
         if (row.close <= p.stop) addAlert("bad", `${p.ticker} stop alert`, `Report close ${fmt(row.close)} is at/below stop ${fmt(p.stop)}`, true);
         if (row.close >= p.target1) addAlert("good", `${p.ticker} target alert`, `Report close ${fmt(row.close)} is above T1 ${fmt(p.target1)}`, true);
+        if (exit.label === "Reduce / Review") addAlert("bad", `${p.ticker} options/OI warning`, exit.note, true);
+        if (exit.label === "Time Exit") addAlert("info", `${p.ticker} hold window review`, exit.note, true);
       }
-      const fresh = state.candidates.filter(c => c.passCore && c.daysInList === 1).slice(0, 3);
-      for (const row of fresh) addAlert("good", `Fresh candidate: ${row.ticker}`, `${row.setup} conviction ${row.conviction}`, true);
+      const fresh = state.candidates.filter(c => c.passCore && c.daysInList === 1 && optionsGrade(c).label !== "Bearish OI").slice(0, 3);
+      for (const row of fresh) addAlert("good", `Fresh candidate: ${row.ticker}`, `${row.setup} conviction ${row.conviction}; ${optionsGrade(row).label}`, true);
     }
     function addAlert(type, title, message, dedupe = false) {
       const key = `${todayIso()}|${title}|${message}`;
@@ -700,6 +812,7 @@
     }
     function renderMetrics() {
       const open = state.positions.filter(p => p.status === "open");
+      const plan = capitalPlan();
       const openPnl = open.reduce((sum, p) => {
         const row = state.candidates.find(c => c.ticker === p.ticker);
         return sum + (((row?.close || p.entryPrice) - p.entryPrice) * p.shares);
@@ -713,10 +826,20 @@
       document.getElementById("closedPnl").className = `value ${closedPnl >= 0 ? "ok" : "bad-text"}`;
       document.getElementById("winRate").textContent = state.journal.length ? `${fmt(wins / state.journal.length * 100, 1)}%` : "-";
       document.getElementById("cashSlots").textContent = cashSlots();
+      document.getElementById("monthlyAdd").textContent = money(plan.monthly);
+      document.getElementById("swingSleeve").textContent = money(plan.swingSleeve);
+      document.getElementById("positionBudget").textContent = money(plan.perSlot);
+      document.getElementById("riskBudget").textContent = money(plan.riskDollars);
     }
     function renderPlan() {
+      const cap = capitalPlan();
       const plan = weeklyPlanRows();
       const open = openTickers();
+      document.getElementById("capitalPlan").innerHTML = `
+        <div class="mini"><span class="label">Deploy Monthly</span><strong>${money(cap.monthlySwing)}</strong><div class="sub">${cap.deployPct}% of each ${money(cap.monthly)} add</div></div>
+        <div class="mini"><span class="label">Reserve Monthly</span><strong>${money(cap.monthlyReserve)}</strong><div class="sub">Kept for ETFs/cash or better entries</div></div>
+        <div class="mini"><span class="label">Per Position</span><strong>${money(cap.perSlot)}</strong><div class="sub">${cap.maxOpen} max open positions</div></div>
+        <div class="mini"><span class="label">Risk Cap</span><strong>${money(cap.riskDollars)}</strong><div class="sub">${fmt(state.settings.riskPct, 1)}% account risk per trade</div></div>`;
       document.getElementById("weeklyPlan").innerHTML = plan.length ? plan.map(row => candidateCard(row, open.has(row.ticker) ? "Holding" : "Core")).join("") : `<article class="card"><div class="ticker">No Core Trade</div><div class="sub">The current rules did not produce a clean Monday plan. Keep cash available.</div></article>`;
       const planTickers = new Set(plan.map(p => p.ticker));
       const add = state.candidates.filter(c => c.passCore && !planTickers.has(c.ticker) && !open.has(c.ticker)).slice(0, cashSlots() || 3);
@@ -724,7 +847,8 @@
       const ignored = state.candidates.filter(c => !c.passCore).slice(0, 18);
       document.getElementById("ignoreRows").innerHTML = ignored.map(row => {
         const reason = row.entryChangePct > 2 ? "Chase risk" : row.entryChangePct < -3 ? "Broken pullback" : row.atrPct > state.settings.maxAtr ? "ATR too high" : row.setupConfidence == null ? "No history" : row.setupConfidence < state.settings.minWin ? "Weak history" : row.conviction < state.settings.minConviction ? "Low conviction" : "News/options/risk";
-        return `<tr><td><strong>${row.ticker}</strong></td><td>${row.setup}</td><td>${row.conviction}</td><td>${reason}</td><td>${fmt(row.entryChangePct)}%</td><td>${fmt(row.atrPct)}%</td></tr>`;
+        const opt = optionsGrade(row);
+        return `<tr><td><strong>${row.ticker}</strong></td><td>${row.setup}</td><td>${row.conviction}</td><td>${reason}</td><td><span class="tag ${opt.cls}">${opt.label}</span><br><span class="sub">${opt.reason}</span></td><td>${fmt(row.entryChangePct)}%</td><td>${fmt(row.atrPct)}%</td></tr>`;
       }).join("");
     }
     function renderPositions() {
@@ -735,9 +859,11 @@
         const pnl = (current - p.entryPrice) * p.shares;
         const ret = ((current / p.entryPrice) - 1) * 100;
         const status = positionStatus(p);
+        const exit = exitPlan(p);
         return `<tr>
           <td><strong>${p.ticker}</strong><br><span class="sub">${p.setup || ""} ${p.conviction ? `| C${p.conviction}` : ""}</span></td>
           <td class="${status.cls}">${status.label}</td>
+          <td class="${exit.cls}">${exit.label}<br><span class="sub">${exit.note}</span></td>
           <td>${p.entryDate}<br>${fmt(p.entryPrice)}</td>
           <td>${fmt(current)}<br><span class="${pnl >= 0 ? "ok" : "bad-text"}">${fmt(ret)}%</span></td>
           <td>${fmt(p.shares, 2)}</td>
@@ -748,7 +874,7 @@
           <td>${p.maxHoldDate || "-"}</td>
           <td><button type="button" onclick="openCloseDialog('${p.id}')">Close</button> <button class="secondary" type="button" onclick="deletePosition('${p.id}')">Delete</button></td>
         </tr>`;
-      }).join("") : `<tr><td colspan="11">No open swing positions.</td></tr>`;
+      }).join("") : `<tr><td colspan="12">No open swing positions.</td></tr>`;
     }
     function renderAlerts() {
       document.getElementById("alerts").innerHTML = state.alerts.length ? state.alerts.slice(0, 30).map(a => `<div class="alert ${a.type === "bad" ? "bad" : a.type === "good" ? "good" : ""}"><strong>${a.title}</strong><div class="sub">${a.message}</div><div class="sub">${new Date(a.at).toLocaleString()}</div></div>`).join("") : `<div class="alert">No alerts yet.</div>`;
@@ -784,7 +910,7 @@
         document.querySelectorAll(".view").forEach(view => view.classList.toggle("hidden", view.id !== `view-${state.activeView}`));
       });
     });
-    ["planSize","maxOpen","minConviction","minWin","maxAtr","accountSize","riskPct","swingCapitalPct"].forEach(id => {
+    ["planSize","maxOpen","minConviction","minWin","maxAtr","accountSize","riskPct","swingCapitalPct","monthlyContribution","deployPct"].forEach(id => {
       document.getElementById(id).addEventListener("input", () => {
         state.settings = settingsFromInputs();
         saveJson(STORAGE.settings, state.settings);
