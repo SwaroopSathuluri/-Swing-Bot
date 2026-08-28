@@ -42,6 +42,11 @@ jobs:
           cp swingbot-pro-v2.html site/swingbot-pro-v2.html
           cp swingbot-pro-v2-data.json site/swingbot-pro-v2-data.json
           cp swing-command-center.html site/swing-command-center.html
+          cp swing-command-manifest.webmanifest site/swing-command-manifest.webmanifest
+          cp swing-command-sw.js site/swing-command-sw.js
+          cp swing-command-icon.svg site/swing-command-icon.svg
+          cp swing-command-icon-192.png site/swing-command-icon-192.png
+          cp swing-command-icon-512.png site/swing-command-icon-512.png
           cp stocks.html site/stocks.html
           cp stocks-edge.html site/stocks-edge.html
           cp etfs.html site/etfs.html

@@ -1,0 +1,43 @@
+{
+  "name": "Swing Trading Command Center",
+  "short_name": "Swing Bot",
+  "description": "Swing Bot command center for weekly setup selection, position tracking, capital sizing, and exit alerts.",
+  "start_url": "swing-command-center.html?v=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f2ec",
+  "theme_color": "#087865",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "swing-command-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "swing-command-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "swing-command-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Weekly Plan",
+      "short_name": "Plan",
+      "url": "swing-command-center.html?v=pwa#plan"
+    },
+    {
+      "name": "Positions",
+      "short_name": "Positions",
+      "url": "swing-command-center.html?v=pwa#positions"
+    }
+  ]
+}

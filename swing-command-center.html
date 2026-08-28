@@ -3,6 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#087865">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Swing Bot">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="swing-command-manifest.webmanifest">
+  <link rel="apple-touch-icon" href="swing-command-icon-192.png">
   <title>Swing Trading Command Center</title>
   <style>
     :root {
@@ -179,6 +185,7 @@
         <p>Weekly swing workflow for the bot: build the Monday plan, avoid daily churn, add only when cash is free, track active positions, and get exit alerts for stop, target, stale hold window, or broken setup.</p>
         <div class="hero-actions">
           <button type="button" onclick="refreshReports()">Refresh Signals</button>
+          <button class="secondary" id="installAppBtn" type="button" onclick="installApp()">Install App</button>
           <button class="secondary" type="button" onclick="freezeWeeklyPlan()">Freeze Weekly Plan</button>
           <button class="secondary" type="button" onclick="requestNotifications()">Enable Notifications</button>
           <a class="link-btn secondary" target="_blank" rel="noreferrer" href="https://swaroopsathuluri.github.io/-Swing-Bot/swingbot-pro-v2.html">Pro v2</a>
@@ -370,6 +377,7 @@
   <script>
     const REPORT_URL = "https://swaroopsathuluri.github.io/-Swing-Bot/stocks-edge.html?v=";
     const ENRICH_URL = "https://swaroopsathuluri.github.io/-Swing-Bot/swingbot-pro-v2-data.json?v=";
+    let deferredInstallPrompt = null;
     const STORAGE = {
       settings: "swingCommandSettings.v1",
       positions: "swingCommandPositions.v1",
@@ -780,6 +788,22 @@
         render();
       });
     }
+    function installApp() {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        deferredInstallPrompt.userChoice.finally(() => {
+          deferredInstallPrompt = null;
+          renderShell();
+        });
+        return;
+      }
+      const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+      const message = ios
+        ? "On iPhone: open this page in Safari, tap Share, then Add to Home Screen."
+        : "If Install app is not shown, open Chrome menu and choose Add to Home screen.";
+      addAlert("info", "Install Swing Bot", message);
+      renderAlerts();
+    }
     function exportJournal() {
       const payload = JSON.stringify({ settings: state.settings, positions: state.positions, journal: state.journal, plans: state.plans }, null, 2);
       const blob = new Blob([payload], { type: "application/json" });
@@ -889,6 +913,8 @@
       document.getElementById("weekLabel").textContent = weekKey();
       document.getElementById("nextReview").textContent = "Mon/Wed/Fri";
       document.getElementById("actionLabel").textContent = cashSlots() > 0 ? "Review Adds" : "Manage Exits";
+      const installBtn = document.getElementById("installAppBtn");
+      if (installBtn) installBtn.textContent = deferredInstallPrompt ? "Install App" : "Install Help";
     }
     function render() {
       state.settings = settingsFromInputs();
@@ -910,6 +936,16 @@
         document.querySelectorAll(".view").forEach(view => view.classList.toggle("hidden", view.id !== `view-${state.activeView}`));
       });
     });
+    window.addEventListener("beforeinstallprompt", event => {
+      event.preventDefault();
+      deferredInstallPrompt = event;
+      renderShell();
+    });
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("swing-command-sw.js").catch(() => {});
+      });
+    }
     ["planSize","maxOpen","minConviction","minWin","maxAtr","accountSize","riskPct","swingCapitalPct","monthlyContribution","deployPct"].forEach(id => {
       document.getElementById(id).addEventListener("input", () => {
         state.settings = settingsFromInputs();
