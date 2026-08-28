@@ -13,7 +13,7 @@ OUTPUT = Path(__file__).with_name("swingbot-pro-v2-data.json")
 
 
 def fetch_json(url: str) -> dict:
-    with urllib.request.urlopen(url, timeout=18) as response:
+    with urllib.request.urlopen(url, timeout=6) as response:
         return json.loads(response.read().decode("utf-8"))
 
 
@@ -88,7 +88,7 @@ def fetch_news(ticker: str, api_key: str) -> dict:
 
 
 def fetch_options_snapshot(ticker: str, api_key: str) -> dict:
-    query = urllib.parse.urlencode({"limit": "250", "apiKey": api_key})
+    query = urllib.parse.urlencode({"limit": "80", "apiKey": api_key})
     payload = safe_fetch(f"https://api.massive.com/v3/snapshot/options/{urllib.parse.quote(ticker)}?{query}")
     if not payload:
         return {"available": False, "score": 0, "label": "Unavailable"}
