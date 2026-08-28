@@ -1,0 +1,803 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Swing Trading Command Center</title>
+  <style>
+    :root {
+      --bg: #f4f2ec;
+      --panel: #fffdf8;
+      --ink: #14272d;
+      --muted: #66757b;
+      --line: #ded7c9;
+      --green: #087865;
+      --blue: #245a96;
+      --amber: #a7681d;
+      --red: #a13d3d;
+      --shadow: 0 14px 32px rgba(20, 39, 45, .09);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        linear-gradient(135deg, rgba(8,120,101,.10), transparent 34%),
+        linear-gradient(225deg, rgba(36,90,150,.10), transparent 30%),
+        var(--bg);
+    }
+    button, input, select {
+      font: inherit;
+    }
+    button, .link-btn {
+      border: 1px solid transparent;
+      border-radius: 8px;
+      min-height: 38px;
+      padding: 9px 12px;
+      background: var(--ink);
+      color: #fffdf8;
+      font-weight: 750;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    button.secondary, .link-btn.secondary {
+      background: #fffdf8;
+      color: var(--ink);
+      border-color: var(--line);
+    }
+    button.good { background: var(--green); }
+    button.warn { background: var(--amber); }
+    button.bad { background: var(--red); }
+    .wrap { max-width: 1580px; margin: 0 auto; padding: 18px 14px 42px; }
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(340px, .8fr);
+      gap: 18px;
+      padding: 22px;
+      border-radius: 16px;
+      color: #fffdf8;
+      background: linear-gradient(135deg, #102f35, #087865 56%, #245a96);
+      box-shadow: var(--shadow);
+    }
+    h1 { margin: 0; font-size: clamp(2rem, 4vw, 4rem); line-height: .98; letter-spacing: 0; }
+    h2 { margin: 0 0 12px; font-size: 1.05rem; }
+    h3 { margin: 0 0 8px; font-size: .95rem; }
+    .hero p { max-width: 900px; margin: 12px 0 0; color: rgba(255,253,248,.86); line-height: 1.5; }
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+    .pulse { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .pulse div {
+      border: 1px solid rgba(255,253,248,.22);
+      background: rgba(255,253,248,.12);
+      border-radius: 10px;
+      padding: 12px;
+    }
+    .k { display:block; color: rgba(255,253,248,.72); text-transform: uppercase; letter-spacing: .08em; font-size: .72rem; }
+    .v { display:block; font-size: 1.3rem; font-weight: 850; margin-top: 5px; }
+    .layout {
+      display: grid;
+      grid-template-columns: 340px minmax(0, 1fr);
+      gap: 14px;
+      margin-top: 14px;
+      align-items: start;
+    }
+    .panel, .metric, .card {
+      background: rgba(255,253,248,.95);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+    }
+    .panel { padding: 15px; }
+    .settings { display: grid; gap: 12px; }
+    label { display: grid; gap: 5px; color: var(--muted); font-size: .73rem; text-transform: uppercase; letter-spacing: .08em; }
+    input, select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 9px 10px;
+      background: #fff;
+      color: var(--ink);
+    }
+    .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    .tab.active { background: var(--green); }
+    .metrics { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+    .metric { padding: 13px; }
+    .label { color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-size: .72rem; }
+    .value { font-size: 1.55rem; font-weight: 850; margin-top: 5px; }
+    .split { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 12px; margin-top: 12px; }
+    .cards { display: grid; gap: 10px; }
+    .card { padding: 13px; }
+    .ticker-line { display: flex; justify-content: space-between; gap: 10px; align-items: start; }
+    .ticker { font-size: 1.55rem; font-weight: 900; line-height: 1; }
+    .sub { color: var(--muted); line-height: 1.42; font-size: .9rem; }
+    .tag {
+      display: inline-flex;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(8,120,101,.12);
+      color: var(--green);
+      font-size: .74rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .tag.warn { background: rgba(167,104,29,.14); color: var(--amber); }
+    .tag.bad { background: rgba(161,61,61,.12); color: var(--red); }
+    .row-actions { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+    .scorebar { height: 8px; border-radius: 999px; background: #e8e1d2; overflow: hidden; margin: 10px 0; }
+    .scorebar span { display:block; height:100%; background: linear-gradient(90deg, var(--amber), var(--green)); }
+    .tablewrap { overflow: auto; max-height: 66vh; border-radius: 12px; border: 1px solid var(--line); background: var(--panel); }
+    table { width: 100%; min-width: 1100px; border-collapse: collapse; }
+    th, td { padding: 9px 8px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; font-size: .88rem; }
+    th { position: sticky; top: 0; background: #ebe4d5; z-index: 1; color: #485a61; text-transform: uppercase; letter-spacing: .07em; font-size: .68rem; }
+    .ok { color: var(--green); font-weight: 800; }
+    .bad-text { color: var(--red); font-weight: 800; }
+    .warn-text { color: var(--amber); font-weight: 800; }
+    .hidden { display: none !important; }
+    .alert-list { display: grid; gap: 8px; }
+    .alert { border-left: 4px solid var(--blue); padding: 10px; background: #fff; border-radius: 8px; }
+    .alert.bad { border-left-color: var(--red); }
+    .alert.good { border-left-color: var(--green); }
+    dialog {
+      width: min(620px, calc(100vw - 24px));
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: 0 30px 70px rgba(0,0,0,.24);
+      background: var(--panel);
+      color: var(--ink);
+    }
+    dialog::backdrop { background: rgba(20,39,45,.38); }
+    .form-grid { display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    @media (max-width: 1120px) {
+      .hero, .layout, .split { grid-template-columns: 1fr; }
+      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 620px) {
+      .pulse, .form-grid { grid-template-columns: 1fr; }
+      .metrics { grid-template-columns: 1fr; }
+      .wrap { padding: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div>
+        <h1>Swing Trading Command Center</h1>
+        <p>Weekly swing workflow for the bot: build the Monday plan, avoid daily churn, add only when cash is free, track active positions, and get exit alerts for stop, target, stale hold window, or broken setup.</p>
+        <div class="hero-actions">
+          <button type="button" onclick="refreshReports()">Refresh Signals</button>
+          <button class="secondary" type="button" onclick="freezeWeeklyPlan()">Freeze Weekly Plan</button>
+          <button class="secondary" type="button" onclick="requestNotifications()">Enable Notifications</button>
+          <a class="link-btn secondary" target="_blank" rel="noreferrer" href="https://swaroopsathuluri.github.io/-Swing-Bot/swingbot-pro-v2.html">Pro v2</a>
+        </div>
+      </div>
+      <div class="pulse">
+        <div><span class="k">Report Date</span><span class="v" id="reportDate">Loading</span></div>
+        <div><span class="k">Plan Week</span><span class="v" id="weekLabel">-</span></div>
+        <div><span class="k">Action</span><span class="v" id="actionLabel">Review</span></div>
+        <div><span class="k">Next Review</span><span class="v" id="nextReview">Monday</span></div>
+      </div>
+    </section>
+
+    <div class="layout">
+      <aside class="panel">
+        <h2>Rules</h2>
+        <div class="settings">
+          <label>Default Plan Size
+            <select id="planSize">
+              <option value="2" selected>Top 2</option>
+              <option value="3">Top 3</option>
+              <option value="1">Top 1</option>
+            </select>
+          </label>
+          <label>Max Open Positions
+            <input id="maxOpen" type="number" min="1" max="10" value="3">
+          </label>
+          <label>Minimum Conviction
+            <input id="minConviction" type="number" min="45" max="95" value="65">
+          </label>
+          <label>Minimum Historical Win %
+            <input id="minWin" type="number" min="0" max="100" value="45">
+          </label>
+          <label>Max ATR %
+            <input id="maxAtr" type="number" min="1" max="15" step=".5" value="6">
+          </label>
+          <label>Account Size
+            <input id="accountSize" type="number" min="0" step="100" value="15000">
+          </label>
+          <label>Risk Per Trade %
+            <input id="riskPct" type="number" min=".1" max="5" step=".1" value="1">
+          </label>
+          <label>Swing Capital %
+            <input id="swingCapitalPct" type="number" min="1" max="100" step="1" value="60">
+          </label>
+          <button type="button" onclick="saveSettings()">Save Rules</button>
+          <button class="secondary" type="button" onclick="exportJournal()">Export Journal</button>
+          <button class="secondary" type="button" onclick="importJournalPrompt()">Import Journal</button>
+        </div>
+      </aside>
+
+      <main>
+        <div class="tabs">
+          <button class="tab active" type="button" data-view="plan">Weekly Plan</button>
+          <button class="tab" type="button" data-view="positions">Positions</button>
+          <button class="tab" type="button" data-view="alerts">Alerts</button>
+          <button class="tab" type="button" data-view="journal">Returns</button>
+        </div>
+
+        <section class="metrics">
+          <article class="metric"><div class="label">Open Positions</div><div class="value" id="openCount">0</div></article>
+          <article class="metric"><div class="label">Open P/L</div><div class="value" id="openPnl">$0</div></article>
+          <article class="metric"><div class="label">Closed P/L</div><div class="value" id="closedPnl">$0</div></article>
+          <article class="metric"><div class="label">Win Rate</div><div class="value" id="winRate">-</div></article>
+          <article class="metric"><div class="label">Cash Slots</div><div class="value" id="cashSlots">0</div></article>
+        </section>
+
+        <section id="view-plan" class="view">
+          <div class="split">
+            <div class="panel">
+              <h2>Monday Core List</h2>
+              <div class="cards" id="weeklyPlan"></div>
+            </div>
+            <div class="panel">
+              <h2>Add Only If Cash Free</h2>
+              <div class="cards" id="newCandidates"></div>
+            </div>
+          </div>
+          <section class="panel" style="margin-top:12px">
+            <h2>Ignore / Chased / Weak</h2>
+            <div class="tablewrap">
+              <table>
+                <thead><tr><th>Ticker</th><th>Setup</th><th>Conviction</th><th>Reason</th><th>Since Entry</th><th>ATR</th></tr></thead>
+                <tbody id="ignoreRows"></tbody>
+              </table>
+            </div>
+          </section>
+        </section>
+
+        <section id="view-positions" class="view hidden">
+          <section class="panel">
+            <h2>Open Position Tracker</h2>
+            <div class="tablewrap">
+              <table>
+                <thead><tr><th>Ticker</th><th>Status</th><th>Entry</th><th>Current</th><th>Shares</th><th>P/L</th><th>Stop</th><th>T1</th><th>T2</th><th>Hold</th><th>Actions</th></tr></thead>
+                <tbody id="positionRows"></tbody>
+              </table>
+            </div>
+          </section>
+        </section>
+
+        <section id="view-alerts" class="view hidden">
+          <section class="panel">
+            <h2>Action Alerts</h2>
+            <div class="alert-list" id="alerts"></div>
+          </section>
+        </section>
+
+        <section id="view-journal" class="view hidden">
+          <section class="panel">
+            <h2>Closed Trade Journal</h2>
+            <div class="tablewrap">
+              <table>
+                <thead><tr><th>Ticker</th><th>Entry Date</th><th>Exit Date</th><th>Entry</th><th>Exit</th><th>Shares</th><th>P/L</th><th>Return</th><th>Reason</th></tr></thead>
+                <tbody id="journalRows"></tbody>
+              </table>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <dialog id="positionDialog">
+    <form method="dialog" onsubmit="savePositionFromDialog(event)">
+      <h2 id="dialogTitle">Add Position</h2>
+      <div class="form-grid">
+        <label>Ticker <input id="formTicker" required></label>
+        <label>Entry Date <input id="formEntryDate" type="date" required></label>
+        <label>Entry Price <input id="formEntry" type="number" min=".01" step=".01" required></label>
+        <label>Shares <input id="formShares" type="number" min=".0001" step=".0001" required></label>
+        <label>Stop <input id="formStop" type="number" min=".01" step=".01"></label>
+        <label>Target 1 <input id="formT1" type="number" min=".01" step=".01"></label>
+        <label>Target 2 <input id="formT2" type="number" min=".01" step=".01"></label>
+        <label>Max Hold Date <input id="formMaxHold" type="date"></label>
+      </div>
+      <input id="formSource" type="hidden">
+      <div class="row-actions">
+        <button class="good" type="submit">Save Position</button>
+        <button class="secondary" type="button" onclick="document.getElementById('positionDialog').close()">Cancel</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="closeDialog">
+    <form method="dialog" onsubmit="closePositionFromDialog(event)">
+      <h2>Close Position</h2>
+      <div class="form-grid">
+        <label>Ticker <input id="closeTicker" readonly></label>
+        <label>Exit Date <input id="closeDate" type="date" required></label>
+        <label>Exit Price <input id="closePrice" type="number" min=".01" step=".01" required></label>
+        <label>Reason
+          <select id="closeReason">
+            <option>Target 1</option>
+            <option>Target 2</option>
+            <option>Stop</option>
+            <option>Hold Window Expired</option>
+            <option>Manual Risk Cut</option>
+            <option>Setup Broken</option>
+          </select>
+        </label>
+      </div>
+      <div class="row-actions">
+        <button class="bad" type="submit">Close Trade</button>
+        <button class="secondary" type="button" onclick="document.getElementById('closeDialog').close()">Cancel</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script>
+    const REPORT_URL = "https://swaroopsathuluri.github.io/-Swing-Bot/stocks-edge.html?v=";
+    const ENRICH_URL = "https://swaroopsathuluri.github.io/-Swing-Bot/swingbot-pro-v2-data.json?v=";
+    const STORAGE = {
+      settings: "swingCommandSettings.v1",
+      positions: "swingCommandPositions.v1",
+      journal: "swingCommandJournal.v1",
+      plans: "swingCommandWeeklyPlans.v1",
+      alerts: "swingCommandAlerts.v1"
+    };
+    const state = {
+      rows: [],
+      enrichment: { items: {} },
+      candidates: [],
+      reportUpdated: "-",
+      activeView: "plan",
+      settings: loadJson(STORAGE.settings, {
+        planSize: 2,
+        maxOpen: 3,
+        minConviction: 65,
+        minWin: 45,
+        maxAtr: 6,
+        accountSize: 15000,
+        riskPct: 1,
+        swingCapitalPct: 60
+      }),
+      positions: loadJson(STORAGE.positions, []),
+      journal: loadJson(STORAGE.journal, []),
+      plans: loadJson(STORAGE.plans, {}),
+      alerts: loadJson(STORAGE.alerts, [])
+    };
+
+    function loadJson(key, fallback) {
+      try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch (_) { return fallback; }
+    }
+    function saveJson(key, value) { localStorage.setItem(key, JSON.stringify(value)); }
+    function money(value) { return Number(value || 0).toLocaleString(undefined, { style:"currency", currency:"USD", maximumFractionDigits: 0 }); }
+    function fmt(value, digits = 2) { return Number(value || 0).toFixed(digits); }
+    function todayIso() { return new Date().toISOString().slice(0, 10); }
+    function weekKey(date = new Date()) {
+      const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+      const day = d.getUTCDay() || 7;
+      d.setUTCDate(d.getUTCDate() + 1 - day);
+      return d.toISOString().slice(0, 10);
+    }
+    function addDaysIso(iso, days) {
+      const d = new Date(`${iso}T12:00:00`);
+      d.setDate(d.getDate() + days);
+      return d.toISOString().slice(0, 10);
+    }
+    function maxHoldDays(text) {
+      const match = String(text || "").match(/(\d+)-(\d+)/);
+      return match ? Number(match[2]) : 10;
+    }
+    function tradingHoldDate(entryDate, holdWindow) {
+      return addDaysIso(entryDate, Math.ceil(maxHoldDays(holdWindow) * 1.45));
+    }
+    function extractRows(html) {
+      const match = html.match(/const rows = (\[.*?\]);\n\s*const state/s);
+      if (!match) throw new Error("Could not find report rows.");
+      return JSON.parse(match[1]);
+    }
+    function extractUpdated(html) {
+      const match = html.match(/Last Updated: ([^<]+)/);
+      return match ? match[1] : "unknown";
+    }
+    function componentScores(row, extra) {
+      const technical = clamp((Number(row.score || 0) / 115) * 100, 0, 100);
+      const rs = clamp(50 + Number(row.rsVsSpy20d || 0) * 2, 0, 100);
+      const confidence = row.setupConfidence == null ? 45 : Number(row.setupConfidence);
+      const sampleBonus = clamp(Number(row.similarSetups || 0) * 5, 0, 20);
+      const history = clamp(confidence * .8 + sampleBonus, 0, 100);
+      const news = extra.news?.available ? clamp(50 + Number(extra.news.score || 0) * 5, 0, 100) : 50;
+      const options = extra.options?.available ? clamp(50 + Number(extra.options.score || 0) * 5, 0, 100) : 50;
+      const quality = extra.quality?.available ? clamp(50 + Number(extra.quality.score || 0) * 5, 0, 100) : 50;
+      let risk = 100;
+      if (Number(row.atrPct || 0) > 6) risk -= 28;
+      if (Number(row.entryChangePct || 0) > 2) risk -= 24;
+      if (Number(row.entryChangePct || 0) < -3) risk -= 24;
+      if (Number(row.rsi14 || 0) > 72) risk -= 18;
+      if (Number(row.daysInList || 1) > 5) risk -= 12;
+      return { technical, rs, history, news, options, quality, risk: clamp(risk, 0, 100) };
+    }
+    function clamp(value, min, max) { return Math.max(min, Math.min(max, value)); }
+    function conviction(row) {
+      const extra = state.enrichment.items?.[row.ticker] || {};
+      const c = componentScores(row, extra);
+      const value = Math.round(c.technical*.28 + c.rs*.18 + c.history*.18 + c.news*.12 + c.options*.14 + c.quality*.06 + c.risk*.04);
+      const reasons = [];
+      if (row.score >= 90) reasons.push("strong technicals");
+      if (row.rsVsSpy20d >= 7) reasons.push("relative strength");
+      if (row.setupConfidence != null && row.setupConfidence >= 60) reasons.push("good prior setup record");
+      if (extra.news?.label === "Positive") reasons.push("positive news tone");
+      if (extra.options?.label === "Bullish") reasons.push("bullish options/OI");
+      if (row.entryChangePct > 2) reasons.push("chase risk");
+      if (row.entryChangePct < -3) reasons.push("broken pullback risk");
+      if (row.atrPct > 6) reasons.push("high ATR");
+      return { value, reasons, extra, components: c };
+    }
+    function settingsFromInputs() {
+      return {
+        planSize: Number(document.getElementById("planSize").value),
+        maxOpen: Number(document.getElementById("maxOpen").value),
+        minConviction: Number(document.getElementById("minConviction").value),
+        minWin: Number(document.getElementById("minWin").value),
+        maxAtr: Number(document.getElementById("maxAtr").value),
+        accountSize: Number(document.getElementById("accountSize").value),
+        riskPct: Number(document.getElementById("riskPct").value),
+        swingCapitalPct: Number(document.getElementById("swingCapitalPct").value)
+      };
+    }
+    function applySettingsToInputs() {
+      for (const [key, value] of Object.entries(state.settings)) {
+        const el = document.getElementById(key);
+        if (el) el.value = value;
+      }
+    }
+    function saveSettings() {
+      state.settings = settingsFromInputs();
+      saveJson(STORAGE.settings, state.settings);
+      buildCandidates();
+      renderAll();
+    }
+    async function refreshReports() {
+      document.getElementById("actionLabel").textContent = "Loading";
+      const stamp = Date.now();
+      const [reportResp, enrichResp] = await Promise.all([
+        fetch(REPORT_URL + stamp, { cache: "no-store" }),
+        fetch(ENRICH_URL + stamp, { cache: "no-store" }).catch(() => null)
+      ]);
+      if (!reportResp.ok) throw new Error(`Report fetch failed: ${reportResp.status}`);
+      const html = await reportResp.text();
+      state.rows = extractRows(html);
+      state.reportUpdated = extractUpdated(html);
+      if (enrichResp && enrichResp.ok) state.enrichment = await enrichResp.json();
+      buildCandidates();
+      createAlerts();
+      render();
+    }
+    function passesCore(row) {
+      const s = state.settings;
+      if (!row.goodForSwing || row.setup === "Avoid") return false;
+      if (row.conviction < s.minConviction) return false;
+      if (row.atrPct > s.maxAtr) return false;
+      if (row.setupConfidence == null) return false;
+      if (row.setupConfidence < s.minWin) return false;
+      if (row.entryChangePct < -3 || row.entryChangePct > 2) return false;
+      if (row.newsLabel === "Negative" || row.optionsLabel === "Bearish") return false;
+      return true;
+    }
+    function buildCandidates() {
+      state.settings = settingsFromInputs();
+      state.candidates = state.rows
+        .filter(row => row.goodForSwing && row.setup !== "Avoid")
+        .map(row => {
+          const pro = conviction(row);
+          return {
+            ...row,
+            conviction: pro.value,
+            reasons: pro.reasons,
+            newsLabel: pro.extra.news?.label || "Neutral",
+            optionsLabel: pro.extra.options?.label || "Mixed",
+            passCore: false
+          };
+        })
+        .map(row => ({ ...row, passCore: passesCore(row) }))
+        .sort((a, b) => b.conviction - a.conviction || (b.edgeScore || 0) - (a.edgeScore || 0) || b.rsVsSpy20d - a.rsVsSpy20d);
+    }
+    function freezeWeeklyPlan() {
+      const key = weekKey();
+      const picks = state.candidates.filter(c => c.passCore).slice(0, state.settings.planSize);
+      state.plans[key] = {
+        createdAt: new Date().toISOString(),
+        reportUpdated: state.reportUpdated,
+        tickers: picks.map(p => p.ticker)
+      };
+      saveJson(STORAGE.plans, state.plans);
+      addAlert("good", "Weekly plan frozen", `${picks.map(p => p.ticker).join(", ") || "No qualifying trades"}`);
+      render();
+    }
+    function weeklyPlanRows() {
+      const key = weekKey();
+      const saved = state.plans[key];
+      if (saved?.tickers?.length) {
+        return saved.tickers.map(ticker => state.candidates.find(c => c.ticker === ticker)).filter(Boolean);
+      }
+      return state.candidates.filter(c => c.passCore).slice(0, state.settings.planSize);
+    }
+    function openTickers() { return new Set(state.positions.filter(p => p.status === "open").map(p => p.ticker)); }
+    function cashSlots() { return Math.max(0, state.settings.maxOpen - openTickers().size); }
+    function candidateCard(row, mode) {
+      const size = suggestedShares(row);
+      return `<article class="card">
+        <div class="ticker-line"><div><div class="ticker">${row.ticker}</div><div class="sub">${row.name || ""}</div></div><span class="tag ${row.passCore ? "" : "warn"}">${mode}</span></div>
+        <div class="scorebar"><span style="width:${row.conviction}%"></span></div>
+        <div class="sub">Conviction ${row.conviction} | ${row.setup} | Win ${row.confidenceLabel || "N/A"} | Edge ${row.edgeScore ?? 0} | Entry ${fmt(row.entryChangePct)}%</div>
+        <div class="sub">Stop ${fmt(row.stopLoss)} | T1 ${fmt(row.target1)} | T2 ${fmt(row.target2)} | ${row.holdWindow}</div>
+        <div class="sub">${row.reasons.join("; ") || "balanced setup"}</div>
+        <div class="row-actions">
+          <button class="good" type="button" onclick="openPositionDialog('${row.ticker}', ${size.shares})">Add Position</button>
+          <button class="secondary" type="button" onclick="addAlert('info','Watch ${row.ticker}','Added to review list')">Watch</button>
+        </div>
+      </article>`;
+    }
+    function suggestedShares(row) {
+      const riskDollars = state.settings.accountSize * (state.settings.riskPct / 100);
+      const perShareRisk = Math.max(.01, row.close - row.stopLoss);
+      const byRisk = Math.floor(riskDollars / perShareRisk);
+      const sleeve = state.settings.accountSize * (state.settings.swingCapitalPct / 100);
+      const byCapital = Math.floor((sleeve / Math.max(1, state.settings.maxOpen)) / row.close);
+      return { shares: Math.max(1, Math.min(byRisk || 1, byCapital || 1)), riskDollars, perShareRisk };
+    }
+    function openPositionDialog(ticker, shares = 1) {
+      const row = state.candidates.find(c => c.ticker === ticker) || {};
+      document.getElementById("dialogTitle").textContent = `Add ${ticker}`;
+      document.getElementById("formTicker").value = ticker;
+      document.getElementById("formEntryDate").value = todayIso();
+      document.getElementById("formEntry").value = row.close || "";
+      document.getElementById("formShares").value = shares;
+      document.getElementById("formStop").value = row.stopLoss || "";
+      document.getElementById("formT1").value = row.target1 || "";
+      document.getElementById("formT2").value = row.target2 || "";
+      document.getElementById("formMaxHold").value = tradingHoldDate(todayIso(), row.holdWindow);
+      document.getElementById("formSource").value = JSON.stringify(row);
+      document.getElementById("positionDialog").showModal();
+    }
+    function savePositionFromDialog(event) {
+      event.preventDefault();
+      const source = JSON.parse(document.getElementById("formSource").value || "{}");
+      const position = {
+        id: crypto.randomUUID(),
+        status: "open",
+        ticker: document.getElementById("formTicker").value.trim().toUpperCase(),
+        entryDate: document.getElementById("formEntryDate").value,
+        entryPrice: Number(document.getElementById("formEntry").value),
+        shares: Number(document.getElementById("formShares").value),
+        stop: Number(document.getElementById("formStop").value),
+        target1: Number(document.getElementById("formT1").value),
+        target2: Number(document.getElementById("formT2").value),
+        maxHoldDate: document.getElementById("formMaxHold").value,
+        setup: source.setup || "",
+        conviction: source.conviction || null,
+        notes: source.reasons?.join("; ") || ""
+      };
+      state.positions.push(position);
+      saveJson(STORAGE.positions, state.positions);
+      document.getElementById("positionDialog").close();
+      addAlert("good", `Position added: ${position.ticker}`, `${position.shares} shares at ${fmt(position.entryPrice)}`);
+      render();
+    }
+    function openCloseDialog(id) {
+      const p = state.positions.find(pos => pos.id === id);
+      if (!p) return;
+      const row = state.candidates.find(c => c.ticker === p.ticker);
+      document.getElementById("closeTicker").value = p.ticker;
+      document.getElementById("closeDate").value = todayIso();
+      document.getElementById("closePrice").value = row?.close || p.entryPrice;
+      document.getElementById("closeDialog").dataset.id = id;
+      document.getElementById("closeDialog").showModal();
+    }
+    function closePositionFromDialog(event) {
+      event.preventDefault();
+      const id = document.getElementById("closeDialog").dataset.id;
+      const index = state.positions.findIndex(p => p.id === id);
+      if (index < 0) return;
+      const p = state.positions[index];
+      const exitPrice = Number(document.getElementById("closePrice").value);
+      const closed = {
+        ...p,
+        status: "closed",
+        exitDate: document.getElementById("closeDate").value,
+        exitPrice,
+        exitReason: document.getElementById("closeReason").value,
+        pnl: (exitPrice - p.entryPrice) * p.shares,
+        returnPct: ((exitPrice / p.entryPrice) - 1) * 100
+      };
+      state.positions.splice(index, 1);
+      state.journal.push(closed);
+      saveJson(STORAGE.positions, state.positions);
+      saveJson(STORAGE.journal, state.journal);
+      document.getElementById("closeDialog").close();
+      addAlert(closed.pnl >= 0 ? "good" : "bad", `Closed ${closed.ticker}`, `${money(closed.pnl)} | ${fmt(closed.returnPct)}%`);
+      render();
+    }
+    function deletePosition(id) {
+      state.positions = state.positions.filter(p => p.id !== id);
+      saveJson(STORAGE.positions, state.positions);
+      render();
+    }
+    function positionStatus(p) {
+      const row = state.candidates.find(c => c.ticker === p.ticker);
+      const current = row?.close || p.entryPrice;
+      if (current <= p.stop) return { label: "Stop risk", cls: "bad-text" };
+      if (current >= p.target2) return { label: "Target 2", cls: "ok" };
+      if (current >= p.target1) return { label: "Target 1", cls: "ok" };
+      if (p.maxHoldDate && todayIso() >= p.maxHoldDate) return { label: "Exit review", cls: "warn-text" };
+      if (row && !row.passCore && row.entryChangePct < -3) return { label: "Broken", cls: "bad-text" };
+      return { label: "Hold", cls: "ok" };
+    }
+    function createAlerts() {
+      for (const p of state.positions.filter(p => p.status === "open")) {
+        const row = state.candidates.find(c => c.ticker === p.ticker);
+        if (!row) continue;
+        if (row.close <= p.stop) addAlert("bad", `${p.ticker} stop alert`, `Report close ${fmt(row.close)} is at/below stop ${fmt(p.stop)}`, true);
+        if (row.close >= p.target1) addAlert("good", `${p.ticker} target alert`, `Report close ${fmt(row.close)} is above T1 ${fmt(p.target1)}`, true);
+      }
+      const fresh = state.candidates.filter(c => c.passCore && c.daysInList === 1).slice(0, 3);
+      for (const row of fresh) addAlert("good", `Fresh candidate: ${row.ticker}`, `${row.setup} conviction ${row.conviction}`, true);
+    }
+    function addAlert(type, title, message, dedupe = false) {
+      const key = `${todayIso()}|${title}|${message}`;
+      if (dedupe && state.alerts.some(a => a.key === key)) return;
+      const alert = { key, type, title, message, at: new Date().toISOString() };
+      state.alerts.unshift(alert);
+      state.alerts = state.alerts.slice(0, 80);
+      saveJson(STORAGE.alerts, state.alerts);
+      if (Notification.permission === "granted") new Notification(title, { body: message });
+    }
+    function requestNotifications() {
+      if (!("Notification" in window)) {
+        addAlert("bad", "Notifications unavailable", "This browser does not support desktop notifications.");
+        render();
+        return;
+      }
+      Notification.requestPermission().then(permission => {
+        addAlert(permission === "granted" ? "good" : "bad", "Notification permission", permission);
+        render();
+      });
+    }
+    function exportJournal() {
+      const payload = JSON.stringify({ settings: state.settings, positions: state.positions, journal: state.journal, plans: state.plans }, null, 2);
+      const blob = new Blob([payload], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `swing-command-journal-${todayIso()}.json`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+    function importJournalPrompt() {
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = "application/json";
+      input.onchange = async () => {
+        const file = input.files[0];
+        if (!file) return;
+        const payload = JSON.parse(await file.text());
+        state.settings = payload.settings || state.settings;
+        state.positions = payload.positions || [];
+        state.journal = payload.journal || [];
+        state.plans = payload.plans || {};
+        saveJson(STORAGE.settings, state.settings);
+        saveJson(STORAGE.positions, state.positions);
+        saveJson(STORAGE.journal, state.journal);
+        saveJson(STORAGE.plans, state.plans);
+        applySettingsToInputs();
+        render();
+      };
+      input.click();
+    }
+    function renderMetrics() {
+      const open = state.positions.filter(p => p.status === "open");
+      const openPnl = open.reduce((sum, p) => {
+        const row = state.candidates.find(c => c.ticker === p.ticker);
+        return sum + (((row?.close || p.entryPrice) - p.entryPrice) * p.shares);
+      }, 0);
+      const closedPnl = state.journal.reduce((sum, t) => sum + Number(t.pnl || 0), 0);
+      const wins = state.journal.filter(t => t.pnl > 0).length;
+      document.getElementById("openCount").textContent = open.length;
+      document.getElementById("openPnl").textContent = money(openPnl);
+      document.getElementById("openPnl").className = `value ${openPnl >= 0 ? "ok" : "bad-text"}`;
+      document.getElementById("closedPnl").textContent = money(closedPnl);
+      document.getElementById("closedPnl").className = `value ${closedPnl >= 0 ? "ok" : "bad-text"}`;
+      document.getElementById("winRate").textContent = state.journal.length ? `${fmt(wins / state.journal.length * 100, 1)}%` : "-";
+      document.getElementById("cashSlots").textContent = cashSlots();
+    }
+    function renderPlan() {
+      const plan = weeklyPlanRows();
+      const open = openTickers();
+      document.getElementById("weeklyPlan").innerHTML = plan.length ? plan.map(row => candidateCard(row, open.has(row.ticker) ? "Holding" : "Core")).join("") : `<article class="card"><div class="ticker">No Core Trade</div><div class="sub">The current rules did not produce a clean Monday plan. Keep cash available.</div></article>`;
+      const planTickers = new Set(plan.map(p => p.ticker));
+      const add = state.candidates.filter(c => c.passCore && !planTickers.has(c.ticker) && !open.has(c.ticker)).slice(0, cashSlots() || 3);
+      document.getElementById("newCandidates").innerHTML = add.length ? add.map(row => candidateCard(row, "Cash Free")).join("") : `<article class="card"><div class="ticker">No Add</div><div class="sub">No fresh add-on candidate, or no cash slot available.</div></article>`;
+      const ignored = state.candidates.filter(c => !c.passCore).slice(0, 18);
+      document.getElementById("ignoreRows").innerHTML = ignored.map(row => {
+        const reason = row.entryChangePct > 2 ? "Chase risk" : row.entryChangePct < -3 ? "Broken pullback" : row.atrPct > state.settings.maxAtr ? "ATR too high" : row.setupConfidence == null ? "No history" : row.setupConfidence < state.settings.minWin ? "Weak history" : row.conviction < state.settings.minConviction ? "Low conviction" : "News/options/risk";
+        return `<tr><td><strong>${row.ticker}</strong></td><td>${row.setup}</td><td>${row.conviction}</td><td>${reason}</td><td>${fmt(row.entryChangePct)}%</td><td>${fmt(row.atrPct)}%</td></tr>`;
+      }).join("");
+    }
+    function renderPositions() {
+      const rows = state.positions.filter(p => p.status === "open");
+      document.getElementById("positionRows").innerHTML = rows.length ? rows.map(p => {
+        const row = state.candidates.find(c => c.ticker === p.ticker);
+        const current = row?.close || p.entryPrice;
+        const pnl = (current - p.entryPrice) * p.shares;
+        const ret = ((current / p.entryPrice) - 1) * 100;
+        const status = positionStatus(p);
+        return `<tr>
+          <td><strong>${p.ticker}</strong><br><span class="sub">${p.setup || ""} ${p.conviction ? `| C${p.conviction}` : ""}</span></td>
+          <td class="${status.cls}">${status.label}</td>
+          <td>${p.entryDate}<br>${fmt(p.entryPrice)}</td>
+          <td>${fmt(current)}<br><span class="${pnl >= 0 ? "ok" : "bad-text"}">${fmt(ret)}%</span></td>
+          <td>${fmt(p.shares, 2)}</td>
+          <td class="${pnl >= 0 ? "ok" : "bad-text"}">${money(pnl)}</td>
+          <td>${fmt(p.stop)}</td>
+          <td>${fmt(p.target1)}</td>
+          <td>${fmt(p.target2)}</td>
+          <td>${p.maxHoldDate || "-"}</td>
+          <td><button type="button" onclick="openCloseDialog('${p.id}')">Close</button> <button class="secondary" type="button" onclick="deletePosition('${p.id}')">Delete</button></td>
+        </tr>`;
+      }).join("") : `<tr><td colspan="11">No open swing positions.</td></tr>`;
+    }
+    function renderAlerts() {
+      document.getElementById("alerts").innerHTML = state.alerts.length ? state.alerts.slice(0, 30).map(a => `<div class="alert ${a.type === "bad" ? "bad" : a.type === "good" ? "good" : ""}"><strong>${a.title}</strong><div class="sub">${a.message}</div><div class="sub">${new Date(a.at).toLocaleString()}</div></div>`).join("") : `<div class="alert">No alerts yet.</div>`;
+    }
+    function renderJournal() {
+      document.getElementById("journalRows").innerHTML = state.journal.length ? state.journal.slice().reverse().map(t => `<tr>
+        <td><strong>${t.ticker}</strong></td><td>${t.entryDate}</td><td>${t.exitDate}</td><td>${fmt(t.entryPrice)}</td><td>${fmt(t.exitPrice)}</td><td>${fmt(t.shares, 2)}</td><td class="${t.pnl >= 0 ? "ok" : "bad-text"}">${money(t.pnl)}</td><td class="${t.returnPct >= 0 ? "ok" : "bad-text"}">${fmt(t.returnPct)}%</td><td>${t.exitReason}</td>
+      </tr>`).join("") : `<tr><td colspan="9">No closed trades yet.</td></tr>`;
+    }
+    function renderShell() {
+      document.getElementById("reportDate").textContent = state.reportUpdated;
+      document.getElementById("weekLabel").textContent = weekKey();
+      document.getElementById("nextReview").textContent = "Mon/Wed/Fri";
+      document.getElementById("actionLabel").textContent = cashSlots() > 0 ? "Review Adds" : "Manage Exits";
+    }
+    function render() {
+      state.settings = settingsFromInputs();
+      saveJson(STORAGE.settings, state.settings);
+      renderAll();
+    }
+    function renderAll() {
+      renderShell();
+      renderMetrics();
+      renderPlan();
+      renderPositions();
+      renderAlerts();
+      renderJournal();
+    }
+    document.querySelectorAll(".tab").forEach(button => {
+      button.addEventListener("click", () => {
+        state.activeView = button.dataset.view;
+        document.querySelectorAll(".tab").forEach(b => b.classList.toggle("active", b === button));
+        document.querySelectorAll(".view").forEach(view => view.classList.toggle("hidden", view.id !== `view-${state.activeView}`));
+      });
+    });
+    ["planSize","maxOpen","minConviction","minWin","maxAtr","accountSize","riskPct","swingCapitalPct"].forEach(id => {
+      document.getElementById(id).addEventListener("input", () => {
+        state.settings = settingsFromInputs();
+        saveJson(STORAGE.settings, state.settings);
+        buildCandidates();
+        renderAll();
+      });
+    });
+    applySettingsToInputs();
+    refreshReports().catch(error => {
+      addAlert("bad", "Signal load failed", error.message);
+      renderAll();
+    });
+    setInterval(() => refreshReports().catch(error => addAlert("bad", "Refresh failed", error.message, true)), 5 * 60 * 1000);
+  </script>
+</body>
+</html>

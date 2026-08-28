@@ -120,6 +120,10 @@ def build_home_page(stock_result: dict, etf_result: dict, seasonality_result: di
         <h2>Swing Bot Pro v2</h2>
         <p>Interactive conviction mode: Top 2 by default, with technicals, relative strength, history, entry discipline, risk penalties, and optional Massive news/options enrichment.</p>
       </a>
+      <a class="link-card" href="swing-command-center.html?v={asset_version}">
+        <h2>Swing Command Center</h2>
+        <p>Weekly swing-trading app: Monday plan, add-only-if-cash-free list, open position tracking, target/stop alerts, and return journal.</p>
+      </a>
       <a class="link-card" href="stocks.html?v={asset_version}">
         <h2>Stocks Classic</h2>
         <p>Original stock scanner link with the classic technical score ranking kept intact for comparison.</p>
