@@ -4,7 +4,7 @@ Static HTML swing-trading reports for:
 
 - `qqq` for QQQ constituents
 - `mag7` for the Mag 7 basket
-- `market` for the top 100 liquid U.S. stocks by latest dollar volume
+- `market` for the top 500 liquid U.S. stocks from a broader dollar-volume universe
 
 ## Local use
 

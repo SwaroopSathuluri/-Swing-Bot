@@ -13,14 +13,16 @@ from pathlib import Path
 from universe_lists import UNIVERSE_CONFIG
 
 
-MIN_PRICE = 5.0
-MIN_DOLLAR_VOLUME = 10_000_000
+MIN_PRICE = 10.0
+MIN_LATEST_DOLLAR_VOLUME = 50_000_000
+MIN_AVG_DOLLAR_VOLUME = 75_000_000
 LOOKBACK_DAYS = 220
 HISTORY_DAYS = 520
 OUTPUT_FILENAME = "swing_trading_mag7_report.html"
 PAGES_FILENAME = "index.html"
-MAX_MARKET_TICKERS = 100
-MARKET_CANDIDATE_BUFFER = 180
+MAX_MARKET_TICKERS = 500
+MARKET_CANDIDATE_BUFFER = 750
+_HISTORY_CACHE: dict[tuple[str, str, str], list[dict]] = {}
 
 
 def load_local_env(env_path: Path) -> None:
@@ -88,12 +90,17 @@ def fetch_grouped_day(date_str: str, api_key: str) -> list[dict]:
 
 
 def fetch_history(ticker: str, start_date: str, end_date: str, api_key: str) -> list[dict]:
+    cache_key = (ticker, start_date, end_date)
+    if cache_key in _HISTORY_CACHE:
+        return _HISTORY_CACHE[cache_key]
     url = (
         "https://api.massive.com/v2/aggs/ticker/"
         f"{urllib.parse.quote(ticker)}/range/1/day/{start_date}/{end_date}"
         f"?adjusted=true&sort=asc&limit=5000&apiKey={urllib.parse.quote(api_key)}"
     )
-    return fetch_json(url).get("results", [])
+    results = fetch_json(url).get("results", [])
+    _HISTORY_CACHE[cache_key] = results
+    return results
 
 
 def sma(values: list[float], period: int) -> float:
@@ -353,7 +360,7 @@ def classify_stock(ticker: str, meta: dict, history: list[dict], spy_closes: lis
     volumes = [float(bar["v"]) for bar in history]
     latest_close = closes[-1]
     avg_dollar_volume = statistics.mean(c * v for c, v in zip(closes[-20:], volumes[-20:]))
-    if latest_close < MIN_PRICE or avg_dollar_volume < MIN_DOLLAR_VOLUME:
+    if latest_close < MIN_PRICE or avg_dollar_volume < MIN_AVG_DOLLAR_VOLUME:
         return None
 
     ema20 = ema_series(closes, 20)[-1]
@@ -634,7 +641,7 @@ def generate_report(
         close = float(row.get("c", 0))
         volume = float(row.get("v", 0))
         dollar_volume = close * volume
-        if close < MIN_PRICE or dollar_volume < MIN_DOLLAR_VOLUME:
+        if close < MIN_PRICE or dollar_volume < MIN_LATEST_DOLLAR_VOLUME:
             continue
         tradable_candidates.append(
             {

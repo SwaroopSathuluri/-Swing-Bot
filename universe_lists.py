@@ -130,8 +130,8 @@ UNIVERSE_CONFIG = {
         "members": set(QQQ_CONSTITUENTS),
     },
     "market": {
-        "label": "Top 100 U.S. Stocks",
-        "description": "Top 100 liquid U.S. common stocks ranked by latest dollar volume.",
+        "label": "Top 500 Liquid U.S. Stocks",
+        "description": "Top 500 liquid U.S. common stocks from a broader dollar-volume universe, with price and average-volume quality filters.",
         "members": None,
     },
 }
