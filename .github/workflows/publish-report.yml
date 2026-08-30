@@ -31,6 +31,9 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Test fundamentals feed
+        run: python -m unittest -v test_fundamentals_research.py
+
       - name: Generate reports and home page
         run: python build_pages_site.py
 
@@ -41,6 +44,7 @@ jobs:
           cp swingbot-pro.html site/swingbot-pro.html
           cp swingbot-pro-v2.html site/swingbot-pro-v2.html
           cp swingbot-pro-v2-data.json site/swingbot-pro-v2-data.json
+          cp fundamentals-data.json site/fundamentals-data.json
           cp swing-command-center.html site/swing-command-center.html
           cp swing-command-manifest.webmanifest site/swing-command-manifest.webmanifest
           cp swing-command-sw.js site/swing-command-sw.js

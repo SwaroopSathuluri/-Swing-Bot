@@ -1,0 +1,3218 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-30T15:16:10+00:00",
+  "methodology": {
+    "universe": [
+      "NVDA",
+      "GOOGL",
+      "AMZN",
+      "TSM",
+      "LLY",
+      "META",
+      "AVGO",
+      "AAPL",
+      "COST",
+      "ORCL",
+      "GEV",
+      "V"
+    ],
+    "score_weights": {
+      "business": 50,
+      "valuation": 25,
+      "technical": 25
+    },
+    "requirements": [
+      "Recent price, ratios and quarterly financial statements",
+      "Four complete, contiguous quarters for TTM-derived margins",
+      "At least 65% business evidence and 45% valuation evidence",
+      "Supported U.S. operating-company accounting model"
+    ],
+    "limitations": [
+      "Fixed score anchors are subjective and are not sector-normalized or trained on future returns.",
+      "Foreign issuers, ADRs, banks, insurers, brokers and REITs are withheld pending dedicated models.",
+      "Prices are scheduled snapshots and can be delayed; preferred bands are technical references, not fair value.",
+      "The tracked list is curated and is not an exhaustive whole-market screen."
+    ],
+    "source": "Massive market and financial data, with SEC filing links"
+  },
+  "errors": [],
+  "summary": {
+    "tracked": 12,
+    "ranked": 10,
+    "actionable": 1,
+    "watch": 9,
+    "unavailable": 2,
+    "top_ticker": "NVDA",
+    "top_score": 86.0
+  },
+  "rankings": [
+    {
+      "ticker": "NVDA",
+      "name": "Nvidia Corp",
+      "sector": "SEMICONDUCTORS & RELATED DEVICES",
+      "theme": "AI compute",
+      "action": "START SMALL",
+      "tone": "positive",
+      "conclusion": "The evidence supports a starter position, with later additions conditioned on new filings and price discipline.",
+      "scores": {
+        "overall": 86.0,
+        "business": 97.1,
+        "valuation": 50.0,
+        "technical": 100.0,
+        "data_completeness": 100.0
+      },
+      "technical": {
+        "price": 217.55,
+        "change_pct": -4.57,
+        "asof": "2026-08-29T00:00:01+00:00",
+        "ema20": 215.67,
+        "sma50": 208.42,
+        "sma200": 195.83,
+        "rsi14": 52.3,
+        "atr14": 7.66,
+        "high52": 236.54,
+        "low52": 164.07,
+        "preferred_band": {
+          "low": 205.74,
+          "high": 218.35
+        },
+        "deeper_band": {
+          "low": 191.23,
+          "high": 200.42
+        },
+        "status": "INSIDE PREFERRED BAND",
+        "price_kind": "regular_close",
+        "market_status": "closed"
+      },
+      "metrics": {
+        "revenue_growth_yoy": 105.9,
+        "eps_growth_yoy": 127.8,
+        "gross_margin": 75.0,
+        "operating_margin": 66.2,
+        "fcf_margin": 41.9,
+        "roe": 84.2,
+        "net_cash": 66003000000.0,
+        "current_ratio": 4.6,
+        "debt_to_equity": 0.15,
+        "pe": 27.24,
+        "ps": 17.34,
+        "pfcf": 41.36,
+        "ev_ebitda": 26.15,
+        "fcf_yield": 2.42
+      },
+      "catalysts": [
+        "Latest quarterly revenue grew 105.9% year over year.",
+        "Latest-quarter operating margin is strong at 66.2%.",
+        "Trailing free-cash-flow margin is 41.9%.",
+        "Cash and short-term investments exceed reported current and long-term debt.",
+        "Price is inside the model's preferred technical accumulation band."
+      ],
+      "risks": [
+        "AI spending, customer concentration and semiconductor cycles can make growth volatile.",
+        "Export controls and customers developing their own chips can pressure demand or margins."
+      ],
+      "news": [
+        {
+          "title": "Nvidia Stock Won't Be Overvalued by 2028: My Case for Buying NVDA Today",
+          "url": "https://www.fool.com/investing/2026/08/30/nvidia-stock-overvalued-2028-buy-nvda/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T11:15:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Is This the Single Best Reason to Buy Amazon Stock Right Now?",
+          "url": "https://www.fool.com/investing/2026/08/30/is-amazons-this-the-single-best-reason-to-buy-the/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T11:05:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "VOO vs. RSP: If AI Stocks Get Too Concentrated, Here's Which One I'd Choose",
+          "url": "https://www.fool.com/investing/2026/08/30/voo-vs-rsp-if-ai-stocks-get-too-concentrated-heres/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T10:24:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "History Says This Is What Happens to Nvidia Stock in September",
+          "url": "https://www.fool.com/investing/2026/08/30/history-says-what-happens-nvidia-stock-september/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T10:05:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "I'd Rather Bet on AI's Electric Bill Than Its Chips. Here's Why.",
+          "url": "https://www.fool.com/investing/2026/08/29/id-rather-bet-on-ais-electric-bill-than-its-chips/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-29T16:15:00Z",
+          "sentiment": "neutral"
+        }
+      ],
+      "filing_links": [
+        {
+          "label": "SEC company filings",
+          "url": "https://www.sec.gov/edgar/browse/?CIK=1045810&owner=exclude&action=getcompany"
+        }
+      ],
+      "data_status": "ready",
+      "freshness": {
+        "price_asof": "2026-08-29T00:00:01+00:00",
+        "ratio_asof": "2026-08-28",
+        "financial_period_end": "2026-07-26",
+        "balance_period_end": "2026-07-26",
+        "cash_flow_period_end": "2026-07-26",
+        "filing_date": "2026-08-26",
+        "price_age_days": 1,
+        "ratio_age_days": 2,
+        "financial_age_days": 35,
+        "balance_age_days": 35,
+        "cash_flow_age_days": 35,
+        "price_fresh": true,
+        "ratios_fresh": true,
+        "income_fresh": true,
+        "balance_fresh": true,
+        "cash_flow_fresh": true,
+        "financials_fresh": true,
+        "quarters_complete": true,
+        "note": "All required sources pass freshness checks."
+      },
+      "model_note": "Generic operating-company model applied.",
+      "rank": 1
+    },
+    {
+      "ticker": "LLY",
+      "name": "Eli Lilly & Co.",
+      "sector": "PHARMACEUTICAL PREPARATIONS",
+      "theme": "Metabolic health and medicines",
+      "action": "WATCH",
+      "tone": "neutral",
+      "conclusion": "Evidence is mixed; keep the company on the research list until valuation or price improves.",
+      "scores": {
+        "overall": 74.3,
+        "business": 83.9,
+        "valuation": 38.4,
+        "technical": 91.0,
+        "data_completeness": 100.0
+      },
+      "technical": {
+        "price": 1174.61,
+        "change_pct": -0.13,
+        "asof": "2026-08-29T00:00:01+00:00",
+        "ema20": 1204.52,
+        "sma50": 1186.84,
+        "sma200": 1059.78,
+        "rsi14": 45.5,
+        "atr14": 38.47,
+        "high52": 1292.65,
+        "low52": 712.05,
+        "preferred_band": {
+          "low": 1173.38,
+          "high": 1217.98
+        },
+        "deeper_band": {
+          "low": 1036.7,
+          "high": 1082.86
+        },
+        "status": "INSIDE PREFERRED BAND",
+        "price_kind": "regular_close",
+        "market_status": "closed"
+      },
+      "metrics": {
+        "revenue_growth_yoy": 47.7,
+        "eps_growth_yoy": 26.2,
+        "gross_margin": 85.8,
+        "operating_margin": 39.1,
+        "fcf_margin": 22.8,
+        "roe": 78.8,
+        "net_cash": -45958000000.0,
+        "current_ratio": 1.4,
+        "debt_to_equity": 1.62,
+        "pe": 39.2,
+        "ps": 13.14,
+        "pfcf": 57.56,
+        "ev_ebitda": 26.21,
+        "fcf_yield": 1.74
+      },
+      "catalysts": [
+        "Latest quarterly revenue grew 47.7% year over year.",
+        "Latest-quarter operating margin is strong at 39.1%.",
+        "Trailing free-cash-flow margin is 22.8%.",
+        "Price is inside the model's preferred technical accumulation band."
+      ],
+      "risks": [
+        "The thesis is concentrated in incretin medicines, with pricing, reimbursement and competition risk.",
+        "Manufacturing execution, trial results and safety findings can change the outlook quickly."
+      ],
+      "news": [
+        {
+          "title": "3 Things That Matter Most for Eli Lilly Now",
+          "url": "https://www.fool.com/investing/2026/08/29/3-things-that-matter-most-for-eli-lilly-now/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T00:15:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "Has Novo Nordisk Finally Found the Catalyst That Could Flip the Script on Eli Lilly?",
+          "url": "https://www.fool.com/investing/2026/08/29/has-novo-nordisk-finally-found-the-catalyst-that-c/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-29T23:15:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "AbbVie vs. Eli Lilly and: Which Healthcare Stock Is a Better Buy in 2026?",
+          "url": "https://www.fool.com/coverage/better-buy/2026/08/29/abbvie-vs-eli-lilly-and-which-healthcare-stock-is-a-better-buy-in-2026/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-29T19:15:01Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Which Healthcare ETF Offers the Better Growth Outlook: VanEck Biotech or Invesco Pharmaceuticals?",
+          "url": "https://www.fool.com/coverage/etfs/2026/08/28/which-healthcare-etf-offers-the-better-growth-outlook-vaneck-biotech-or-invesco-pharmaceuticals/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-28T15:31:01Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Breast Cancer Therapeutics Market Size to Reach USD 95.14 Billion at a CAGR of 9.20% from 2035 – SNS Insider",
+          "url": "https://www.globenewswire.com/news-release/2026/08/28/3352704/0/en/breast-cancer-therapeutics-market-size-to-reach-usd-95-14-billion-at-a-cagr-of-9-20-from-2035-sns-insider.html",
+          "publisher": "GlobeNewswire Inc.",
+          "published_utc": "2026-08-28T13:00:00Z",
+          "sentiment": "positive"
+        }
+      ],
+      "filing_links": [
+        {
+          "label": "SEC company filings",
+          "url": "https://www.sec.gov/edgar/browse/?CIK=59478&owner=exclude&action=getcompany"
+        }
+      ],
+      "data_status": "ready",
+      "freshness": {
+        "price_asof": "2026-08-29T00:00:01+00:00",
+        "ratio_asof": "2026-08-28",
+        "financial_period_end": "2026-06-30",
+        "balance_period_end": "2026-06-30",
+        "cash_flow_period_end": "2026-06-30",
+        "filing_date": "2026-08-05",
+        "price_age_days": 1,
+        "ratio_age_days": 2,
+        "financial_age_days": 61,
+        "balance_age_days": 61,
+        "cash_flow_age_days": 61,
+        "price_fresh": true,
+        "ratios_fresh": true,
+        "income_fresh": true,
+        "balance_fresh": true,
+        "cash_flow_fresh": true,
+        "financials_fresh": true,
+        "quarters_complete": true,
+        "note": "All required sources pass freshness checks."
+      },
+      "model_note": "Generic operating-company model applied.",
+      "rank": 2
+    },
+    {
+      "ticker": "AAPL",
+      "name": "Apple Inc.",
+      "sector": "ELECTRONIC COMPUTERS",
+      "theme": "Devices and services ecosystem",
+      "action": "WATCH PRICE",
+      "tone": "caution",
+      "conclusion": "The stock is above its preferred technical band; wait for price or fundamentals to catch up.",
+      "scores": {
+        "overall": 74.1,
+        "business": 77.8,
+        "valuation": 51.3,
+        "technical": 89.5,
+        "data_completeness": 100.0
+      },
+      "technical": {
+        "price": 319.7,
+        "change_pct": 1.63,
+        "asof": "2026-08-29T00:00:01+00:00",
+        "ema20": 312.84,
+        "sma50": 312.0,
+        "sma200": 282.6,
+        "rsi14": 57.4,
+        "atr14": 7.15,
+        "high52": 344.57,
+        "low52": 225.95,
+        "preferred_band": {
+          "low": 309.5,
+          "high": 315.34
+        },
+        "deeper_band": {
+          "low": 278.31,
+          "high": 286.89
+        },
+        "status": "ABOVE PREFERRED BAND",
+        "price_kind": "regular_close",
+        "market_status": "closed"
+      },
+      "metrics": {
+        "revenue_growth_yoy": 16.4,
+        "eps_growth_yoy": 28.7,
+        "gross_margin": 50.1,
+        "operating_margin": 32.6,
+        "fcf_margin": 29.3,
+        "roe": 119.9,
+        "net_cash": -21945000000.0,
+        "current_ratio": 1.0,
+        "debt_to_equity": 0.78,
+        "pe": 36.19,
+        "ps": 9.99,
+        "pfcf": 34.14,
+        "ev_ebitda": 28.05,
+        "fcf_yield": 2.93
+      },
+      "catalysts": [
+        "Latest quarterly revenue grew 16.4% year over year.",
+        "Latest-quarter operating margin is strong at 32.6%.",
+        "Trailing free-cash-flow margin is 29.3%."
+      ],
+      "risks": [
+        "Hardware concentration, China exposure and App Store regulation can pressure growth or margins.",
+        "A premium valuation requires the installed base and services engine to keep compounding.",
+        "Price is above the preferred technical band, increasing chase risk."
+      ],
+      "news": [
+        {
+          "title": "Amazon Has Badly Underperformed the S&P 500 and Nasdaq-100 Since Jeff Bezos Stepped Down as CEO. Could Apple Do the Same Starting Sept. 1 When Tim Cook Steps Down?",
+          "url": "https://www.fool.com/investing/2026/08/30/amazon-has-badly-underperformed-the-sp-500-and-nas/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T14:15:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "Tim Cook Committed Apple to a $60 Billion Domestic Manufacturing Bet Just Weeks Before Handing Off the CEO Job. Here's What It Means for Apple Investors.",
+          "url": "https://www.fool.com/investing/2026/08/30/tim-cook-apple-60-billion-bet-means-investors/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T10:15:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "A Hawkish Fed Speech Turns a Green Morning Red",
+          "url": "https://www.fool.com/investing/2026/08/28/a-hawkish-fed-speech-turns-a-green-morning-red/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-28T18:13:04Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "If I Could Invest in Just 1 ETF in 2026, Here's What I'd Buy",
+          "url": "https://www.fool.com/investing/2026/08/28/if-i-could-invest-in-just-1-etf-in-2026-heres-wher/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-28T15:05:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Own VOO? Here's the Problem With Adding This Popular Growth ETF.",
+          "url": "https://www.fool.com/investing/2026/08/28/own-voo-problem-adding-popular-growth-etf-qqqm/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-28T14:30:00Z",
+          "sentiment": "neutral"
+        }
+      ],
+      "filing_links": [
+        {
+          "label": "SEC company filings",
+          "url": "https://www.sec.gov/edgar/browse/?CIK=320193&owner=exclude&action=getcompany"
+        }
+      ],
+      "data_status": "ready",
+      "freshness": {
+        "price_asof": "2026-08-29T00:00:01+00:00",
+        "ratio_asof": "2026-08-28",
+        "financial_period_end": "2026-06-27",
+        "balance_period_end": "2026-06-27",
+        "cash_flow_period_end": "2026-06-27",
+        "filing_date": "2026-07-31",
+        "price_age_days": 1,
+        "ratio_age_days": 2,
+        "financial_age_days": 64,
+        "balance_age_days": 64,
+        "cash_flow_age_days": 64,
+        "price_fresh": true,
+        "ratios_fresh": true,
+        "income_fresh": true,
+        "balance_fresh": true,
+        "cash_flow_fresh": true,
+        "financials_fresh": true,
+        "quarters_complete": true,
+        "note": "All required sources pass freshness checks."
+      },
+      "model_note": "Generic operating-company model applied.",
+      "rank": 3
+    },
+    {
+      "ticker": "V",
+      "name": "VISA Inc.",
+      "sector": "SERVICES-BUSINESS SERVICES, NEC",
+      "theme": "Global payments network",
+      "action": "WATCH PRICE",
+      "tone": "caution",
+      "conclusion": "The stock is above its preferred technical band; wait for price or fundamentals to catch up.",
+      "scores": {
+        "overall": 73.6,
+        "business": 80.7,
+        "valuation": 49.2,
+        "technical": 83.9,
+        "data_completeness": 100.0
+      },
+      "technical": {
+        "price": 381.6,
+        "change_pct": 0.51,
+        "asof": "2026-08-28T23:48:01+00:00",
+        "ema20": 370.7,
+        "sma50": 358.41,
+        "sma200": 333.0,
+        "rsi14": 65.5,
+        "atr14": 6.65,
+        "high52": 385.57,
+        "low52": 293.89,
+        "preferred_band": {
+          "low": 356.08,
+          "high": 373.02
+        },
+        "deeper_band": {
+          "low": 329.01,
+          "high": 336.99
+        },
+        "status": "ABOVE PREFERRED BAND",
+        "price_kind": "regular_close",
+        "market_status": "closed"
+      },
+      "metrics": {
+        "revenue_growth_yoy": 14.4,
+        "eps_growth_yoy": 10.4,
+        "gross_margin": 100.0,
+        "operating_margin": 59.1,
+        "fcf_margin": 47.2,
+        "roe": 50.9,
+        "net_cash": -10066000000.0,
+        "current_ratio": 1.0,
+        "debt_to_equity": 0.68,
+        "pe": 39.82,
+        "ps": 16.01,
+        "pfcf": 33.91,
+        "ev_ebitda": 23.71,
+        "fcf_yield": 2.95
+      },
+      "catalysts": [
+        "Latest quarterly revenue growth remained positive at 14.4% year over year.",
+        "Latest-quarter operating margin is strong at 59.1%.",
+        "Trailing free-cash-flow margin is 47.2%."
+      ],
+      "risks": [
+        "Payments regulation, litigation and changes in interchange economics could pressure the network model.",
+        "Consumer-spending weakness and alternative payment rails can slow transaction growth.",
+        "Price is above the preferred technical band, increasing chase risk."
+      ],
+      "news": [
+        {
+          "title": "Bill Ackman Just Bought Visa, Mastercard, and S&P Global Stock. Each One Collects a Toll on Somebody Else's Sale.",
+          "url": "https://www.fool.com/investing/2026/08/28/bill-ackman-just-bought-visa-mastercard-and-s-and-p-global-stock-each-one-collects-a-toll-on-somebody-else-s-sale/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-29T00:34:01Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Is Mastercard an Undervalued Stock to Buy?",
+          "url": "https://www.fool.com/investing/2026/08/28/is-mastercard-an-undervalued-stock-to-buy/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-29T00:07:27Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Is Visa an Undervalued Stock to Buy?",
+          "url": "https://www.fool.com/investing/2026/08/28/is-visa-an-undervalued-stock-to-buy/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-28T17:13:59Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Can Klook Help Mastercard Capture More APAC Travel Spending?",
+          "url": "https://www.zacks.com/stock/news/2981352/can-klook-help-mastercard-capture-more-apac-travel-spending?cid=CS-ZC-FT-analyst_blog|quick_take-2981352",
+          "publisher": "Zacks Investment Research",
+          "published_utc": "2026-08-27T15:33:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "Why Is Visa (V) Up 4.1% Since Last Earnings Report?",
+          "url": "https://www.zacks.com/stock/news/2981171/why-is-visa-v-up-4-1-since-last-earnings-report?cid=CS-ZC-FT-realtime_blog-2981171",
+          "publisher": "Zacks Investment Research",
+          "published_utc": "2026-08-27T15:30:24Z",
+          "sentiment": "neutral"
+        }
+      ],
+      "filing_links": [
+        {
+          "label": "SEC company filings",
+          "url": "https://www.sec.gov/edgar/browse/?CIK=1403161&owner=exclude&action=getcompany"
+        }
+      ],
+      "data_status": "ready",
+      "freshness": {
+        "price_asof": "2026-08-28T23:48:01+00:00",
+        "ratio_asof": "2026-08-28",
+        "financial_period_end": "2026-06-30",
+        "balance_period_end": "2026-06-30",
+        "cash_flow_period_end": "2026-06-30",
+        "filing_date": "2026-07-29",
+        "price_age_days": 2,
+        "ratio_age_days": 2,
+        "financial_age_days": 61,
+        "balance_age_days": 61,
+        "cash_flow_age_days": 61,
+        "price_fresh": true,
+        "ratios_fresh": true,
+        "income_fresh": true,
+        "balance_fresh": true,
+        "cash_flow_fresh": true,
+        "financials_fresh": true,
+        "quarters_complete": true,
+        "note": "All required sources pass freshness checks."
+      },
+      "model_note": "Generic operating-company model applied.",
+      "rank": 4
+    },
+    {
+      "ticker": "GOOGL",
+      "name": "Alphabet Inc. Class A Common Stock",
+      "sector": "SERVICES-COMPUTER PROGRAMMING, DATA PROCESSING, ETC.",
+      "theme": "Search, cloud and AI",
+      "action": "WATCH VALUATION",
+      "tone": "caution",
+      "conclusion": "Business evidence may be sound, but valuation leaves too little margin for error.",
+      "scores": {
+        "overall": 69.1,
+        "business": 77.4,
+        "valuation": 30.5,
+        "technical": 91.0,
+        "data_completeness": 100.0
+      },
+      "technical": {
+        "price": 346.59,
+        "change_pct": 1.74,
+        "asof": "2026-08-29T00:00:01+00:00",
+        "ema20": 346.49,
+        "sma50": 349.78,
+        "sma200": 334.57,
+        "rsi14": 49.3,
+        "atr14": 8.48,
+        "high52": 408.61,
+        "low52": 206.19,
+        "preferred_band": {
+          "low": 343.52,
+          "high": 352.74
+        },
+        "deeper_band": {
+          "low": 329.48,
+          "high": 339.66
+        },
+        "status": "INSIDE PREFERRED BAND",
+        "price_kind": "regular_close",
+        "market_status": "closed"
+      },
+      "metrics": {
+        "revenue_growth_yoy": 24.2,
+        "eps_growth_yoy": 294.4,
+        "gross_margin": 61.6,
+        "operating_margin": 34.0,
+        "fcf_margin": 11.9,
+        "roe": 38.1,
+        "net_cash": 144309000000.0,
+        "current_ratio": 2.7,
+        "debt_to_equity": 0.15,
+        "pe": 17.36,
+        "ps": 9.51,
+        "pfcf": 79.57,
+        "ev_ebitda": 24.77,
+        "fcf_yield": 1.26
+      },
+      "catalysts": [
+        "Latest quarterly revenue grew 24.2% year over year.",
+        "Latest-quarter operating margin is strong at 34.0%.",
+        "Trailing free-cash-flow margin is 11.9%.",
+        "Cash and short-term investments exceed reported current and long-term debt.",
+        "Price is inside the model's preferred technical accumulation band."
+      ],
+      "risks": [
+        "Antitrust remedies and AI-driven changes to search could alter the economics of the core franchise.",
+        "Large infrastructure spending must translate into durable Cloud and AI cash returns.",
+        "Large non-operating items make EPS, ROE and simple earnings multiples less representative of operations."
+      ],
+      "news": [
+        {
+          "title": "Prediction: This Is What a $5,000 Investment in SpaceX Will Be Worth by 2030",
+          "url": "https://www.fool.com/investing/2026/08/30/prediction-this-is-what-a-5000-investment-in-space/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T14:05:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "Why Rezolve AI Stock Skyrocketed This Week",
+          "url": "https://www.fool.com/investing/2026/08/30/why-rezolve-ai-stock-skyrocketed-this-week/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T10:29:44Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "Are Oklo and NuScale Power Still a Buy After Data Center Backlash?",
+          "url": "https://www.fool.com/investing/2026/08/30/are-oklo-and-nuscale-power-still-a-buy-after-data/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T06:05:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "Is D-Wave Quantum a Buy?",
+          "url": "https://www.fool.com/investing/2026/08/29/is-d-wave-quantum-a-buy/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-29T17:13:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "SEC Filings Just Revealed the Smart Money Is Overweight SpaceX. Should You Buy It Now?",
+          "url": "https://www.fool.com/investing/2026/08/29/sec-filings-just-revealed-smart-money-is-overweigh/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-29T15:15:00Z",
+          "sentiment": "positive"
+        }
+      ],
+      "filing_links": [
+        {
+          "label": "SEC company filings",
+          "url": "https://www.sec.gov/edgar/browse/?CIK=1652044&owner=exclude&action=getcompany"
+        }
+      ],
+      "data_status": "ready",
+      "freshness": {
+        "price_asof": "2026-08-29T00:00:01+00:00",
+        "ratio_asof": "2026-08-28",
+        "financial_period_end": "2026-06-30",
+        "balance_period_end": "2026-06-30",
+        "cash_flow_period_end": "2026-06-30",
+        "filing_date": "2026-07-23",
+        "price_age_days": 1,
+        "ratio_age_days": 2,
+        "financial_age_days": 61,
+        "balance_age_days": 61,
+        "cash_flow_age_days": 61,
+        "price_fresh": true,
+        "ratios_fresh": true,
+        "income_fresh": true,
+        "balance_fresh": true,
+        "cash_flow_fresh": true,
+        "financials_fresh": true,
+        "quarters_complete": true,
+        "note": "All required sources pass freshness checks."
+      },
+      "model_note": "Generic operating-company model applied.",
+      "rank": 5
+    },
+    {
+      "ticker": "AVGO",
+      "name": "Broadcom Inc. Common Stock",
+      "sector": "SEMICONDUCTORS & RELATED DEVICES",
+      "theme": "AI networking and infrastructure software",
+      "action": "WATCH VALUATION",
+      "tone": "caution",
+      "conclusion": "Business evidence may be sound, but valuation leaves too little margin for error.",
+      "scores": {
+        "overall": 64.4,
+        "business": 91.4,
+        "valuation": 25.3,
+        "technical": 49.5,
+        "data_completeness": 100.0
+      },
+      "technical": {
+        "price": 368.79,
+        "change_pct": -0.74,
+        "asof": "2026-08-29T00:00:01+00:00",
+        "ema20": 379.94,
+        "sma50": 386.11,
+        "sma200": 369.38,
+        "rsi14": 42.7,
+        "atr14": 13.96,
+        "high52": 495.0,
+        "low52": 287.17,
+        "preferred_band": {
+          "low": 375.05,
+          "high": 390.99
+        },
+        "deeper_band": {
+          "low": 361.01,
+          "high": 377.76
+        },
+        "status": "BELOW PREFERRED BAND",
+        "price_kind": "regular_close",
+        "market_status": "closed"
+      },
+      "metrics": {
+        "revenue_growth_yoy": 47.9,
+        "eps_growth_yoy": 85.4,
+        "gross_margin": 69.5,
+        "operating_margin": 48.6,
+        "fcf_margin": 43.4,
+        "roe": 33.4,
+        "net_cash": -45279000000.0,
+        "current_ratio": 2.2,
+        "debt_to_equity": 0.74,
+        "pe": 59.85,
+        "ps": 23.25,
+        "pfcf": 53.55,
+        "ev_ebitda": 42.85,
+        "fcf_yield": 1.87
+      },
+      "catalysts": [
+        "Latest quarterly revenue grew 47.9% year over year.",
+        "Latest-quarter operating margin is strong at 48.6%.",
+        "Trailing free-cash-flow margin is 43.4%."
+      ],
+      "risks": [
+        "Large customers, acquisition integration and debt create concentration and execution risk.",
+        "A slowdown in custom AI accelerators or networking demand could compress a premium valuation."
+      ],
+      "news": [
+        {
+          "title": "Tim Cook Committed Apple to a $60 Billion Domestic Manufacturing Bet Just Weeks Before Handing Off the CEO Job. Here's What It Means for Apple Investors.",
+          "url": "https://www.fool.com/investing/2026/08/30/tim-cook-apple-60-billion-bet-means-investors/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T10:15:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Stock Market Today, Aug. 28: Marvell Slides 10% on Softer Fiscal 2028 Guidance and Google Deal Timing",
+          "url": "https://www.fool.com/coverage/stock-market-today/2026/08/28/stock-market-today-aug-28-marvell-slides-10-on-softer-fiscal-2028-guidance-and-google-deal-timing/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-28T21:09:34Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "Billionaire Ken Griffin Is Shifting His AI Bets. Here's What He's Buying and Selling.",
+          "url": "https://www.fool.com/investing/2026/08/28/billionaire-ken-griffin-is-shifting-his-ai-bets-he/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-28T10:30:00Z",
+          "sentiment": "negative"
+        },
+        {
+          "title": "Meet the Super Semiconductor ETF Obliterating the S&P 500 and the Nasdaq-100 in 2026",
+          "url": "https://www.fool.com/investing/2026/08/28/meet-semiconductor-etf-sp-500-nasdaq-100-in-2026/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-28T08:30:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Stock Market Today, Aug. 27: Nvidia Surges on Blowout Results and Surprising Guidance",
+          "url": "https://www.fool.com/coverage/stock-market-today/2026/08/27/stock-market-today-aug-27-nvidia-surges-on-blowout-results-and-surprising-guidance/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-27T21:01:26Z",
+          "sentiment": "positive"
+        }
+      ],
+      "filing_links": [
+        {
+          "label": "SEC company filings",
+          "url": "https://www.sec.gov/edgar/browse/?CIK=1730168&owner=exclude&action=getcompany"
+        }
+      ],
+      "data_status": "ready",
+      "freshness": {
+        "price_asof": "2026-08-29T00:00:01+00:00",
+        "ratio_asof": "2026-08-28",
+        "financial_period_end": "2026-05-03",
+        "balance_period_end": "2026-05-03",
+        "cash_flow_period_end": "2026-05-03",
+        "filing_date": "2026-06-09",
+        "price_age_days": 1,
+        "ratio_age_days": 2,
+        "financial_age_days": 119,
+        "balance_age_days": 119,
+        "cash_flow_age_days": 119,
+        "price_fresh": true,
+        "ratios_fresh": true,
+        "income_fresh": true,
+        "balance_fresh": true,
+        "cash_flow_fresh": true,
+        "financials_fresh": true,
+        "quarters_complete": true,
+        "note": "All required sources pass freshness checks."
+      },
+      "model_note": "Generic operating-company model applied.",
+      "rank": 6
+    },
+    {
+      "ticker": "GEV",
+      "name": "GE Vernova Inc.",
+      "sector": "ELECTRONIC & OTHER ELECTRICAL EQUIPMENT (NO COMPUTER EQUIP)",
+      "theme": "Power generation and grid equipment",
+      "action": "WATCH",
+      "tone": "neutral",
+      "conclusion": "Evidence is mixed; keep the company on the research list until valuation or price improves.",
+      "scores": {
+        "overall": 62.5,
+        "business": 62.6,
+        "valuation": 58.4,
+        "technical": 66.2,
+        "data_completeness": 100.0
+      },
+      "technical": {
+        "price": 911.93,
+        "change_pct": -4.39,
+        "asof": "2026-08-29T00:00:01+00:00",
+        "ema20": 981.31,
+        "sma50": 1031.65,
+        "sma200": 877.43,
+        "rsi14": 37.0,
+        "atr14": 46.79,
+        "high52": 1195.94,
+        "low52": 530.16,
+        "preferred_band": {
+          "low": 964.93,
+          "high": 1048.03
+        },
+        "deeper_band": {
+          "low": 849.36,
+          "high": 905.5
+        },
+        "status": "BELOW PREFERRED BAND",
+        "price_kind": "regular_close",
+        "market_status": "closed"
+      },
+      "metrics": {
+        "revenue_growth_yoy": 21.9,
+        "eps_growth_yoy": 32.8,
+        "gross_margin": 21.3,
+        "operating_margin": 5.9,
+        "fcf_margin": 30.1,
+        "roe": 79.7,
+        "net_cash": 10326000000.0,
+        "current_ratio": 0.8,
+        "debt_to_equity": 0.23,
+        "pe": 25.49,
+        "ps": 5.87,
+        "pfcf": 19.53,
+        "ev_ebitda": 77.49,
+        "fcf_yield": 5.12
+      },
+      "catalysts": [
+        "Latest quarterly revenue grew 21.9% year over year.",
+        "Trailing free-cash-flow margin is 30.1%.",
+        "Cash and short-term investments exceed reported current and long-term debt."
+      ],
+      "risks": [
+        "Backlog conversion, project execution and the path to profitability in Wind can be volatile.",
+        "A large valuation rerating makes the stock sensitive to slower power-infrastructure orders.",
+        "Large non-operating items make EPS, ROE and simple earnings multiples less representative of operations."
+      ],
+      "news": [
+        {
+          "title": "A Wall Street Journal Report on $3 Trillion in Off-Balance-Sheet AI Commitments Recently Tanked Vertiv and GE Vernova. Here's What Actually Changed.",
+          "url": "https://www.fool.com/investing/2026/08/28/a-wall-street-journal-report-on-3-trillion-in-off/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-28T21:05:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "2 Energy Stocks Riding the Data Center Power Crunch",
+          "url": "https://www.fool.com/investing/2026/08/23/2-energy-stocks-riding-the-data-center-power-crunc/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-23T18:35:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Gas Turbine Prices Are on Track to Nearly Triple. These Stocks Are Cashing In",
+          "url": "https://www.fool.com/investing/2026/08/23/gas-turbine-prices-on-track-triple-stocks-gev/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-23T16:11:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "GE Vernova's Backlog Is Bigger Than Some Countries' GDP. Here's What's Actually Inside the $176 Billion.",
+          "url": "https://www.fool.com/investing/2026/08/22/ge-vernovas-backlog-is-bigger-than-some-countries/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-22T23:05:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Morgan Stanley Says AI Data Centers Face a 38-Gigawatt Power Gap. These Industrial Stocks Fill It.",
+          "url": "https://www.fool.com/investing/2026/08/20/morgan-stanley-says-ai-data-centers-face-a-38-giga/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-20T12:05:00Z",
+          "sentiment": "positive"
+        }
+      ],
+      "filing_links": [
+        {
+          "label": "SEC company filings",
+          "url": "https://www.sec.gov/edgar/browse/?CIK=1996810&owner=exclude&action=getcompany"
+        }
+      ],
+      "data_status": "ready",
+      "freshness": {
+        "price_asof": "2026-08-29T00:00:01+00:00",
+        "ratio_asof": "2026-08-28",
+        "financial_period_end": "2026-06-30",
+        "balance_period_end": "2026-06-30",
+        "cash_flow_period_end": "2026-06-30",
+        "filing_date": "2026-07-22",
+        "price_age_days": 1,
+        "ratio_age_days": 2,
+        "financial_age_days": 61,
+        "balance_age_days": 61,
+        "cash_flow_age_days": 61,
+        "price_fresh": true,
+        "ratios_fresh": true,
+        "income_fresh": true,
+        "balance_fresh": true,
+        "cash_flow_fresh": true,
+        "financials_fresh": true,
+        "quarters_complete": true,
+        "note": "All required sources pass freshness checks."
+      },
+      "model_note": "Generic operating-company model applied.",
+      "rank": 7
+    },
+    {
+      "ticker": "AMZN",
+      "name": "Amazon.Com Inc",
+      "sector": "RETAIL-CATALOG & MAIL-ORDER HOUSES",
+      "theme": "Cloud, commerce and advertising",
+      "action": "WATCH PRICE",
+      "tone": "caution",
+      "conclusion": "The stock is above its preferred technical band; wait for price or fundamentals to catch up.",
+      "scores": {
+        "overall": 62.0,
+        "business": 56.4,
+        "valuation": 45.6,
+        "technical": 89.5,
+        "data_completeness": 94.0
+      },
+      "technical": {
+        "price": 266.43,
+        "change_pct": 3.97,
+        "asof": "2026-08-29T00:00:01+00:00",
+        "ema20": 260.99,
+        "sma50": 251.66,
+        "sma200": 238.68,
+        "rsi14": 55.9,
+        "atr14": 7.04,
+        "high52": 287.2,
+        "low52": 196.0,
+        "preferred_band": {
+          "low": 249.2,
+          "high": 263.45
+        },
+        "deeper_band": {
+          "low": 234.46,
+          "high": 242.9
+        },
+        "status": "ABOVE PREFERRED BAND",
+        "price_kind": "regular_close",
+        "market_status": "closed"
+      },
+      "metrics": {
+        "revenue_growth_yoy": 19.6,
+        "eps_growth_yoy": 242.3,
+        "gross_margin": 52.3,
+        "operating_margin": 13.7,
+        "fcf_margin": -1.5,
+        "roe": 24.5,
+        "net_cash": -5906000000.0,
+        "current_ratio": 1.0,
+        "debt_to_equity": 0.23,
+        "pe": 21.24,
+        "ps": 3.7,
+        "pfcf": null,
+        "ev_ebitda": 17.31,
+        "fcf_yield": -0.4
+      },
+      "catalysts": [
+        "Latest quarterly revenue grew 19.6% year over year."
+      ],
+      "risks": [
+        "Heavy data-center spending can suppress free cash flow before returns are proven.",
+        "Retail margins, labor costs and regulatory scrutiny remain meaningful swing factors.",
+        "Trailing free cash flow is negative relative to the latest four-quarter revenue base.",
+        "Large non-operating items make EPS, ROE and simple earnings multiples less representative of operations.",
+        "Price is above the preferred technical band, increasing chase risk."
+      ],
+      "news": [
+        {
+          "title": "Amazon Has Badly Underperformed the S&P 500 and Nasdaq-100 Since Jeff Bezos Stepped Down as CEO. Could Apple Do the Same Starting Sept. 1 When Tim Cook Steps Down?",
+          "url": "https://www.fool.com/investing/2026/08/30/amazon-has-badly-underperformed-the-sp-500-and-nas/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T14:15:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "Prediction: This Is What a $5,000 Investment in SpaceX Will Be Worth by 2030",
+          "url": "https://www.fool.com/investing/2026/08/30/prediction-this-is-what-a-5000-investment-in-space/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T14:05:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "Is This the Single Best Reason to Buy Amazon Stock Right Now?",
+          "url": "https://www.fool.com/investing/2026/08/30/is-amazons-this-the-single-best-reason-to-buy-the/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T11:05:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Better International E-Commerce Stock: MercadoLibre vs. Sea Limited",
+          "url": "https://www.fool.com/investing/2026/08/30/better-international-e-commerce-stock-mercadolibre/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T08:15:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "360in360 Living Memories Adds Audiobook and Voice-Preservation Capability",
+          "url": "https://www.globenewswire.com/news-release/2026/08/29/3352925/0/en/360in360-living-memories-adds-audiobook-and-voice-preservation-capability.html",
+          "publisher": "GlobeNewswire Inc.",
+          "published_utc": "2026-08-29T09:58:00Z",
+          "sentiment": "neutral"
+        }
+      ],
+      "filing_links": [
+        {
+          "label": "SEC company filings",
+          "url": "https://www.sec.gov/edgar/browse/?CIK=1018724&owner=exclude&action=getcompany"
+        }
+      ],
+      "data_status": "ready",
+      "freshness": {
+        "price_asof": "2026-08-29T00:00:01+00:00",
+        "ratio_asof": "2026-08-28",
+        "financial_period_end": "2026-06-30",
+        "balance_period_end": "2026-06-30",
+        "cash_flow_period_end": "2026-06-30",
+        "filing_date": "2026-07-31",
+        "price_age_days": 1,
+        "ratio_age_days": 2,
+        "financial_age_days": 61,
+        "balance_age_days": 61,
+        "cash_flow_age_days": 61,
+        "price_fresh": true,
+        "ratios_fresh": true,
+        "income_fresh": true,
+        "balance_fresh": true,
+        "cash_flow_fresh": true,
+        "financials_fresh": true,
+        "quarters_complete": true,
+        "note": "All required sources pass freshness checks."
+      },
+      "model_note": "Generic operating-company model applied.",
+      "rank": 8
+    },
+    {
+      "ticker": "META",
+      "name": "Meta Platforms, Inc. Class A Common Stock",
+      "sector": "SERVICES-COMPUTER PROGRAMMING, DATA PROCESSING, ETC.",
+      "theme": "Digital advertising and AI",
+      "action": "WATCH PRICE",
+      "tone": "caution",
+      "conclusion": "The long-term price trend needs to stabilize before new capital is considered.",
+      "scores": {
+        "overall": 61.3,
+        "business": 71.9,
+        "valuation": 65.7,
+        "technical": 35.6,
+        "data_completeness": 100.0
+      },
+      "technical": {
+        "price": 578.02,
+        "change_pct": 1.21,
+        "asof": "2026-08-29T00:00:01+00:00",
+        "ema20": 575.09,
+        "sma50": 592.14,
+        "sma200": 622.72,
+        "rsi14": 49.6,
+        "atr14": 20.08,
+        "high52": 790.8,
+        "low52": 520.26,
+        "preferred_band": {
+          "low": 568.06,
+          "high": 599.17
+        },
+        "deeper_band": {
+          "low": 610.68,
+          "high": 634.77
+        },
+        "status": "TREND BROKEN",
+        "price_kind": "regular_close",
+        "market_status": "closed"
+      },
+      "metrics": {
+        "revenue_growth_yoy": 28.0,
+        "eps_growth_yoy": -13.4,
+        "gross_margin": 81.4,
+        "operating_margin": 30.9,
+        "fcf_margin": 18.0,
+        "roe": 26.1,
+        "net_cash": 6596000000.0,
+        "current_ratio": 2.2,
+        "debt_to_equity": 0.32,
+        "pe": 21.62,
+        "ps": 6.45,
+        "pfcf": 35.94,
+        "ev_ebitda": 14.05,
+        "fcf_yield": 2.78
+      },
+      "catalysts": [
+        "Latest quarterly revenue grew 28.0% year over year.",
+        "Latest-quarter operating margin is strong at 30.9%.",
+        "Trailing free-cash-flow margin is 18.0%.",
+        "Cash and short-term investments exceed reported current and long-term debt."
+      ],
+      "risks": [
+        "Advertising is economically sensitive, while regulation and platform-policy changes are persistent risks.",
+        "AI and metaverse investment can raise costs faster than monetization improves."
+      ],
+      "news": [
+        {
+          "title": "Meta Stock Looks Undervalued. Is the Market Missing Something?",
+          "url": "https://www.fool.com/investing/2026/08/30/meta-stock-looks-undervalued-is-the-market-missing/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T14:15:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "A Wall Street Journal Report on $3 Trillion in Off-Balance-Sheet AI Commitments Recently Tanked Vertiv and GE Vernova. Here's What Actually Changed.",
+          "url": "https://www.fool.com/investing/2026/08/28/a-wall-street-journal-report-on-3-trillion-in-off/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-28T21:05:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "Why the Bull Market Should Run Through 2027",
+          "url": "https://www.zacks.com/stock/news/2982096/why-the-bull-market-should-run-through-2027?cid=CS-ZC-FT-weekend_wisdom-2982096",
+          "publisher": "Zacks Investment Research",
+          "published_utc": "2026-08-28T18:04:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Meta's $18 Billion Settlement Could Reshape Social Media Stocks",
+          "url": "https://www.zacks.com/stock/news/2981568/meta-s-18-billion-settlement-could-reshape-social-media-stocks?cid=CS-ZC-FT-analyst_blog|company_news_corporate_actions-2981568",
+          "publisher": "Zacks Investment Research",
+          "published_utc": "2026-08-28T12:21:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "The S&P 500 Is Repeating an Ominous Pattern Not Seen in 26 Years. History Says This Is What Usually Happens Next, and Why This Time Could Be Different.",
+          "url": "https://www.fool.com/investing/2026/08/28/the-sp-500-is-repeating-an-ominous-pattern-not-see/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-28T10:26:00Z",
+          "sentiment": "positive"
+        }
+      ],
+      "filing_links": [
+        {
+          "label": "SEC company filings",
+          "url": "https://www.sec.gov/edgar/browse/?CIK=1326801&owner=exclude&action=getcompany"
+        }
+      ],
+      "data_status": "ready",
+      "freshness": {
+        "price_asof": "2026-08-29T00:00:01+00:00",
+        "ratio_asof": "2026-08-28",
+        "financial_period_end": "2026-06-30",
+        "balance_period_end": "2026-06-30",
+        "cash_flow_period_end": "2026-06-30",
+        "filing_date": "2026-07-30",
+        "price_age_days": 1,
+        "ratio_age_days": 2,
+        "financial_age_days": 61,
+        "balance_age_days": 61,
+        "cash_flow_age_days": 61,
+        "price_fresh": true,
+        "ratios_fresh": true,
+        "income_fresh": true,
+        "balance_fresh": true,
+        "cash_flow_fresh": true,
+        "financials_fresh": true,
+        "quarters_complete": true,
+        "note": "All required sources pass freshness checks."
+      },
+      "model_note": "Generic operating-company model applied.",
+      "rank": 9
+    },
+    {
+      "ticker": "ORCL",
+      "name": "Oracle Corp",
+      "sector": "SERVICES-PREPACKAGED SOFTWARE",
+      "theme": "Database and cloud infrastructure",
+      "action": "WATCH PRICE",
+      "tone": "caution",
+      "conclusion": "The long-term price trend needs to stabilize before new capital is considered.",
+      "scores": {
+        "overall": 54.2,
+        "business": 60.3,
+        "valuation": 51.7,
+        "technical": 44.6,
+        "data_completeness": 94.0
+      },
+      "technical": {
+        "price": 150.85,
+        "change_pct": -0.72,
+        "asof": "2026-08-29T00:00:01+00:00",
+        "ema20": 145.22,
+        "sma50": 141.55,
+        "sma200": 170.66,
+        "rsi14": 56.1,
+        "atr14": 6.51,
+        "high52": 345.72,
+        "low52": 114.5,
+        "preferred_band": {
+          "low": 139.27,
+          "high": 147.5
+        },
+        "deeper_band": {
+          "low": 166.75,
+          "high": 174.57
+        },
+        "status": "TREND BROKEN",
+        "price_kind": "regular_close",
+        "market_status": "closed"
+      },
+      "metrics": {
+        "revenue_growth_yoy": 20.6,
+        "eps_growth_yoy": 21.8,
+        "gross_margin": 65.2,
+        "operating_margin": 32.0,
+        "fcf_margin": -35.2,
+        "roe": 40.0,
+        "net_cash": -97647000000.0,
+        "current_ratio": 1.1,
+        "debt_to_equity": 3.05,
+        "pe": 25.58,
+        "ps": 6.45,
+        "pfcf": null,
+        "ev_ebitda": 16.79,
+        "fcf_yield": -5.45
+      },
+      "catalysts": [
+        "Latest quarterly revenue grew 20.6% year over year.",
+        "Latest-quarter operating margin is strong at 32.0%."
+      ],
+      "risks": [
+        "Cloud expansion requires heavy capital spending and disciplined balance-sheet management.",
+        "Execution against larger cloud competitors and converting backlog into profitable revenue are key.",
+        "Trailing free cash flow is negative relative to the latest four-quarter revenue base."
+      ],
+      "news": [
+        {
+          "title": "Software-defined Commercial Vehicle Market worth $7.29 billion by 2035 — MarketsandMarkets™",
+          "url": "https://www.globenewswire.com/news-release/2026/08/28/3352734/0/en/software-defined-commercial-vehicle-market-worth-7-29-billion-by-2035-marketsandmarkets.html",
+          "publisher": "GlobeNewswire Inc.",
+          "published_utc": "2026-08-28T14:00:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Wall Street Analysts Think Oracle (ORCL) Is a Good Investment: Is It?",
+          "url": "https://www.zacks.com/stock/news/2981647/wall-street-analysts-think-oracle-orcl-is-a-good-investment-is-it?cid=CS-ZC-FT-fundamental_analysis|average_broker_rating-2981647",
+          "publisher": "Zacks Investment Research",
+          "published_utc": "2026-08-28T13:30:03Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "C3.ai vs. Oracle: Which Artificial Intelligence Stock Is a Better Investment in 2026?",
+          "url": "https://www.fool.com/coverage/better-buy/2026/08/27/c3-ai-vs-oracle-which-artificial-intelligence-stock-is-a-better-investment-in-2026/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-27T23:36:59Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "I'd Rather Own Bloom Energy Than Nvidia Right Now. Here's My Case.",
+          "url": "https://www.fool.com/investing/2026/08/26/id-rather-own-bloom-energy-than-nvidia-right-now-h/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-26T20:30:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "Will Bloom Energy Be the Next SpaceX? What the Numbers Actually Say.",
+          "url": "https://www.fool.com/investing/2026/08/26/will-bloom-energy-be-the-next-spacex/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-26T16:05:00Z",
+          "sentiment": "neutral"
+        }
+      ],
+      "filing_links": [
+        {
+          "label": "SEC company filings",
+          "url": "https://www.sec.gov/edgar/browse/?CIK=1341439&owner=exclude&action=getcompany"
+        }
+      ],
+      "data_status": "ready",
+      "freshness": {
+        "price_asof": "2026-08-29T00:00:01+00:00",
+        "ratio_asof": "2026-08-28",
+        "financial_period_end": "2026-05-31",
+        "balance_period_end": "2026-05-31",
+        "cash_flow_period_end": "2026-05-31",
+        "filing_date": "2026-06-22",
+        "price_age_days": 1,
+        "ratio_age_days": 2,
+        "financial_age_days": 91,
+        "balance_age_days": 91,
+        "cash_flow_age_days": 91,
+        "price_fresh": true,
+        "ratios_fresh": true,
+        "income_fresh": true,
+        "balance_fresh": true,
+        "cash_flow_fresh": true,
+        "financials_fresh": true,
+        "quarters_complete": true,
+        "note": "All required sources pass freshness checks."
+      },
+      "model_note": "Generic operating-company model applied.",
+      "rank": 10
+    },
+    {
+      "ticker": "COST",
+      "name": "Costco Wholesale Corp",
+      "sector": "RETAIL-VARIETY STORES",
+      "theme": "Membership retail",
+      "action": "INSUFFICIENT DATA",
+      "tone": "neutral",
+      "conclusion": "Recent, complete business, valuation and price evidence is required before ranking this stock.",
+      "scores": {
+        "overall": null,
+        "business": 52.9,
+        "valuation": 48.4,
+        "technical": 65.3,
+        "data_completeness": 79.0
+      },
+      "technical": {
+        "price": 945.47,
+        "change_pct": 1.16,
+        "asof": "2026-08-29T00:00:01+00:00",
+        "ema20": 950.76,
+        "sma50": 945.78,
+        "sma200": 959.94,
+        "rsi14": 48.1,
+        "atr14": 18.3,
+        "high52": 1096.5,
+        "low52": 844.06,
+        "preferred_band": {
+          "low": 939.37,
+          "high": 957.16
+        },
+        "deeper_band": {
+          "low": 948.96,
+          "high": 970.92
+        },
+        "status": "INSIDE PREFERRED BAND",
+        "price_kind": "regular_close",
+        "market_status": "closed"
+      },
+      "metrics": {
+        "revenue_growth_yoy": 11.6,
+        "eps_growth_yoy": 15.2,
+        "gross_margin": 12.8,
+        "operating_margin": 4.0,
+        "fcf_margin": null,
+        "roe": 26.4,
+        "net_cash": 14326000000.0,
+        "current_ratio": 1.1,
+        "debt_to_equity": 0.17,
+        "pe": 47.44,
+        "ps": 1.43,
+        "pfcf": null,
+        "ev_ebitda": 32.23,
+        "fcf_yield": null
+      },
+      "catalysts": [
+        "Latest quarterly revenue growth remained positive at 11.6% year over year.",
+        "Cash and short-term investments exceed reported current and long-term debt.",
+        "Price is inside the model's preferred technical accumulation band."
+      ],
+      "risks": [
+        "A premium valuation leaves little room for slower traffic, weaker renewals or margin pressure.",
+        "Low merchandise margins make wage, freight and input-cost execution important.",
+        "Needs current financial statements."
+      ],
+      "news": [
+        {
+          "title": "3 Consumer Stocks Driving Growth From a Regional-to-National Expansion",
+          "url": "https://www.fool.com/investing/2026/08/30/3-consumer-stocks-driving-growth-from-a-regional-t/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T08:30:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "A Costco Special Dividend Could Be Coming, but Walmart Has Raised Its Dividend for 53 Consecutive Years. Here's the Better Buy Now.",
+          "url": "https://www.fool.com/investing/2026/08/28/a-costco-special-dividend-could-be-coming-but-walm/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-29T02:15:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "Target's Digital Growth Story Gains Strength With Same-Day Delivery",
+          "url": "https://www.zacks.com/stock/news/2982079/target-s-digital-growth-story-gains-strength-with-same-day-delivery?cid=CS-ZC-FT-analyst_blog|rank_focused-2982079",
+          "publisher": "Zacks Investment Research",
+          "published_utc": "2026-08-28T16:23:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "Costco (COST) Stock Drops Despite Market Gains: Important Facts to Note",
+          "url": "https://www.zacks.com/stock/news/2981444/costco-cost-stock-drops-despite-market-gains-important-facts-to-note?cid=CS-ZC-FT-fundamental_analysis|yseop_template_6-2981444",
+          "publisher": "Zacks Investment Research",
+          "published_utc": "2026-08-27T21:45:03Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "Costco Stock: Higher Oil Prices are Bringing Customers to Costco",
+          "url": "https://www.fool.com/investing/2026/08/23/costco-stock-higher-oil-prices-are-bringing-custom/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-23T04:25:17Z",
+          "sentiment": "positive"
+        }
+      ],
+      "filing_links": [
+        {
+          "label": "SEC company filings",
+          "url": "https://www.sec.gov/edgar/browse/?CIK=909832&owner=exclude&action=getcompany"
+        }
+      ],
+      "data_status": "insufficient",
+      "freshness": {
+        "price_asof": "2026-08-29T00:00:01+00:00",
+        "ratio_asof": "2026-08-28",
+        "financial_period_end": "2026-05-10",
+        "balance_period_end": "2026-05-10",
+        "cash_flow_period_end": "2023-11-26",
+        "filing_date": "2026-06-03",
+        "price_age_days": 1,
+        "ratio_age_days": 2,
+        "financial_age_days": 112,
+        "balance_age_days": 112,
+        "cash_flow_age_days": 1008,
+        "price_fresh": true,
+        "ratios_fresh": true,
+        "income_fresh": true,
+        "balance_fresh": true,
+        "cash_flow_fresh": false,
+        "financials_fresh": false,
+        "quarters_complete": true,
+        "note": "Needs current financial statements."
+      },
+      "model_note": "Generic operating-company model applied.",
+      "rank": 11
+    },
+    {
+      "ticker": "TSM",
+      "name": "Taiwan Semiconductor Manufacturing Company Ltd.",
+      "sector": "Sector unavailable",
+      "theme": "Advanced semiconductor foundry",
+      "action": "UNSUPPORTED MODEL",
+      "tone": "neutral",
+      "conclusion": "This security needs a sector, foreign-issuer or ADR-specific model before an investment view is responsible.",
+      "scores": {
+        "overall": null,
+        "business": null,
+        "valuation": null,
+        "technical": 91.0,
+        "data_completeness": 10.0
+      },
+      "technical": {
+        "price": 417.52,
+        "change_pct": -2.29,
+        "asof": "2026-08-29T00:00:01+00:00",
+        "ema20": 418.22,
+        "sma50": 423.43,
+        "sma200": 369.53,
+        "rsi14": 49.6,
+        "atr14": 12.74,
+        "high52": 479.0,
+        "low52": 225.63,
+        "preferred_band": {
+          "low": 413.76,
+          "high": 427.89
+        },
+        "deeper_band": {
+          "low": 361.89,
+          "high": 377.17
+        },
+        "status": "INSIDE PREFERRED BAND",
+        "price_kind": "regular_close",
+        "market_status": "closed"
+      },
+      "metrics": {
+        "revenue_growth_yoy": null,
+        "eps_growth_yoy": null,
+        "gross_margin": null,
+        "operating_margin": null,
+        "fcf_margin": null,
+        "roe": null,
+        "net_cash": null,
+        "current_ratio": null,
+        "debt_to_equity": null,
+        "pe": null,
+        "ps": null,
+        "pfcf": null,
+        "ev_ebitda": null,
+        "fcf_yield": null
+      },
+      "catalysts": [
+        "Price is inside the model's preferred technical accumulation band."
+      ],
+      "risks": [
+        "Taiwan geopolitical risk is a severe tail risk that ordinary valuation metrics cannot capture.",
+        "The U.S. ADR does not fit this SEC-quarterly model, so Swing Bot withholds an investment action.",
+        "Needs current ratios, financial statements, four contiguous quarters."
+      ],
+      "news": [
+        {
+          "title": "This Was Situational Awareness's Top 5 Holdings at the End of Q2. They're All on Sale Now",
+          "url": "https://www.fool.com/investing/2026/08/28/this-was-situational-awarenesss-top-5-holdings-at/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-28T18:15:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Meet the Super Semiconductor ETF Obliterating the S&P 500 and the Nasdaq-100 in 2026",
+          "url": "https://www.fool.com/investing/2026/08/28/meet-semiconductor-etf-sp-500-nasdaq-100-in-2026/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-28T08:30:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Top China Tech Plays Worth Adding to Your Portfolio Right Now",
+          "url": "https://www.zacks.com/stock/news/2981272/top-china-tech-plays-worth-adding-to-your-portfolio-right-now?cid=CS-ZC-FT-china_technology-2981272",
+          "publisher": "Zacks Investment Research",
+          "published_utc": "2026-08-27T15:49:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "3 Artificial Intelligence (AI) Stocks Hedge Funds Are Buying Hand Over Fist",
+          "url": "https://www.fool.com/investing/2026/08/27/3-ai-stocks-hedge-funds-are-buying/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-27T14:19:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Billionaire David Tepper Sold Every Single Share of UnitedHealth in Q2. Here's Whether He Made a Costly Mistake.",
+          "url": "https://www.fool.com/investing/2026/08/26/billionaire-david-tepper-sold-every-single-share-o/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-26T10:30:00Z",
+          "sentiment": "neutral"
+        }
+      ],
+      "filing_links": [
+        {
+          "label": "SEC company filings",
+          "url": "https://www.sec.gov/edgar/browse/?CIK=1046179&owner=exclude&action=getcompany"
+        }
+      ],
+      "data_status": "unsupported_foreign",
+      "freshness": {
+        "price_asof": "2026-08-29T00:00:01+00:00",
+        "ratio_asof": null,
+        "financial_period_end": null,
+        "balance_period_end": null,
+        "cash_flow_period_end": null,
+        "filing_date": null,
+        "price_age_days": 1,
+        "ratio_age_days": null,
+        "financial_age_days": null,
+        "balance_age_days": null,
+        "cash_flow_age_days": null,
+        "price_fresh": true,
+        "ratios_fresh": false,
+        "income_fresh": false,
+        "balance_fresh": false,
+        "cash_flow_fresh": false,
+        "financials_fresh": false,
+        "quarters_complete": false,
+        "note": "Needs current ratios, financial statements, four contiguous quarters."
+      },
+      "model_note": "Foreign issuers and ADRs require currency, filing-frequency and share-ratio normalization.",
+      "rank": 12
+    }
+  ],
+  "items": {
+    "NVDA": {
+      "ticker": "NVDA",
+      "name": "Nvidia Corp",
+      "sector": "SEMICONDUCTORS & RELATED DEVICES",
+      "theme": "AI compute",
+      "action": "START SMALL",
+      "tone": "positive",
+      "conclusion": "The evidence supports a starter position, with later additions conditioned on new filings and price discipline.",
+      "scores": {
+        "overall": 86.0,
+        "business": 97.1,
+        "valuation": 50.0,
+        "technical": 100.0,
+        "data_completeness": 100.0
+      },
+      "technical": {
+        "price": 217.55,
+        "change_pct": -4.57,
+        "asof": "2026-08-29T00:00:01+00:00",
+        "ema20": 215.67,
+        "sma50": 208.42,
+        "sma200": 195.83,
+        "rsi14": 52.3,
+        "atr14": 7.66,
+        "high52": 236.54,
+        "low52": 164.07,
+        "preferred_band": {
+          "low": 205.74,
+          "high": 218.35
+        },
+        "deeper_band": {
+          "low": 191.23,
+          "high": 200.42
+        },
+        "status": "INSIDE PREFERRED BAND",
+        "price_kind": "regular_close",
+        "market_status": "closed"
+      },
+      "metrics": {
+        "revenue_growth_yoy": 105.9,
+        "eps_growth_yoy": 127.8,
+        "gross_margin": 75.0,
+        "operating_margin": 66.2,
+        "fcf_margin": 41.9,
+        "roe": 84.2,
+        "net_cash": 66003000000.0,
+        "current_ratio": 4.6,
+        "debt_to_equity": 0.15,
+        "pe": 27.24,
+        "ps": 17.34,
+        "pfcf": 41.36,
+        "ev_ebitda": 26.15,
+        "fcf_yield": 2.42
+      },
+      "catalysts": [
+        "Latest quarterly revenue grew 105.9% year over year.",
+        "Latest-quarter operating margin is strong at 66.2%.",
+        "Trailing free-cash-flow margin is 41.9%.",
+        "Cash and short-term investments exceed reported current and long-term debt.",
+        "Price is inside the model's preferred technical accumulation band."
+      ],
+      "risks": [
+        "AI spending, customer concentration and semiconductor cycles can make growth volatile.",
+        "Export controls and customers developing their own chips can pressure demand or margins."
+      ],
+      "news": [
+        {
+          "title": "Nvidia Stock Won't Be Overvalued by 2028: My Case for Buying NVDA Today",
+          "url": "https://www.fool.com/investing/2026/08/30/nvidia-stock-overvalued-2028-buy-nvda/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T11:15:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Is This the Single Best Reason to Buy Amazon Stock Right Now?",
+          "url": "https://www.fool.com/investing/2026/08/30/is-amazons-this-the-single-best-reason-to-buy-the/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T11:05:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "VOO vs. RSP: If AI Stocks Get Too Concentrated, Here's Which One I'd Choose",
+          "url": "https://www.fool.com/investing/2026/08/30/voo-vs-rsp-if-ai-stocks-get-too-concentrated-heres/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T10:24:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "History Says This Is What Happens to Nvidia Stock in September",
+          "url": "https://www.fool.com/investing/2026/08/30/history-says-what-happens-nvidia-stock-september/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T10:05:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "I'd Rather Bet on AI's Electric Bill Than Its Chips. Here's Why.",
+          "url": "https://www.fool.com/investing/2026/08/29/id-rather-bet-on-ais-electric-bill-than-its-chips/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-29T16:15:00Z",
+          "sentiment": "neutral"
+        }
+      ],
+      "filing_links": [
+        {
+          "label": "SEC company filings",
+          "url": "https://www.sec.gov/edgar/browse/?CIK=1045810&owner=exclude&action=getcompany"
+        }
+      ],
+      "data_status": "ready",
+      "freshness": {
+        "price_asof": "2026-08-29T00:00:01+00:00",
+        "ratio_asof": "2026-08-28",
+        "financial_period_end": "2026-07-26",
+        "balance_period_end": "2026-07-26",
+        "cash_flow_period_end": "2026-07-26",
+        "filing_date": "2026-08-26",
+        "price_age_days": 1,
+        "ratio_age_days": 2,
+        "financial_age_days": 35,
+        "balance_age_days": 35,
+        "cash_flow_age_days": 35,
+        "price_fresh": true,
+        "ratios_fresh": true,
+        "income_fresh": true,
+        "balance_fresh": true,
+        "cash_flow_fresh": true,
+        "financials_fresh": true,
+        "quarters_complete": true,
+        "note": "All required sources pass freshness checks."
+      },
+      "model_note": "Generic operating-company model applied.",
+      "rank": 1
+    },
+    "LLY": {
+      "ticker": "LLY",
+      "name": "Eli Lilly & Co.",
+      "sector": "PHARMACEUTICAL PREPARATIONS",
+      "theme": "Metabolic health and medicines",
+      "action": "WATCH",
+      "tone": "neutral",
+      "conclusion": "Evidence is mixed; keep the company on the research list until valuation or price improves.",
+      "scores": {
+        "overall": 74.3,
+        "business": 83.9,
+        "valuation": 38.4,
+        "technical": 91.0,
+        "data_completeness": 100.0
+      },
+      "technical": {
+        "price": 1174.61,
+        "change_pct": -0.13,
+        "asof": "2026-08-29T00:00:01+00:00",
+        "ema20": 1204.52,
+        "sma50": 1186.84,
+        "sma200": 1059.78,
+        "rsi14": 45.5,
+        "atr14": 38.47,
+        "high52": 1292.65,
+        "low52": 712.05,
+        "preferred_band": {
+          "low": 1173.38,
+          "high": 1217.98
+        },
+        "deeper_band": {
+          "low": 1036.7,
+          "high": 1082.86
+        },
+        "status": "INSIDE PREFERRED BAND",
+        "price_kind": "regular_close",
+        "market_status": "closed"
+      },
+      "metrics": {
+        "revenue_growth_yoy": 47.7,
+        "eps_growth_yoy": 26.2,
+        "gross_margin": 85.8,
+        "operating_margin": 39.1,
+        "fcf_margin": 22.8,
+        "roe": 78.8,
+        "net_cash": -45958000000.0,
+        "current_ratio": 1.4,
+        "debt_to_equity": 1.62,
+        "pe": 39.2,
+        "ps": 13.14,
+        "pfcf": 57.56,
+        "ev_ebitda": 26.21,
+        "fcf_yield": 1.74
+      },
+      "catalysts": [
+        "Latest quarterly revenue grew 47.7% year over year.",
+        "Latest-quarter operating margin is strong at 39.1%.",
+        "Trailing free-cash-flow margin is 22.8%.",
+        "Price is inside the model's preferred technical accumulation band."
+      ],
+      "risks": [
+        "The thesis is concentrated in incretin medicines, with pricing, reimbursement and competition risk.",
+        "Manufacturing execution, trial results and safety findings can change the outlook quickly."
+      ],
+      "news": [
+        {
+          "title": "3 Things That Matter Most for Eli Lilly Now",
+          "url": "https://www.fool.com/investing/2026/08/29/3-things-that-matter-most-for-eli-lilly-now/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T00:15:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "Has Novo Nordisk Finally Found the Catalyst That Could Flip the Script on Eli Lilly?",
+          "url": "https://www.fool.com/investing/2026/08/29/has-novo-nordisk-finally-found-the-catalyst-that-c/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-29T23:15:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "AbbVie vs. Eli Lilly and: Which Healthcare Stock Is a Better Buy in 2026?",
+          "url": "https://www.fool.com/coverage/better-buy/2026/08/29/abbvie-vs-eli-lilly-and-which-healthcare-stock-is-a-better-buy-in-2026/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-29T19:15:01Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Which Healthcare ETF Offers the Better Growth Outlook: VanEck Biotech or Invesco Pharmaceuticals?",
+          "url": "https://www.fool.com/coverage/etfs/2026/08/28/which-healthcare-etf-offers-the-better-growth-outlook-vaneck-biotech-or-invesco-pharmaceuticals/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-28T15:31:01Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Breast Cancer Therapeutics Market Size to Reach USD 95.14 Billion at a CAGR of 9.20% from 2035 – SNS Insider",
+          "url": "https://www.globenewswire.com/news-release/2026/08/28/3352704/0/en/breast-cancer-therapeutics-market-size-to-reach-usd-95-14-billion-at-a-cagr-of-9-20-from-2035-sns-insider.html",
+          "publisher": "GlobeNewswire Inc.",
+          "published_utc": "2026-08-28T13:00:00Z",
+          "sentiment": "positive"
+        }
+      ],
+      "filing_links": [
+        {
+          "label": "SEC company filings",
+          "url": "https://www.sec.gov/edgar/browse/?CIK=59478&owner=exclude&action=getcompany"
+        }
+      ],
+      "data_status": "ready",
+      "freshness": {
+        "price_asof": "2026-08-29T00:00:01+00:00",
+        "ratio_asof": "2026-08-28",
+        "financial_period_end": "2026-06-30",
+        "balance_period_end": "2026-06-30",
+        "cash_flow_period_end": "2026-06-30",
+        "filing_date": "2026-08-05",
+        "price_age_days": 1,
+        "ratio_age_days": 2,
+        "financial_age_days": 61,
+        "balance_age_days": 61,
+        "cash_flow_age_days": 61,
+        "price_fresh": true,
+        "ratios_fresh": true,
+        "income_fresh": true,
+        "balance_fresh": true,
+        "cash_flow_fresh": true,
+        "financials_fresh": true,
+        "quarters_complete": true,
+        "note": "All required sources pass freshness checks."
+      },
+      "model_note": "Generic operating-company model applied.",
+      "rank": 2
+    },
+    "AAPL": {
+      "ticker": "AAPL",
+      "name": "Apple Inc.",
+      "sector": "ELECTRONIC COMPUTERS",
+      "theme": "Devices and services ecosystem",
+      "action": "WATCH PRICE",
+      "tone": "caution",
+      "conclusion": "The stock is above its preferred technical band; wait for price or fundamentals to catch up.",
+      "scores": {
+        "overall": 74.1,
+        "business": 77.8,
+        "valuation": 51.3,
+        "technical": 89.5,
+        "data_completeness": 100.0
+      },
+      "technical": {
+        "price": 319.7,
+        "change_pct": 1.63,
+        "asof": "2026-08-29T00:00:01+00:00",
+        "ema20": 312.84,
+        "sma50": 312.0,
+        "sma200": 282.6,
+        "rsi14": 57.4,
+        "atr14": 7.15,
+        "high52": 344.57,
+        "low52": 225.95,
+        "preferred_band": {
+          "low": 309.5,
+          "high": 315.34
+        },
+        "deeper_band": {
+          "low": 278.31,
+          "high": 286.89
+        },
+        "status": "ABOVE PREFERRED BAND",
+        "price_kind": "regular_close",
+        "market_status": "closed"
+      },
+      "metrics": {
+        "revenue_growth_yoy": 16.4,
+        "eps_growth_yoy": 28.7,
+        "gross_margin": 50.1,
+        "operating_margin": 32.6,
+        "fcf_margin": 29.3,
+        "roe": 119.9,
+        "net_cash": -21945000000.0,
+        "current_ratio": 1.0,
+        "debt_to_equity": 0.78,
+        "pe": 36.19,
+        "ps": 9.99,
+        "pfcf": 34.14,
+        "ev_ebitda": 28.05,
+        "fcf_yield": 2.93
+      },
+      "catalysts": [
+        "Latest quarterly revenue grew 16.4% year over year.",
+        "Latest-quarter operating margin is strong at 32.6%.",
+        "Trailing free-cash-flow margin is 29.3%."
+      ],
+      "risks": [
+        "Hardware concentration, China exposure and App Store regulation can pressure growth or margins.",
+        "A premium valuation requires the installed base and services engine to keep compounding.",
+        "Price is above the preferred technical band, increasing chase risk."
+      ],
+      "news": [
+        {
+          "title": "Amazon Has Badly Underperformed the S&P 500 and Nasdaq-100 Since Jeff Bezos Stepped Down as CEO. Could Apple Do the Same Starting Sept. 1 When Tim Cook Steps Down?",
+          "url": "https://www.fool.com/investing/2026/08/30/amazon-has-badly-underperformed-the-sp-500-and-nas/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T14:15:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "Tim Cook Committed Apple to a $60 Billion Domestic Manufacturing Bet Just Weeks Before Handing Off the CEO Job. Here's What It Means for Apple Investors.",
+          "url": "https://www.fool.com/investing/2026/08/30/tim-cook-apple-60-billion-bet-means-investors/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T10:15:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "A Hawkish Fed Speech Turns a Green Morning Red",
+          "url": "https://www.fool.com/investing/2026/08/28/a-hawkish-fed-speech-turns-a-green-morning-red/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-28T18:13:04Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "If I Could Invest in Just 1 ETF in 2026, Here's What I'd Buy",
+          "url": "https://www.fool.com/investing/2026/08/28/if-i-could-invest-in-just-1-etf-in-2026-heres-wher/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-28T15:05:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Own VOO? Here's the Problem With Adding This Popular Growth ETF.",
+          "url": "https://www.fool.com/investing/2026/08/28/own-voo-problem-adding-popular-growth-etf-qqqm/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-28T14:30:00Z",
+          "sentiment": "neutral"
+        }
+      ],
+      "filing_links": [
+        {
+          "label": "SEC company filings",
+          "url": "https://www.sec.gov/edgar/browse/?CIK=320193&owner=exclude&action=getcompany"
+        }
+      ],
+      "data_status": "ready",
+      "freshness": {
+        "price_asof": "2026-08-29T00:00:01+00:00",
+        "ratio_asof": "2026-08-28",
+        "financial_period_end": "2026-06-27",
+        "balance_period_end": "2026-06-27",
+        "cash_flow_period_end": "2026-06-27",
+        "filing_date": "2026-07-31",
+        "price_age_days": 1,
+        "ratio_age_days": 2,
+        "financial_age_days": 64,
+        "balance_age_days": 64,
+        "cash_flow_age_days": 64,
+        "price_fresh": true,
+        "ratios_fresh": true,
+        "income_fresh": true,
+        "balance_fresh": true,
+        "cash_flow_fresh": true,
+        "financials_fresh": true,
+        "quarters_complete": true,
+        "note": "All required sources pass freshness checks."
+      },
+      "model_note": "Generic operating-company model applied.",
+      "rank": 3
+    },
+    "V": {
+      "ticker": "V",
+      "name": "VISA Inc.",
+      "sector": "SERVICES-BUSINESS SERVICES, NEC",
+      "theme": "Global payments network",
+      "action": "WATCH PRICE",
+      "tone": "caution",
+      "conclusion": "The stock is above its preferred technical band; wait for price or fundamentals to catch up.",
+      "scores": {
+        "overall": 73.6,
+        "business": 80.7,
+        "valuation": 49.2,
+        "technical": 83.9,
+        "data_completeness": 100.0
+      },
+      "technical": {
+        "price": 381.6,
+        "change_pct": 0.51,
+        "asof": "2026-08-28T23:48:01+00:00",
+        "ema20": 370.7,
+        "sma50": 358.41,
+        "sma200": 333.0,
+        "rsi14": 65.5,
+        "atr14": 6.65,
+        "high52": 385.57,
+        "low52": 293.89,
+        "preferred_band": {
+          "low": 356.08,
+          "high": 373.02
+        },
+        "deeper_band": {
+          "low": 329.01,
+          "high": 336.99
+        },
+        "status": "ABOVE PREFERRED BAND",
+        "price_kind": "regular_close",
+        "market_status": "closed"
+      },
+      "metrics": {
+        "revenue_growth_yoy": 14.4,
+        "eps_growth_yoy": 10.4,
+        "gross_margin": 100.0,
+        "operating_margin": 59.1,
+        "fcf_margin": 47.2,
+        "roe": 50.9,
+        "net_cash": -10066000000.0,
+        "current_ratio": 1.0,
+        "debt_to_equity": 0.68,
+        "pe": 39.82,
+        "ps": 16.01,
+        "pfcf": 33.91,
+        "ev_ebitda": 23.71,
+        "fcf_yield": 2.95
+      },
+      "catalysts": [
+        "Latest quarterly revenue growth remained positive at 14.4% year over year.",
+        "Latest-quarter operating margin is strong at 59.1%.",
+        "Trailing free-cash-flow margin is 47.2%."
+      ],
+      "risks": [
+        "Payments regulation, litigation and changes in interchange economics could pressure the network model.",
+        "Consumer-spending weakness and alternative payment rails can slow transaction growth.",
+        "Price is above the preferred technical band, increasing chase risk."
+      ],
+      "news": [
+        {
+          "title": "Bill Ackman Just Bought Visa, Mastercard, and S&P Global Stock. Each One Collects a Toll on Somebody Else's Sale.",
+          "url": "https://www.fool.com/investing/2026/08/28/bill-ackman-just-bought-visa-mastercard-and-s-and-p-global-stock-each-one-collects-a-toll-on-somebody-else-s-sale/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-29T00:34:01Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Is Mastercard an Undervalued Stock to Buy?",
+          "url": "https://www.fool.com/investing/2026/08/28/is-mastercard-an-undervalued-stock-to-buy/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-29T00:07:27Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Is Visa an Undervalued Stock to Buy?",
+          "url": "https://www.fool.com/investing/2026/08/28/is-visa-an-undervalued-stock-to-buy/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-28T17:13:59Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Can Klook Help Mastercard Capture More APAC Travel Spending?",
+          "url": "https://www.zacks.com/stock/news/2981352/can-klook-help-mastercard-capture-more-apac-travel-spending?cid=CS-ZC-FT-analyst_blog|quick_take-2981352",
+          "publisher": "Zacks Investment Research",
+          "published_utc": "2026-08-27T15:33:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "Why Is Visa (V) Up 4.1% Since Last Earnings Report?",
+          "url": "https://www.zacks.com/stock/news/2981171/why-is-visa-v-up-4-1-since-last-earnings-report?cid=CS-ZC-FT-realtime_blog-2981171",
+          "publisher": "Zacks Investment Research",
+          "published_utc": "2026-08-27T15:30:24Z",
+          "sentiment": "neutral"
+        }
+      ],
+      "filing_links": [
+        {
+          "label": "SEC company filings",
+          "url": "https://www.sec.gov/edgar/browse/?CIK=1403161&owner=exclude&action=getcompany"
+        }
+      ],
+      "data_status": "ready",
+      "freshness": {
+        "price_asof": "2026-08-28T23:48:01+00:00",
+        "ratio_asof": "2026-08-28",
+        "financial_period_end": "2026-06-30",
+        "balance_period_end": "2026-06-30",
+        "cash_flow_period_end": "2026-06-30",
+        "filing_date": "2026-07-29",
+        "price_age_days": 2,
+        "ratio_age_days": 2,
+        "financial_age_days": 61,
+        "balance_age_days": 61,
+        "cash_flow_age_days": 61,
+        "price_fresh": true,
+        "ratios_fresh": true,
+        "income_fresh": true,
+        "balance_fresh": true,
+        "cash_flow_fresh": true,
+        "financials_fresh": true,
+        "quarters_complete": true,
+        "note": "All required sources pass freshness checks."
+      },
+      "model_note": "Generic operating-company model applied.",
+      "rank": 4
+    },
+    "GOOGL": {
+      "ticker": "GOOGL",
+      "name": "Alphabet Inc. Class A Common Stock",
+      "sector": "SERVICES-COMPUTER PROGRAMMING, DATA PROCESSING, ETC.",
+      "theme": "Search, cloud and AI",
+      "action": "WATCH VALUATION",
+      "tone": "caution",
+      "conclusion": "Business evidence may be sound, but valuation leaves too little margin for error.",
+      "scores": {
+        "overall": 69.1,
+        "business": 77.4,
+        "valuation": 30.5,
+        "technical": 91.0,
+        "data_completeness": 100.0
+      },
+      "technical": {
+        "price": 346.59,
+        "change_pct": 1.74,
+        "asof": "2026-08-29T00:00:01+00:00",
+        "ema20": 346.49,
+        "sma50": 349.78,
+        "sma200": 334.57,
+        "rsi14": 49.3,
+        "atr14": 8.48,
+        "high52": 408.61,
+        "low52": 206.19,
+        "preferred_band": {
+          "low": 343.52,
+          "high": 352.74
+        },
+        "deeper_band": {
+          "low": 329.48,
+          "high": 339.66
+        },
+        "status": "INSIDE PREFERRED BAND",
+        "price_kind": "regular_close",
+        "market_status": "closed"
+      },
+      "metrics": {
+        "revenue_growth_yoy": 24.2,
+        "eps_growth_yoy": 294.4,
+        "gross_margin": 61.6,
+        "operating_margin": 34.0,
+        "fcf_margin": 11.9,
+        "roe": 38.1,
+        "net_cash": 144309000000.0,
+        "current_ratio": 2.7,
+        "debt_to_equity": 0.15,
+        "pe": 17.36,
+        "ps": 9.51,
+        "pfcf": 79.57,
+        "ev_ebitda": 24.77,
+        "fcf_yield": 1.26
+      },
+      "catalysts": [
+        "Latest quarterly revenue grew 24.2% year over year.",
+        "Latest-quarter operating margin is strong at 34.0%.",
+        "Trailing free-cash-flow margin is 11.9%.",
+        "Cash and short-term investments exceed reported current and long-term debt.",
+        "Price is inside the model's preferred technical accumulation band."
+      ],
+      "risks": [
+        "Antitrust remedies and AI-driven changes to search could alter the economics of the core franchise.",
+        "Large infrastructure spending must translate into durable Cloud and AI cash returns.",
+        "Large non-operating items make EPS, ROE and simple earnings multiples less representative of operations."
+      ],
+      "news": [
+        {
+          "title": "Prediction: This Is What a $5,000 Investment in SpaceX Will Be Worth by 2030",
+          "url": "https://www.fool.com/investing/2026/08/30/prediction-this-is-what-a-5000-investment-in-space/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T14:05:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "Why Rezolve AI Stock Skyrocketed This Week",
+          "url": "https://www.fool.com/investing/2026/08/30/why-rezolve-ai-stock-skyrocketed-this-week/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T10:29:44Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "Are Oklo and NuScale Power Still a Buy After Data Center Backlash?",
+          "url": "https://www.fool.com/investing/2026/08/30/are-oklo-and-nuscale-power-still-a-buy-after-data/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T06:05:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "Is D-Wave Quantum a Buy?",
+          "url": "https://www.fool.com/investing/2026/08/29/is-d-wave-quantum-a-buy/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-29T17:13:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "SEC Filings Just Revealed the Smart Money Is Overweight SpaceX. Should You Buy It Now?",
+          "url": "https://www.fool.com/investing/2026/08/29/sec-filings-just-revealed-smart-money-is-overweigh/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-29T15:15:00Z",
+          "sentiment": "positive"
+        }
+      ],
+      "filing_links": [
+        {
+          "label": "SEC company filings",
+          "url": "https://www.sec.gov/edgar/browse/?CIK=1652044&owner=exclude&action=getcompany"
+        }
+      ],
+      "data_status": "ready",
+      "freshness": {
+        "price_asof": "2026-08-29T00:00:01+00:00",
+        "ratio_asof": "2026-08-28",
+        "financial_period_end": "2026-06-30",
+        "balance_period_end": "2026-06-30",
+        "cash_flow_period_end": "2026-06-30",
+        "filing_date": "2026-07-23",
+        "price_age_days": 1,
+        "ratio_age_days": 2,
+        "financial_age_days": 61,
+        "balance_age_days": 61,
+        "cash_flow_age_days": 61,
+        "price_fresh": true,
+        "ratios_fresh": true,
+        "income_fresh": true,
+        "balance_fresh": true,
+        "cash_flow_fresh": true,
+        "financials_fresh": true,
+        "quarters_complete": true,
+        "note": "All required sources pass freshness checks."
+      },
+      "model_note": "Generic operating-company model applied.",
+      "rank": 5
+    },
+    "AVGO": {
+      "ticker": "AVGO",
+      "name": "Broadcom Inc. Common Stock",
+      "sector": "SEMICONDUCTORS & RELATED DEVICES",
+      "theme": "AI networking and infrastructure software",
+      "action": "WATCH VALUATION",
+      "tone": "caution",
+      "conclusion": "Business evidence may be sound, but valuation leaves too little margin for error.",
+      "scores": {
+        "overall": 64.4,
+        "business": 91.4,
+        "valuation": 25.3,
+        "technical": 49.5,
+        "data_completeness": 100.0
+      },
+      "technical": {
+        "price": 368.79,
+        "change_pct": -0.74,
+        "asof": "2026-08-29T00:00:01+00:00",
+        "ema20": 379.94,
+        "sma50": 386.11,
+        "sma200": 369.38,
+        "rsi14": 42.7,
+        "atr14": 13.96,
+        "high52": 495.0,
+        "low52": 287.17,
+        "preferred_band": {
+          "low": 375.05,
+          "high": 390.99
+        },
+        "deeper_band": {
+          "low": 361.01,
+          "high": 377.76
+        },
+        "status": "BELOW PREFERRED BAND",
+        "price_kind": "regular_close",
+        "market_status": "closed"
+      },
+      "metrics": {
+        "revenue_growth_yoy": 47.9,
+        "eps_growth_yoy": 85.4,
+        "gross_margin": 69.5,
+        "operating_margin": 48.6,
+        "fcf_margin": 43.4,
+        "roe": 33.4,
+        "net_cash": -45279000000.0,
+        "current_ratio": 2.2,
+        "debt_to_equity": 0.74,
+        "pe": 59.85,
+        "ps": 23.25,
+        "pfcf": 53.55,
+        "ev_ebitda": 42.85,
+        "fcf_yield": 1.87
+      },
+      "catalysts": [
+        "Latest quarterly revenue grew 47.9% year over year.",
+        "Latest-quarter operating margin is strong at 48.6%.",
+        "Trailing free-cash-flow margin is 43.4%."
+      ],
+      "risks": [
+        "Large customers, acquisition integration and debt create concentration and execution risk.",
+        "A slowdown in custom AI accelerators or networking demand could compress a premium valuation."
+      ],
+      "news": [
+        {
+          "title": "Tim Cook Committed Apple to a $60 Billion Domestic Manufacturing Bet Just Weeks Before Handing Off the CEO Job. Here's What It Means for Apple Investors.",
+          "url": "https://www.fool.com/investing/2026/08/30/tim-cook-apple-60-billion-bet-means-investors/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T10:15:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Stock Market Today, Aug. 28: Marvell Slides 10% on Softer Fiscal 2028 Guidance and Google Deal Timing",
+          "url": "https://www.fool.com/coverage/stock-market-today/2026/08/28/stock-market-today-aug-28-marvell-slides-10-on-softer-fiscal-2028-guidance-and-google-deal-timing/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-28T21:09:34Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "Billionaire Ken Griffin Is Shifting His AI Bets. Here's What He's Buying and Selling.",
+          "url": "https://www.fool.com/investing/2026/08/28/billionaire-ken-griffin-is-shifting-his-ai-bets-he/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-28T10:30:00Z",
+          "sentiment": "negative"
+        },
+        {
+          "title": "Meet the Super Semiconductor ETF Obliterating the S&P 500 and the Nasdaq-100 in 2026",
+          "url": "https://www.fool.com/investing/2026/08/28/meet-semiconductor-etf-sp-500-nasdaq-100-in-2026/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-28T08:30:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Stock Market Today, Aug. 27: Nvidia Surges on Blowout Results and Surprising Guidance",
+          "url": "https://www.fool.com/coverage/stock-market-today/2026/08/27/stock-market-today-aug-27-nvidia-surges-on-blowout-results-and-surprising-guidance/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-27T21:01:26Z",
+          "sentiment": "positive"
+        }
+      ],
+      "filing_links": [
+        {
+          "label": "SEC company filings",
+          "url": "https://www.sec.gov/edgar/browse/?CIK=1730168&owner=exclude&action=getcompany"
+        }
+      ],
+      "data_status": "ready",
+      "freshness": {
+        "price_asof": "2026-08-29T00:00:01+00:00",
+        "ratio_asof": "2026-08-28",
+        "financial_period_end": "2026-05-03",
+        "balance_period_end": "2026-05-03",
+        "cash_flow_period_end": "2026-05-03",
+        "filing_date": "2026-06-09",
+        "price_age_days": 1,
+        "ratio_age_days": 2,
+        "financial_age_days": 119,
+        "balance_age_days": 119,
+        "cash_flow_age_days": 119,
+        "price_fresh": true,
+        "ratios_fresh": true,
+        "income_fresh": true,
+        "balance_fresh": true,
+        "cash_flow_fresh": true,
+        "financials_fresh": true,
+        "quarters_complete": true,
+        "note": "All required sources pass freshness checks."
+      },
+      "model_note": "Generic operating-company model applied.",
+      "rank": 6
+    },
+    "GEV": {
+      "ticker": "GEV",
+      "name": "GE Vernova Inc.",
+      "sector": "ELECTRONIC & OTHER ELECTRICAL EQUIPMENT (NO COMPUTER EQUIP)",
+      "theme": "Power generation and grid equipment",
+      "action": "WATCH",
+      "tone": "neutral",
+      "conclusion": "Evidence is mixed; keep the company on the research list until valuation or price improves.",
+      "scores": {
+        "overall": 62.5,
+        "business": 62.6,
+        "valuation": 58.4,
+        "technical": 66.2,
+        "data_completeness": 100.0
+      },
+      "technical": {
+        "price": 911.93,
+        "change_pct": -4.39,
+        "asof": "2026-08-29T00:00:01+00:00",
+        "ema20": 981.31,
+        "sma50": 1031.65,
+        "sma200": 877.43,
+        "rsi14": 37.0,
+        "atr14": 46.79,
+        "high52": 1195.94,
+        "low52": 530.16,
+        "preferred_band": {
+          "low": 964.93,
+          "high": 1048.03
+        },
+        "deeper_band": {
+          "low": 849.36,
+          "high": 905.5
+        },
+        "status": "BELOW PREFERRED BAND",
+        "price_kind": "regular_close",
+        "market_status": "closed"
+      },
+      "metrics": {
+        "revenue_growth_yoy": 21.9,
+        "eps_growth_yoy": 32.8,
+        "gross_margin": 21.3,
+        "operating_margin": 5.9,
+        "fcf_margin": 30.1,
+        "roe": 79.7,
+        "net_cash": 10326000000.0,
+        "current_ratio": 0.8,
+        "debt_to_equity": 0.23,
+        "pe": 25.49,
+        "ps": 5.87,
+        "pfcf": 19.53,
+        "ev_ebitda": 77.49,
+        "fcf_yield": 5.12
+      },
+      "catalysts": [
+        "Latest quarterly revenue grew 21.9% year over year.",
+        "Trailing free-cash-flow margin is 30.1%.",
+        "Cash and short-term investments exceed reported current and long-term debt."
+      ],
+      "risks": [
+        "Backlog conversion, project execution and the path to profitability in Wind can be volatile.",
+        "A large valuation rerating makes the stock sensitive to slower power-infrastructure orders.",
+        "Large non-operating items make EPS, ROE and simple earnings multiples less representative of operations."
+      ],
+      "news": [
+        {
+          "title": "A Wall Street Journal Report on $3 Trillion in Off-Balance-Sheet AI Commitments Recently Tanked Vertiv and GE Vernova. Here's What Actually Changed.",
+          "url": "https://www.fool.com/investing/2026/08/28/a-wall-street-journal-report-on-3-trillion-in-off/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-28T21:05:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "2 Energy Stocks Riding the Data Center Power Crunch",
+          "url": "https://www.fool.com/investing/2026/08/23/2-energy-stocks-riding-the-data-center-power-crunc/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-23T18:35:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Gas Turbine Prices Are on Track to Nearly Triple. These Stocks Are Cashing In",
+          "url": "https://www.fool.com/investing/2026/08/23/gas-turbine-prices-on-track-triple-stocks-gev/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-23T16:11:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "GE Vernova's Backlog Is Bigger Than Some Countries' GDP. Here's What's Actually Inside the $176 Billion.",
+          "url": "https://www.fool.com/investing/2026/08/22/ge-vernovas-backlog-is-bigger-than-some-countries/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-22T23:05:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Morgan Stanley Says AI Data Centers Face a 38-Gigawatt Power Gap. These Industrial Stocks Fill It.",
+          "url": "https://www.fool.com/investing/2026/08/20/morgan-stanley-says-ai-data-centers-face-a-38-giga/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-20T12:05:00Z",
+          "sentiment": "positive"
+        }
+      ],
+      "filing_links": [
+        {
+          "label": "SEC company filings",
+          "url": "https://www.sec.gov/edgar/browse/?CIK=1996810&owner=exclude&action=getcompany"
+        }
+      ],
+      "data_status": "ready",
+      "freshness": {
+        "price_asof": "2026-08-29T00:00:01+00:00",
+        "ratio_asof": "2026-08-28",
+        "financial_period_end": "2026-06-30",
+        "balance_period_end": "2026-06-30",
+        "cash_flow_period_end": "2026-06-30",
+        "filing_date": "2026-07-22",
+        "price_age_days": 1,
+        "ratio_age_days": 2,
+        "financial_age_days": 61,
+        "balance_age_days": 61,
+        "cash_flow_age_days": 61,
+        "price_fresh": true,
+        "ratios_fresh": true,
+        "income_fresh": true,
+        "balance_fresh": true,
+        "cash_flow_fresh": true,
+        "financials_fresh": true,
+        "quarters_complete": true,
+        "note": "All required sources pass freshness checks."
+      },
+      "model_note": "Generic operating-company model applied.",
+      "rank": 7
+    },
+    "AMZN": {
+      "ticker": "AMZN",
+      "name": "Amazon.Com Inc",
+      "sector": "RETAIL-CATALOG & MAIL-ORDER HOUSES",
+      "theme": "Cloud, commerce and advertising",
+      "action": "WATCH PRICE",
+      "tone": "caution",
+      "conclusion": "The stock is above its preferred technical band; wait for price or fundamentals to catch up.",
+      "scores": {
+        "overall": 62.0,
+        "business": 56.4,
+        "valuation": 45.6,
+        "technical": 89.5,
+        "data_completeness": 94.0
+      },
+      "technical": {
+        "price": 266.43,
+        "change_pct": 3.97,
+        "asof": "2026-08-29T00:00:01+00:00",
+        "ema20": 260.99,
+        "sma50": 251.66,
+        "sma200": 238.68,
+        "rsi14": 55.9,
+        "atr14": 7.04,
+        "high52": 287.2,
+        "low52": 196.0,
+        "preferred_band": {
+          "low": 249.2,
+          "high": 263.45
+        },
+        "deeper_band": {
+          "low": 234.46,
+          "high": 242.9
+        },
+        "status": "ABOVE PREFERRED BAND",
+        "price_kind": "regular_close",
+        "market_status": "closed"
+      },
+      "metrics": {
+        "revenue_growth_yoy": 19.6,
+        "eps_growth_yoy": 242.3,
+        "gross_margin": 52.3,
+        "operating_margin": 13.7,
+        "fcf_margin": -1.5,
+        "roe": 24.5,
+        "net_cash": -5906000000.0,
+        "current_ratio": 1.0,
+        "debt_to_equity": 0.23,
+        "pe": 21.24,
+        "ps": 3.7,
+        "pfcf": null,
+        "ev_ebitda": 17.31,
+        "fcf_yield": -0.4
+      },
+      "catalysts": [
+        "Latest quarterly revenue grew 19.6% year over year."
+      ],
+      "risks": [
+        "Heavy data-center spending can suppress free cash flow before returns are proven.",
+        "Retail margins, labor costs and regulatory scrutiny remain meaningful swing factors.",
+        "Trailing free cash flow is negative relative to the latest four-quarter revenue base.",
+        "Large non-operating items make EPS, ROE and simple earnings multiples less representative of operations.",
+        "Price is above the preferred technical band, increasing chase risk."
+      ],
+      "news": [
+        {
+          "title": "Amazon Has Badly Underperformed the S&P 500 and Nasdaq-100 Since Jeff Bezos Stepped Down as CEO. Could Apple Do the Same Starting Sept. 1 When Tim Cook Steps Down?",
+          "url": "https://www.fool.com/investing/2026/08/30/amazon-has-badly-underperformed-the-sp-500-and-nas/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T14:15:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "Prediction: This Is What a $5,000 Investment in SpaceX Will Be Worth by 2030",
+          "url": "https://www.fool.com/investing/2026/08/30/prediction-this-is-what-a-5000-investment-in-space/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T14:05:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "Is This the Single Best Reason to Buy Amazon Stock Right Now?",
+          "url": "https://www.fool.com/investing/2026/08/30/is-amazons-this-the-single-best-reason-to-buy-the/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T11:05:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Better International E-Commerce Stock: MercadoLibre vs. Sea Limited",
+          "url": "https://www.fool.com/investing/2026/08/30/better-international-e-commerce-stock-mercadolibre/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T08:15:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "360in360 Living Memories Adds Audiobook and Voice-Preservation Capability",
+          "url": "https://www.globenewswire.com/news-release/2026/08/29/3352925/0/en/360in360-living-memories-adds-audiobook-and-voice-preservation-capability.html",
+          "publisher": "GlobeNewswire Inc.",
+          "published_utc": "2026-08-29T09:58:00Z",
+          "sentiment": "neutral"
+        }
+      ],
+      "filing_links": [
+        {
+          "label": "SEC company filings",
+          "url": "https://www.sec.gov/edgar/browse/?CIK=1018724&owner=exclude&action=getcompany"
+        }
+      ],
+      "data_status": "ready",
+      "freshness": {
+        "price_asof": "2026-08-29T00:00:01+00:00",
+        "ratio_asof": "2026-08-28",
+        "financial_period_end": "2026-06-30",
+        "balance_period_end": "2026-06-30",
+        "cash_flow_period_end": "2026-06-30",
+        "filing_date": "2026-07-31",
+        "price_age_days": 1,
+        "ratio_age_days": 2,
+        "financial_age_days": 61,
+        "balance_age_days": 61,
+        "cash_flow_age_days": 61,
+        "price_fresh": true,
+        "ratios_fresh": true,
+        "income_fresh": true,
+        "balance_fresh": true,
+        "cash_flow_fresh": true,
+        "financials_fresh": true,
+        "quarters_complete": true,
+        "note": "All required sources pass freshness checks."
+      },
+      "model_note": "Generic operating-company model applied.",
+      "rank": 8
+    },
+    "META": {
+      "ticker": "META",
+      "name": "Meta Platforms, Inc. Class A Common Stock",
+      "sector": "SERVICES-COMPUTER PROGRAMMING, DATA PROCESSING, ETC.",
+      "theme": "Digital advertising and AI",
+      "action": "WATCH PRICE",
+      "tone": "caution",
+      "conclusion": "The long-term price trend needs to stabilize before new capital is considered.",
+      "scores": {
+        "overall": 61.3,
+        "business": 71.9,
+        "valuation": 65.7,
+        "technical": 35.6,
+        "data_completeness": 100.0
+      },
+      "technical": {
+        "price": 578.02,
+        "change_pct": 1.21,
+        "asof": "2026-08-29T00:00:01+00:00",
+        "ema20": 575.09,
+        "sma50": 592.14,
+        "sma200": 622.72,
+        "rsi14": 49.6,
+        "atr14": 20.08,
+        "high52": 790.8,
+        "low52": 520.26,
+        "preferred_band": {
+          "low": 568.06,
+          "high": 599.17
+        },
+        "deeper_band": {
+          "low": 610.68,
+          "high": 634.77
+        },
+        "status": "TREND BROKEN",
+        "price_kind": "regular_close",
+        "market_status": "closed"
+      },
+      "metrics": {
+        "revenue_growth_yoy": 28.0,
+        "eps_growth_yoy": -13.4,
+        "gross_margin": 81.4,
+        "operating_margin": 30.9,
+        "fcf_margin": 18.0,
+        "roe": 26.1,
+        "net_cash": 6596000000.0,
+        "current_ratio": 2.2,
+        "debt_to_equity": 0.32,
+        "pe": 21.62,
+        "ps": 6.45,
+        "pfcf": 35.94,
+        "ev_ebitda": 14.05,
+        "fcf_yield": 2.78
+      },
+      "catalysts": [
+        "Latest quarterly revenue grew 28.0% year over year.",
+        "Latest-quarter operating margin is strong at 30.9%.",
+        "Trailing free-cash-flow margin is 18.0%.",
+        "Cash and short-term investments exceed reported current and long-term debt."
+      ],
+      "risks": [
+        "Advertising is economically sensitive, while regulation and platform-policy changes are persistent risks.",
+        "AI and metaverse investment can raise costs faster than monetization improves."
+      ],
+      "news": [
+        {
+          "title": "Meta Stock Looks Undervalued. Is the Market Missing Something?",
+          "url": "https://www.fool.com/investing/2026/08/30/meta-stock-looks-undervalued-is-the-market-missing/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T14:15:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "A Wall Street Journal Report on $3 Trillion in Off-Balance-Sheet AI Commitments Recently Tanked Vertiv and GE Vernova. Here's What Actually Changed.",
+          "url": "https://www.fool.com/investing/2026/08/28/a-wall-street-journal-report-on-3-trillion-in-off/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-28T21:05:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "Why the Bull Market Should Run Through 2027",
+          "url": "https://www.zacks.com/stock/news/2982096/why-the-bull-market-should-run-through-2027?cid=CS-ZC-FT-weekend_wisdom-2982096",
+          "publisher": "Zacks Investment Research",
+          "published_utc": "2026-08-28T18:04:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Meta's $18 Billion Settlement Could Reshape Social Media Stocks",
+          "url": "https://www.zacks.com/stock/news/2981568/meta-s-18-billion-settlement-could-reshape-social-media-stocks?cid=CS-ZC-FT-analyst_blog|company_news_corporate_actions-2981568",
+          "publisher": "Zacks Investment Research",
+          "published_utc": "2026-08-28T12:21:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "The S&P 500 Is Repeating an Ominous Pattern Not Seen in 26 Years. History Says This Is What Usually Happens Next, and Why This Time Could Be Different.",
+          "url": "https://www.fool.com/investing/2026/08/28/the-sp-500-is-repeating-an-ominous-pattern-not-see/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-28T10:26:00Z",
+          "sentiment": "positive"
+        }
+      ],
+      "filing_links": [
+        {
+          "label": "SEC company filings",
+          "url": "https://www.sec.gov/edgar/browse/?CIK=1326801&owner=exclude&action=getcompany"
+        }
+      ],
+      "data_status": "ready",
+      "freshness": {
+        "price_asof": "2026-08-29T00:00:01+00:00",
+        "ratio_asof": "2026-08-28",
+        "financial_period_end": "2026-06-30",
+        "balance_period_end": "2026-06-30",
+        "cash_flow_period_end": "2026-06-30",
+        "filing_date": "2026-07-30",
+        "price_age_days": 1,
+        "ratio_age_days": 2,
+        "financial_age_days": 61,
+        "balance_age_days": 61,
+        "cash_flow_age_days": 61,
+        "price_fresh": true,
+        "ratios_fresh": true,
+        "income_fresh": true,
+        "balance_fresh": true,
+        "cash_flow_fresh": true,
+        "financials_fresh": true,
+        "quarters_complete": true,
+        "note": "All required sources pass freshness checks."
+      },
+      "model_note": "Generic operating-company model applied.",
+      "rank": 9
+    },
+    "ORCL": {
+      "ticker": "ORCL",
+      "name": "Oracle Corp",
+      "sector": "SERVICES-PREPACKAGED SOFTWARE",
+      "theme": "Database and cloud infrastructure",
+      "action": "WATCH PRICE",
+      "tone": "caution",
+      "conclusion": "The long-term price trend needs to stabilize before new capital is considered.",
+      "scores": {
+        "overall": 54.2,
+        "business": 60.3,
+        "valuation": 51.7,
+        "technical": 44.6,
+        "data_completeness": 94.0
+      },
+      "technical": {
+        "price": 150.85,
+        "change_pct": -0.72,
+        "asof": "2026-08-29T00:00:01+00:00",
+        "ema20": 145.22,
+        "sma50": 141.55,
+        "sma200": 170.66,
+        "rsi14": 56.1,
+        "atr14": 6.51,
+        "high52": 345.72,
+        "low52": 114.5,
+        "preferred_band": {
+          "low": 139.27,
+          "high": 147.5
+        },
+        "deeper_band": {
+          "low": 166.75,
+          "high": 174.57
+        },
+        "status": "TREND BROKEN",
+        "price_kind": "regular_close",
+        "market_status": "closed"
+      },
+      "metrics": {
+        "revenue_growth_yoy": 20.6,
+        "eps_growth_yoy": 21.8,
+        "gross_margin": 65.2,
+        "operating_margin": 32.0,
+        "fcf_margin": -35.2,
+        "roe": 40.0,
+        "net_cash": -97647000000.0,
+        "current_ratio": 1.1,
+        "debt_to_equity": 3.05,
+        "pe": 25.58,
+        "ps": 6.45,
+        "pfcf": null,
+        "ev_ebitda": 16.79,
+        "fcf_yield": -5.45
+      },
+      "catalysts": [
+        "Latest quarterly revenue grew 20.6% year over year.",
+        "Latest-quarter operating margin is strong at 32.0%."
+      ],
+      "risks": [
+        "Cloud expansion requires heavy capital spending and disciplined balance-sheet management.",
+        "Execution against larger cloud competitors and converting backlog into profitable revenue are key.",
+        "Trailing free cash flow is negative relative to the latest four-quarter revenue base."
+      ],
+      "news": [
+        {
+          "title": "Software-defined Commercial Vehicle Market worth $7.29 billion by 2035 — MarketsandMarkets™",
+          "url": "https://www.globenewswire.com/news-release/2026/08/28/3352734/0/en/software-defined-commercial-vehicle-market-worth-7-29-billion-by-2035-marketsandmarkets.html",
+          "publisher": "GlobeNewswire Inc.",
+          "published_utc": "2026-08-28T14:00:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Wall Street Analysts Think Oracle (ORCL) Is a Good Investment: Is It?",
+          "url": "https://www.zacks.com/stock/news/2981647/wall-street-analysts-think-oracle-orcl-is-a-good-investment-is-it?cid=CS-ZC-FT-fundamental_analysis|average_broker_rating-2981647",
+          "publisher": "Zacks Investment Research",
+          "published_utc": "2026-08-28T13:30:03Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "C3.ai vs. Oracle: Which Artificial Intelligence Stock Is a Better Investment in 2026?",
+          "url": "https://www.fool.com/coverage/better-buy/2026/08/27/c3-ai-vs-oracle-which-artificial-intelligence-stock-is-a-better-investment-in-2026/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-27T23:36:59Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "I'd Rather Own Bloom Energy Than Nvidia Right Now. Here's My Case.",
+          "url": "https://www.fool.com/investing/2026/08/26/id-rather-own-bloom-energy-than-nvidia-right-now-h/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-26T20:30:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "Will Bloom Energy Be the Next SpaceX? What the Numbers Actually Say.",
+          "url": "https://www.fool.com/investing/2026/08/26/will-bloom-energy-be-the-next-spacex/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-26T16:05:00Z",
+          "sentiment": "neutral"
+        }
+      ],
+      "filing_links": [
+        {
+          "label": "SEC company filings",
+          "url": "https://www.sec.gov/edgar/browse/?CIK=1341439&owner=exclude&action=getcompany"
+        }
+      ],
+      "data_status": "ready",
+      "freshness": {
+        "price_asof": "2026-08-29T00:00:01+00:00",
+        "ratio_asof": "2026-08-28",
+        "financial_period_end": "2026-05-31",
+        "balance_period_end": "2026-05-31",
+        "cash_flow_period_end": "2026-05-31",
+        "filing_date": "2026-06-22",
+        "price_age_days": 1,
+        "ratio_age_days": 2,
+        "financial_age_days": 91,
+        "balance_age_days": 91,
+        "cash_flow_age_days": 91,
+        "price_fresh": true,
+        "ratios_fresh": true,
+        "income_fresh": true,
+        "balance_fresh": true,
+        "cash_flow_fresh": true,
+        "financials_fresh": true,
+        "quarters_complete": true,
+        "note": "All required sources pass freshness checks."
+      },
+      "model_note": "Generic operating-company model applied.",
+      "rank": 10
+    },
+    "COST": {
+      "ticker": "COST",
+      "name": "Costco Wholesale Corp",
+      "sector": "RETAIL-VARIETY STORES",
+      "theme": "Membership retail",
+      "action": "INSUFFICIENT DATA",
+      "tone": "neutral",
+      "conclusion": "Recent, complete business, valuation and price evidence is required before ranking this stock.",
+      "scores": {
+        "overall": null,
+        "business": 52.9,
+        "valuation": 48.4,
+        "technical": 65.3,
+        "data_completeness": 79.0
+      },
+      "technical": {
+        "price": 945.47,
+        "change_pct": 1.16,
+        "asof": "2026-08-29T00:00:01+00:00",
+        "ema20": 950.76,
+        "sma50": 945.78,
+        "sma200": 959.94,
+        "rsi14": 48.1,
+        "atr14": 18.3,
+        "high52": 1096.5,
+        "low52": 844.06,
+        "preferred_band": {
+          "low": 939.37,
+          "high": 957.16
+        },
+        "deeper_band": {
+          "low": 948.96,
+          "high": 970.92
+        },
+        "status": "INSIDE PREFERRED BAND",
+        "price_kind": "regular_close",
+        "market_status": "closed"
+      },
+      "metrics": {
+        "revenue_growth_yoy": 11.6,
+        "eps_growth_yoy": 15.2,
+        "gross_margin": 12.8,
+        "operating_margin": 4.0,
+        "fcf_margin": null,
+        "roe": 26.4,
+        "net_cash": 14326000000.0,
+        "current_ratio": 1.1,
+        "debt_to_equity": 0.17,
+        "pe": 47.44,
+        "ps": 1.43,
+        "pfcf": null,
+        "ev_ebitda": 32.23,
+        "fcf_yield": null
+      },
+      "catalysts": [
+        "Latest quarterly revenue growth remained positive at 11.6% year over year.",
+        "Cash and short-term investments exceed reported current and long-term debt.",
+        "Price is inside the model's preferred technical accumulation band."
+      ],
+      "risks": [
+        "A premium valuation leaves little room for slower traffic, weaker renewals or margin pressure.",
+        "Low merchandise margins make wage, freight and input-cost execution important.",
+        "Needs current financial statements."
+      ],
+      "news": [
+        {
+          "title": "3 Consumer Stocks Driving Growth From a Regional-to-National Expansion",
+          "url": "https://www.fool.com/investing/2026/08/30/3-consumer-stocks-driving-growth-from-a-regional-t/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-30T08:30:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "A Costco Special Dividend Could Be Coming, but Walmart Has Raised Its Dividend for 53 Consecutive Years. Here's the Better Buy Now.",
+          "url": "https://www.fool.com/investing/2026/08/28/a-costco-special-dividend-could-be-coming-but-walm/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-29T02:15:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "Target's Digital Growth Story Gains Strength With Same-Day Delivery",
+          "url": "https://www.zacks.com/stock/news/2982079/target-s-digital-growth-story-gains-strength-with-same-day-delivery?cid=CS-ZC-FT-analyst_blog|rank_focused-2982079",
+          "publisher": "Zacks Investment Research",
+          "published_utc": "2026-08-28T16:23:00Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "Costco (COST) Stock Drops Despite Market Gains: Important Facts to Note",
+          "url": "https://www.zacks.com/stock/news/2981444/costco-cost-stock-drops-despite-market-gains-important-facts-to-note?cid=CS-ZC-FT-fundamental_analysis|yseop_template_6-2981444",
+          "publisher": "Zacks Investment Research",
+          "published_utc": "2026-08-27T21:45:03Z",
+          "sentiment": "neutral"
+        },
+        {
+          "title": "Costco Stock: Higher Oil Prices are Bringing Customers to Costco",
+          "url": "https://www.fool.com/investing/2026/08/23/costco-stock-higher-oil-prices-are-bringing-custom/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-23T04:25:17Z",
+          "sentiment": "positive"
+        }
+      ],
+      "filing_links": [
+        {
+          "label": "SEC company filings",
+          "url": "https://www.sec.gov/edgar/browse/?CIK=909832&owner=exclude&action=getcompany"
+        }
+      ],
+      "data_status": "insufficient",
+      "freshness": {
+        "price_asof": "2026-08-29T00:00:01+00:00",
+        "ratio_asof": "2026-08-28",
+        "financial_period_end": "2026-05-10",
+        "balance_period_end": "2026-05-10",
+        "cash_flow_period_end": "2023-11-26",
+        "filing_date": "2026-06-03",
+        "price_age_days": 1,
+        "ratio_age_days": 2,
+        "financial_age_days": 112,
+        "balance_age_days": 112,
+        "cash_flow_age_days": 1008,
+        "price_fresh": true,
+        "ratios_fresh": true,
+        "income_fresh": true,
+        "balance_fresh": true,
+        "cash_flow_fresh": false,
+        "financials_fresh": false,
+        "quarters_complete": true,
+        "note": "Needs current financial statements."
+      },
+      "model_note": "Generic operating-company model applied.",
+      "rank": 11
+    },
+    "TSM": {
+      "ticker": "TSM",
+      "name": "Taiwan Semiconductor Manufacturing Company Ltd.",
+      "sector": "Sector unavailable",
+      "theme": "Advanced semiconductor foundry",
+      "action": "UNSUPPORTED MODEL",
+      "tone": "neutral",
+      "conclusion": "This security needs a sector, foreign-issuer or ADR-specific model before an investment view is responsible.",
+      "scores": {
+        "overall": null,
+        "business": null,
+        "valuation": null,
+        "technical": 91.0,
+        "data_completeness": 10.0
+      },
+      "technical": {
+        "price": 417.52,
+        "change_pct": -2.29,
+        "asof": "2026-08-29T00:00:01+00:00",
+        "ema20": 418.22,
+        "sma50": 423.43,
+        "sma200": 369.53,
+        "rsi14": 49.6,
+        "atr14": 12.74,
+        "high52": 479.0,
+        "low52": 225.63,
+        "preferred_band": {
+          "low": 413.76,
+          "high": 427.89
+        },
+        "deeper_band": {
+          "low": 361.89,
+          "high": 377.17
+        },
+        "status": "INSIDE PREFERRED BAND",
+        "price_kind": "regular_close",
+        "market_status": "closed"
+      },
+      "metrics": {
+        "revenue_growth_yoy": null,
+        "eps_growth_yoy": null,
+        "gross_margin": null,
+        "operating_margin": null,
+        "fcf_margin": null,
+        "roe": null,
+        "net_cash": null,
+        "current_ratio": null,
+        "debt_to_equity": null,
+        "pe": null,
+        "ps": null,
+        "pfcf": null,
+        "ev_ebitda": null,
+        "fcf_yield": null
+      },
+      "catalysts": [
+        "Price is inside the model's preferred technical accumulation band."
+      ],
+      "risks": [
+        "Taiwan geopolitical risk is a severe tail risk that ordinary valuation metrics cannot capture.",
+        "The U.S. ADR does not fit this SEC-quarterly model, so Swing Bot withholds an investment action.",
+        "Needs current ratios, financial statements, four contiguous quarters."
+      ],
+      "news": [
+        {
+          "title": "This Was Situational Awareness's Top 5 Holdings at the End of Q2. They're All on Sale Now",
+          "url": "https://www.fool.com/investing/2026/08/28/this-was-situational-awarenesss-top-5-holdings-at/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-28T18:15:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Meet the Super Semiconductor ETF Obliterating the S&P 500 and the Nasdaq-100 in 2026",
+          "url": "https://www.fool.com/investing/2026/08/28/meet-semiconductor-etf-sp-500-nasdaq-100-in-2026/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-28T08:30:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Top China Tech Plays Worth Adding to Your Portfolio Right Now",
+          "url": "https://www.zacks.com/stock/news/2981272/top-china-tech-plays-worth-adding-to-your-portfolio-right-now?cid=CS-ZC-FT-china_technology-2981272",
+          "publisher": "Zacks Investment Research",
+          "published_utc": "2026-08-27T15:49:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "3 Artificial Intelligence (AI) Stocks Hedge Funds Are Buying Hand Over Fist",
+          "url": "https://www.fool.com/investing/2026/08/27/3-ai-stocks-hedge-funds-are-buying/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-27T14:19:00Z",
+          "sentiment": "positive"
+        },
+        {
+          "title": "Billionaire David Tepper Sold Every Single Share of UnitedHealth in Q2. Here's Whether He Made a Costly Mistake.",
+          "url": "https://www.fool.com/investing/2026/08/26/billionaire-david-tepper-sold-every-single-share-o/?source=iedfolrf0000001",
+          "publisher": "The Motley Fool",
+          "published_utc": "2026-08-26T10:30:00Z",
+          "sentiment": "neutral"
+        }
+      ],
+      "filing_links": [
+        {
+          "label": "SEC company filings",
+          "url": "https://www.sec.gov/edgar/browse/?CIK=1046179&owner=exclude&action=getcompany"
+        }
+      ],
+      "data_status": "unsupported_foreign",
+      "freshness": {
+        "price_asof": "2026-08-29T00:00:01+00:00",
+        "ratio_asof": null,
+        "financial_period_end": null,
+        "balance_period_end": null,
+        "cash_flow_period_end": null,
+        "filing_date": null,
+        "price_age_days": 1,
+        "ratio_age_days": null,
+        "financial_age_days": null,
+        "balance_age_days": null,
+        "cash_flow_age_days": null,
+        "price_fresh": true,
+        "ratios_fresh": false,
+        "income_fresh": false,
+        "balance_fresh": false,
+        "cash_flow_fresh": false,
+        "financials_fresh": false,
+        "quarters_complete": false,
+        "note": "Needs current ratios, financial statements, four contiguous quarters."
+      },
+      "model_note": "Foreign issuers and ADRs require currency, filing-frequency and share-ratio normalization.",
+      "rank": 12
+    }
+  }
+}

@@ -152,6 +152,130 @@
     .bad-text { color: var(--red); font-weight: 800; }
     .warn-text { color: var(--amber); font-weight: 800; }
     .hidden { display: none !important; }
+    .layout.fundamentals-active { grid-template-columns: minmax(0, 1fr); }
+    .fund-shell { display: grid; gap: 12px; }
+    .fund-intro {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(260px, .6fr);
+      gap: 16px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(8,120,101,.10), rgba(36,90,150,.08)), var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .fund-intro h2 { margin-bottom: 7px; font-size: 1.35rem; }
+    .fund-intro p { margin: 0; max-width: 900px; }
+    .fund-freshness {
+      align-self: stretch;
+      display: grid;
+      align-content: center;
+      gap: 5px;
+      padding: 13px;
+      border: 1px solid rgba(8,120,101,.22);
+      border-radius: 10px;
+      background: rgba(255,253,248,.78);
+    }
+    .fund-freshness strong { font-size: 1rem; }
+    .fund-summary { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+    .fund-summary .metric { min-width: 0; }
+    .fund-summary .value { font-size: 1.3rem; overflow-wrap: anywhere; }
+    .fund-toolbar {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) minmax(190px, .45fr);
+      gap: 10px;
+      align-items: end;
+      margin-bottom: 12px;
+    }
+    .fund-rank-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(245px, 1fr)); gap: 10px; }
+    button.fund-rank-card {
+      min-height: 0;
+      display: block;
+      width: 100%;
+      padding: 14px;
+      text-align: left;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      box-shadow: none;
+      font-weight: 500;
+    }
+    button.fund-rank-card:hover, button.fund-rank-card:focus-visible { border-color: var(--green); outline: 2px solid rgba(8,120,101,.18); }
+    button.fund-rank-card.selected { border-color: var(--green); background: rgba(8,120,101,.07); box-shadow: inset 0 0 0 1px rgba(8,120,101,.20); }
+    .fund-card-top, .fund-detail-title, .fund-level-row, .fund-news-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .fund-card-name { min-width: 0; }
+    .fund-card-name strong { display: block; font-size: 1.12rem; }
+    .fund-card-name span { display: block; margin-top: 3px; color: var(--muted); font-size: .79rem; white-space: normal; }
+    .fund-score { font-size: 1.25rem; font-weight: 900; color: var(--green); white-space: nowrap; }
+    .fund-score.unranked { color: var(--muted); font-size: .78rem; }
+    .fund-card-meta { display: flex; flex-wrap: wrap; gap: 6px; margin: 11px 0 8px; }
+    .fund-card-meta .tag { max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
+    .fund-tone {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: .7rem;
+      font-weight: 850;
+      background: rgba(36,90,150,.10);
+      color: var(--blue);
+    }
+    .fund-tone.positive { background: rgba(8,120,101,.12); color: var(--green); }
+    .fund-tone.caution { background: rgba(167,104,29,.14); color: var(--amber); }
+    .fund-tone.negative { background: rgba(161,61,61,.12); color: var(--red); }
+    .fund-tone.neutral { background: rgba(36,90,150,.10); color: var(--blue); }
+    .fund-mini-line { display: flex; justify-content: space-between; gap: 10px; color: var(--muted); font-size: .79rem; }
+    .fund-mini-line span, .fund-level-row strong, .fund-news article { min-width: 0; overflow-wrap: anywhere; }
+    .fund-detail { padding: 17px; }
+    .fund-detail-title { margin-bottom: 14px; }
+    .fund-detail-title h2 { margin: 5px 0 4px; font-size: 1.45rem; }
+    .fund-price { text-align: right; white-space: nowrap; }
+    .fund-price strong { display: block; font-size: 1.55rem; }
+    .fund-score-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 9px; margin: 12px 0; }
+    .fund-score-card, .fund-metric {
+      padding: 11px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #fff;
+    }
+    .fund-score-card strong, .fund-metric strong { display: block; margin-top: 5px; font-size: 1.05rem; }
+    .fund-score-track { height: 6px; margin-top: 8px; overflow: hidden; border-radius: 999px; background: #e8e1d2; }
+    .fund-score-track span { display: block; height: 100%; background: linear-gradient(90deg, var(--amber), var(--green)); }
+    .fund-detail-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 11px; margin-top: 11px; }
+    .fund-subpanel { padding: 14px; border: 1px solid var(--line); border-radius: 10px; background: rgba(255,255,255,.72); }
+    .fund-levels { display: grid; gap: 9px; }
+    .fund-level-row { padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+    .fund-level-row:last-child { padding-bottom: 0; border-bottom: 0; }
+    .fund-level-row span { color: var(--muted); font-size: .82rem; }
+    .fund-metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+    .fund-metric .label { font-size: .66rem; }
+    .fund-lists { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 11px; }
+    .fund-list { margin: 0; padding-left: 19px; color: var(--muted); line-height: 1.5; }
+    .fund-list li + li { margin-top: 7px; }
+    .fund-news { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .fund-news article { padding: 11px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+    .fund-news a { color: var(--ink); font-weight: 800; text-decoration: none; line-height: 1.38; }
+    .fund-news a:hover { color: var(--green); text-decoration: underline; }
+    .fund-news-meta { margin-top: 8px; color: var(--muted); font-size: .75rem; }
+    .fund-links { display: flex; flex-wrap: wrap; gap: 7px; }
+    .fund-links a { color: var(--blue); font-size: .8rem; font-weight: 750; }
+    .fund-note {
+      padding: 11px 13px;
+      border-left: 4px solid var(--blue);
+      border-radius: 8px;
+      background: rgba(36,90,150,.08);
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: .84rem;
+    }
+    .fund-note.caution { border-left-color: var(--amber); background: rgba(167,104,29,.09); }
+    .fund-empty { padding: 18px; color: var(--muted); text-align: center; }
     .alert-list { display: grid; gap: 8px; }
     .alert { border-left: 4px solid var(--blue); padding: 10px; background: #fff; border-radius: 8px; }
     .alert.bad { border-left-color: var(--red); }
@@ -169,11 +293,21 @@
     @media (max-width: 1120px) {
       .hero, .layout, .split { grid-template-columns: 1fr; }
       .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .fund-summary { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .fund-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+    @media (max-width: 820px) {
+      .fund-intro, .fund-detail-grid, .fund-lists { grid-template-columns: 1fr; }
+      .fund-score-grid, .fund-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .fund-news { grid-template-columns: 1fr; }
     }
     @media (max-width: 620px) {
       .pulse, .form-grid { grid-template-columns: 1fr; }
       .metrics { grid-template-columns: 1fr; }
       .wrap { padding: 10px; }
+      .fund-summary, .fund-toolbar, .fund-score-grid, .fund-metrics { grid-template-columns: 1fr; }
+      .fund-detail-title { display: grid; }
+      .fund-price { text-align: left; }
     }
   </style>
 </head>
@@ -199,8 +333,8 @@
       </div>
     </section>
 
-    <div class="layout">
-      <aside class="panel">
+    <div class="layout" id="appLayout">
+      <aside class="panel" id="rulesPanel">
         <h2>Rules</h2>
         <div class="settings">
           <label>Default Plan Size
@@ -249,13 +383,14 @@
 
       <main>
         <div class="tabs">
-          <button class="tab active" type="button" data-view="plan">Weekly Plan</button>
-          <button class="tab" type="button" data-view="positions">Positions</button>
-          <button class="tab" type="button" data-view="alerts">Alerts</button>
-          <button class="tab" type="button" data-view="journal">Returns</button>
+          <button class="tab active" type="button" data-view="plan" aria-pressed="true">Weekly Plan</button>
+          <button class="tab" type="button" data-view="fundamentals" aria-pressed="false">Fundamentals</button>
+          <button class="tab" type="button" data-view="positions" aria-pressed="false">Positions</button>
+          <button class="tab" type="button" data-view="alerts" aria-pressed="false">Alerts</button>
+          <button class="tab" type="button" data-view="journal" aria-pressed="false">Returns</button>
         </div>
 
-        <section class="metrics">
+        <section class="metrics" id="portfolioMetrics">
           <article class="metric"><div class="label">Open Positions</div><div class="value" id="openCount">0</div></article>
           <article class="metric"><div class="label">Open P/L</div><div class="value" id="openPnl">$0</div></article>
           <article class="metric"><div class="label">Closed P/L</div><div class="value" id="closedPnl">$0</div></article>
@@ -291,6 +426,12 @@
               </table>
             </div>
           </section>
+        </section>
+
+        <section id="view-fundamentals" class="view hidden">
+          <div id="fundamentalsRoot" class="fund-shell">
+            <section class="panel"><div class="fund-empty" role="status">Loading fundamental research...</div></section>
+          </div>
         </section>
 
         <section id="view-positions" class="view hidden">
@@ -377,6 +518,8 @@
   <script>
     const REPORT_URL = "https://swaroopsathuluri.github.io/-Swing-Bot/stocks-edge.html?v=";
     const ENRICH_URL = "https://swaroopsathuluri.github.io/-Swing-Bot/swingbot-pro-v2-data.json?v=";
+    const FUNDAMENTALS_LOCAL_URL = "fundamentals-data.json?v=";
+    const FUNDAMENTALS_PUBLIC_URL = "https://swaroopsathuluri.github.io/-Swing-Bot/fundamentals-data.json?v=";
     let deferredInstallPrompt = null;
     const STORAGE = {
       settings: "swingCommandSettings.v1",
@@ -391,6 +534,11 @@
       candidates: [],
       reportUpdated: "-",
       activeView: "plan",
+      fundamentals: null,
+      fundamentalsError: "",
+      fundamentalTicker: "",
+      fundamentalQuery: "",
+      fundamentalSort: "overall",
       settings: loadJson(STORAGE.settings, {
         planSize: 2,
         maxOpen: 3,
@@ -408,6 +556,8 @@
       plans: loadJson(STORAGE.plans, {}),
       alerts: loadJson(STORAGE.alerts, [])
     };
+    const requestedView = window.location.hash.slice(1);
+    if (["plan", "fundamentals", "positions", "alerts", "journal"].includes(requestedView)) state.activeView = requestedView;
 
     function loadJson(key, fallback) {
       try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch (_) { return fallback; }
@@ -415,6 +565,58 @@
     function saveJson(key, value) { localStorage.setItem(key, JSON.stringify(value)); }
     function money(value) { return Number(value || 0).toLocaleString(undefined, { style:"currency", currency:"USD", maximumFractionDigits: 0 }); }
     function fmt(value, digits = 2) { return Number(value || 0).toFixed(digits); }
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      })[char]);
+    }
+    function safeFundUrl(value) {
+      if (!value) return "";
+      try {
+        const url = new URL(String(value), window.location.href);
+        return ["http:", "https:"].includes(url.protocol) ? url.href : "";
+      } catch (_) { return ""; }
+    }
+    function fundFinite(value) {
+      return value !== null && value !== undefined && value !== "" && Number.isFinite(Number(value));
+    }
+    function fundNumber(value, digits = 2) {
+      return fundFinite(value) ? Number(value).toLocaleString(undefined, { minimumFractionDigits: digits, maximumFractionDigits: digits }) : "N/A";
+    }
+    function fundPrice(value) {
+      return fundFinite(value) ? Number(value).toLocaleString(undefined, { style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "N/A";
+    }
+    function fundMoney(value) {
+      if (!fundFinite(value)) return "N/A";
+      const amount = Number(value);
+      return amount.toLocaleString(undefined, { style: "currency", currency: "USD", notation: Math.abs(amount) >= 1e6 ? "compact" : "standard", maximumFractionDigits: 2 });
+    }
+    function fundPct(value, signed = false) {
+      if (!fundFinite(value)) return "N/A";
+      const number = Number(value);
+      const sign = signed && number > 0 ? "+" : "";
+      return `${sign}${number.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%`;
+    }
+    function fundMultiple(value) { return fundFinite(value) ? `${fundNumber(value, 2)}x` : "N/A"; }
+    function fundScore(value) { return fundFinite(value) ? Math.round(Number(value)).toString() : "N/A"; }
+    function fundDate(value, includeTime = false) {
+      if (!value) return "N/A";
+      const parsed = new Date(value);
+      if (Number.isNaN(parsed.getTime())) return escapeHtml(value);
+      return parsed.toLocaleString(undefined, includeTime
+        ? { year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }
+        : { year: "numeric", month: "short", day: "numeric" });
+    }
+    function fundTone(value) {
+      const tone = String(value || "neutral").toLowerCase();
+      return ["positive", "caution", "neutral", "negative"].includes(tone) ? tone : "neutral";
+    }
+    function fundTextList(value) {
+      if (Array.isArray(value)) return value.filter(item => item !== null && item !== undefined && item !== "").map(String);
+      if (value === null || value === undefined || value === "") return [];
+      if (typeof value === "object") return Object.entries(value).map(([key, item]) => `${key.replaceAll("_", " ")}: ${typeof item === "object" ? JSON.stringify(item) : item}`);
+      return [String(value)];
+    }
     function todayIso() { return new Date().toISOString().slice(0, 10); }
     function weekKey(date = new Date()) {
       const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
@@ -557,18 +759,120 @@
       buildCandidates();
       renderAll();
     }
+    async function fetchFundamentals(stamp) {
+      const candidates = [FUNDAMENTALS_LOCAL_URL + stamp, FUNDAMENTALS_PUBLIC_URL + stamp];
+      const attempted = new Set();
+      const failures = [];
+      for (const candidate of candidates) {
+        let resolved = candidate;
+        try { resolved = new URL(candidate, window.location.href).href; } catch (_) {}
+        if (attempted.has(resolved)) continue;
+        attempted.add(resolved);
+        try {
+          const response = await fetch(candidate, { cache: "no-store" });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const payload = await response.json();
+          if (!payload || typeof payload !== "object" || Array.isArray(payload)) throw new Error("invalid feed shape");
+          return payload;
+        } catch (error) {
+          failures.push(error?.message || "unavailable");
+        }
+      }
+      throw new Error(`Fundamental research is unavailable (${failures.join("; ") || "no feed"}).`);
+    }
+    function mergeFundamentalItem(rankRow, detailRow) {
+      const rank = rankRow && typeof rankRow === "object" ? rankRow : {};
+      const detail = detailRow && typeof detailRow === "object" ? detailRow : {};
+      return {
+        ...rank,
+        ...detail,
+        scores: { ...(rank.scores || {}), ...(detail.scores || {}) },
+        technical: {
+          ...(rank.technical || {}),
+          ...(detail.technical || {}),
+          preferred_band: { ...(rank.technical?.preferred_band || {}), ...(detail.technical?.preferred_band || {}) },
+          deeper_band: { ...(rank.technical?.deeper_band || {}), ...(detail.technical?.deeper_band || {}) }
+        },
+        metrics: { ...(rank.metrics || {}), ...(detail.metrics || {}) },
+        freshness: { ...(rank.freshness || {}), ...(detail.freshness || {}) }
+      };
+    }
+    function fundamentalItems() {
+      const payload = state.fundamentals;
+      if (!payload || typeof payload !== "object") return [];
+      const itemMap = payload.items && typeof payload.items === "object" && !Array.isArray(payload.items) ? payload.items : {};
+      const byTicker = new Map(Object.entries(itemMap).map(([key, item]) => [String(key).trim().toUpperCase(), item]));
+      const rows = Array.isArray(payload.rankings) ? payload.rankings : [];
+      const output = [];
+      const seen = new Set();
+      rows.forEach(row => {
+        const ticker = String(row?.ticker || "").trim().toUpperCase();
+        if (!ticker || seen.has(ticker)) return;
+        const merged = mergeFundamentalItem(row, byTicker.get(ticker));
+        output.push({ ...merged, ticker });
+        seen.add(ticker);
+      });
+      byTicker.forEach((item, ticker) => {
+        if (!ticker || seen.has(ticker)) return;
+        output.push({ ...mergeFundamentalItem({}, item), ticker: String(item?.ticker || ticker).trim().toUpperCase() });
+        seen.add(ticker);
+      });
+      return output;
+    }
+    function filteredFundamentalItems() {
+      const query = state.fundamentalQuery.trim().toLowerCase();
+      const scoreKey = ({ business: "business", valuation: "valuation", technical: "technical", completeness: "data_completeness" })[state.fundamentalSort] || "overall";
+      return fundamentalItems()
+        .filter(item => !query || [item.ticker, item.name, item.sector].some(value => String(value || "").toLowerCase().includes(query)))
+        .sort((a, b) => {
+          const aRanked = fundFinite(a.scores?.overall);
+          const bRanked = fundFinite(b.scores?.overall);
+          if (aRanked !== bRanked) return aRanked ? -1 : 1;
+          if (state.fundamentalSort === "name") return String(a.name || a.ticker).localeCompare(String(b.name || b.ticker));
+          const aValue = fundFinite(a.scores?.[scoreKey]) ? Number(a.scores[scoreKey]) : -Infinity;
+          const bValue = fundFinite(b.scores?.[scoreKey]) ? Number(b.scores[scoreKey]) : -Infinity;
+          return bValue - aValue || String(a.ticker).localeCompare(String(b.ticker));
+        });
+    }
+    function computedFundamentalSummary(items = fundamentalItems()) {
+      const source = state.fundamentals?.summary || {};
+      const actions = items.map(item => String(item.action || "").toUpperCase());
+      const top = items.filter(item => fundFinite(item.scores?.overall)).sort((a, b) => Number(b.scores.overall) - Number(a.scores.overall))[0];
+      return {
+        tracked: fundFinite(source.tracked) ? Number(source.tracked) : items.length,
+        ranked: fundFinite(source.ranked) ? Number(source.ranked) : items.filter(item => fundFinite(item.scores?.overall)).length,
+        actionable: fundFinite(source.actionable) ? Number(source.actionable) : actions.filter(action => ["ATTRACTIVE NOW", "START SMALL"].includes(action)).length,
+        watch: fundFinite(source.watch) ? Number(source.watch) : actions.filter(action => action.startsWith("WATCH")).length,
+        unavailable: fundFinite(source.unavailable) ? Number(source.unavailable) : items.filter(item => !fundFinite(item.scores?.overall)).length,
+        topTicker: source.top_ticker || top?.ticker || "N/A",
+        topScore: fundFinite(source.top_score) ? Number(source.top_score) : top?.scores?.overall
+      };
+    }
     async function refreshReports() {
       document.getElementById("actionLabel").textContent = "Loading";
       const stamp = Date.now();
-      const [reportResp, enrichResp] = await Promise.all([
+      const [reportResult, enrichResult, fundamentalsResult] = await Promise.allSettled([
         fetch(REPORT_URL + stamp, { cache: "no-store" }),
-        fetch(ENRICH_URL + stamp, { cache: "no-store" }).catch(() => null)
+        fetch(ENRICH_URL + stamp, { cache: "no-store" }),
+        fetchFundamentals(stamp)
       ]);
+      if (fundamentalsResult.status === "fulfilled") {
+        state.fundamentals = fundamentalsResult.value;
+        state.fundamentalsError = "";
+        const available = fundamentalItems();
+        if (!available.some(item => item.ticker === state.fundamentalTicker)) state.fundamentalTicker = available[0]?.ticker || "";
+      } else {
+        state.fundamentalsError = fundamentalsResult.reason?.message || "Fundamental research is unavailable.";
+      }
+      if (reportResult.status === "rejected") throw reportResult.reason;
+      const reportResp = reportResult.value;
       if (!reportResp.ok) throw new Error(`Report fetch failed: ${reportResp.status}`);
       const html = await reportResp.text();
       state.rows = extractRows(html);
       state.reportUpdated = extractUpdated(html);
-      if (enrichResp && enrichResp.ok) state.enrichment = await enrichResp.json();
+      if (enrichResult.status === "fulfilled" && enrichResult.value.ok) {
+        try { state.enrichment = await enrichResult.value.json(); } catch (_) {}
+      }
       buildCandidates();
       createAlerts();
       render();
@@ -908,11 +1212,268 @@
         <td><strong>${t.ticker}</strong></td><td>${t.entryDate}</td><td>${t.exitDate}</td><td>${fmt(t.entryPrice)}</td><td>${fmt(t.exitPrice)}</td><td>${fmt(t.shares, 2)}</td><td class="${t.pnl >= 0 ? "ok" : "bad-text"}">${money(t.pnl)}</td><td class="${t.returnPct >= 0 ? "ok" : "bad-text"}">${fmt(t.returnPct)}%</td><td>${t.exitReason}</td>
       </tr>`).join("") : `<tr><td colspan="9">No closed trades yet.</td></tr>`;
     }
+    function fundBand(band) {
+      return fundFinite(band?.low) && fundFinite(band?.high) ? `${fundPrice(band.low)} – ${fundPrice(band.high)}` : "N/A";
+    }
+    function fundAge(value) {
+      if (!fundFinite(value)) return "age N/A";
+      const days = Math.max(0, Math.round(Number(value)));
+      return `${days} day${days === 1 ? "" : "s"} old`;
+    }
+    function fundFreshLabel(value) {
+      return value === true ? "Current" : value === false ? "Stale" : "Unknown";
+    }
+    function fundQuarterCoverage(value) {
+      if (value === true) return "4 / 4";
+      if (value === false) return "Incomplete";
+      return fundFinite(value) ? fundNumber(value, 0) : "N/A";
+    }
+    function scoreCard(label, value, explanation) {
+      const available = fundFinite(value);
+      const width = available ? clamp(Number(value), 0, 100) : 0;
+      return `<article class="fund-score-card">
+        <div class="label">${escapeHtml(label)}</div>
+        <strong>${fundScore(value)}</strong>
+        <div class="fund-score-track" aria-hidden="true"><span style="width:${width}%"></span></div>
+        <div class="sub">${escapeHtml(explanation)}</div>
+      </article>`;
+    }
+    function metricCard(label, value) {
+      return `<article class="fund-metric"><div class="label">${escapeHtml(label)}</div><strong>${escapeHtml(value)}</strong></article>`;
+    }
+    function renderFundamentalCards() {
+      const container = document.getElementById("fundamentalCards");
+      const resultsLabel = document.getElementById("fundamentalResultsLabel");
+      if (!container) return;
+      const items = filteredFundamentalItems();
+      if (resultsLabel) resultsLabel.textContent = `${items.length} tracked compan${items.length === 1 ? "y" : "ies"}`;
+      if (items.length && !items.some(item => item.ticker === state.fundamentalTicker)) state.fundamentalTicker = items[0].ticker;
+      if (!items.length) {
+        container.innerHTML = `<div class="fund-empty" role="status">No tracked companies match this search.</div>`;
+        renderFundamentalDetail(null);
+        return;
+      }
+      container.innerHTML = items.map(item => {
+        const ranked = fundFinite(item.scores?.overall);
+        const tone = fundTone(item.tone);
+        const selected = item.ticker === state.fundamentalTicker;
+        return `<button class="fund-rank-card${selected ? " selected" : ""}" type="button" data-ticker="${escapeHtml(item.ticker)}" aria-pressed="${selected}">
+          <span class="fund-card-top">
+            <span class="fund-card-name"><strong>${escapeHtml(item.ticker)}</strong><span>${escapeHtml(item.name || "Name unavailable")}</span></span>
+            <span class="fund-score${ranked ? "" : " unranked"}">${ranked ? `${fundScore(item.scores.overall)}/100` : "UNRANKED"}</span>
+          </span>
+          <span class="fund-card-meta"><span class="fund-tone ${tone}">${escapeHtml(item.action || "STATUS N/A")}</span><span class="tag">${escapeHtml(item.sector || "Sector N/A")}</span></span>
+          <span class="fund-mini-line"><span>${fundPrice(item.technical?.price)}</span><span>${escapeHtml(item.technical?.status || item.data_status || "Status N/A")}</span></span>
+        </button>`;
+      }).join("");
+      container.querySelectorAll("button[data-ticker]").forEach(button => {
+        button.addEventListener("click", () => {
+          state.fundamentalTicker = button.dataset.ticker;
+          renderFundamentalCards();
+          renderFundamentalDetail(fundamentalItems().find(item => item.ticker === state.fundamentalTicker));
+        });
+      });
+      renderFundamentalDetail(fundamentalItems().find(item => item.ticker === state.fundamentalTicker));
+    }
+    function renderFundamentalDetail(item) {
+      const container = document.getElementById("fundamentalDetail");
+      if (!container) return;
+      if (!item) {
+        container.innerHTML = `<section class="panel fund-detail"><div class="fund-empty">Select a tracked company to review its research.</div></section>`;
+        return;
+      }
+      const technical = item.technical || {};
+      const metrics = item.metrics || {};
+      const freshness = item.freshness || {};
+      const tone = fundTone(item.tone);
+      const change = fundFinite(technical.change_pct) ? Number(technical.change_pct) : null;
+      const catalysts = fundTextList(item.catalysts);
+      const risks = fundTextList(item.risks);
+      const news = Array.isArray(item.news) ? item.news : [];
+      const filings = Array.isArray(item.filing_links) ? item.filing_links : [];
+      const newsMarkup = news.length ? news.map(entry => {
+        const href = safeFundUrl(entry?.url);
+        const title = escapeHtml(entry?.title || "Untitled update");
+        const headline = href ? `<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${title}</a>` : `<strong>${title}</strong>`;
+        return `<article>${headline}<div class="fund-news-meta"><span>${escapeHtml(entry?.publisher || "Publisher N/A")}</span><span>${fundDate(entry?.published_utc)}</span></div></article>`;
+      }).join("") : `<div class="sub">No recent company news was included in this research snapshot.</div>`;
+      const filingMarkup = filings.map(link => {
+        const href = safeFundUrl(link?.url);
+        return href ? `<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link?.label || "Company filing")}</a>` : "";
+      }).filter(Boolean).join("") || `<span class="sub">No filing links available.</span>`;
+      container.innerHTML = `<section class="panel fund-detail" aria-labelledby="fund-detail-heading">
+        <div class="fund-detail-title">
+          <div>
+            <span class="fund-tone ${tone}">${escapeHtml(item.action || "STATUS N/A")}</span>
+            <h2 id="fund-detail-heading">${escapeHtml(item.ticker)} · ${escapeHtml(item.name || "Name unavailable")}</h2>
+            <div class="sub">${escapeHtml(item.sector || "Sector N/A")} · Data status: ${escapeHtml(item.data_status || "N/A")}</div>
+          </div>
+          <div class="fund-price"><strong>${fundPrice(technical.price)}</strong><span class="${change === null ? "sub" : change >= 0 ? "ok" : "bad-text"}">${change === null ? "Change N/A" : fundPct(change, true)}</span><div class="sub">As of ${fundDate(technical.asof || freshness.price_asof)}</div></div>
+        </div>
+        <div class="fund-note">${escapeHtml(item.conclusion || "No conclusion is available for this snapshot.")}</div>
+        <div class="fund-score-grid">
+          ${scoreCard("Business quality", item.scores?.business, "Growth, margins, balance sheet and cash generation")}
+          ${scoreCard("Valuation", item.scores?.valuation, "Price paid relative to the available fundamentals")}
+          ${scoreCard("Technical setup", item.scores?.technical, "Trend, momentum and current reference levels")}
+          ${scoreCard("Data completeness", item.scores?.data_completeness, "Coverage and freshness of required inputs")}
+        </div>
+        <div class="fund-detail-grid">
+          <section class="fund-subpanel">
+            <h3>Current setup</h3>
+            <div class="fund-levels">
+              <div class="fund-level-row"><span>Technical status</span><strong>${escapeHtml(technical.status || "N/A")}</strong></div>
+              <div class="fund-level-row"><span>Preferred reference band</span><strong>${fundBand(technical.preferred_band)}</strong></div>
+              <div class="fund-level-row"><span>Deeper reference band</span><strong>${fundBand(technical.deeper_band)}</strong></div>
+              <div class="fund-level-row"><span>52-week range</span><strong>${fundFinite(technical.low52) && fundFinite(technical.high52) ? `${fundPrice(technical.low52)} – ${fundPrice(technical.high52)}` : "N/A"}</strong></div>
+            </div>
+          </section>
+          <section class="fund-subpanel">
+            <h3>Trend & volatility</h3>
+            <div class="fund-levels">
+              <div class="fund-level-row"><span>EMA 20 / SMA 50</span><strong>${fundPrice(technical.ema20)} / ${fundPrice(technical.sma50)}</strong></div>
+              <div class="fund-level-row"><span>SMA 200</span><strong>${fundPrice(technical.sma200)}</strong></div>
+              <div class="fund-level-row"><span>RSI 14</span><strong>${fundNumber(technical.rsi14, 1)}</strong></div>
+              <div class="fund-level-row"><span>ATR 14</span><strong>${fundPrice(technical.atr14)}</strong></div>
+            </div>
+          </section>
+        </div>
+        <section class="fund-subpanel" style="margin-top:11px">
+          <h3>Fundamental metrics</h3>
+          <div class="fund-metrics">
+            ${metricCard("Revenue growth YoY", fundPct(metrics.revenue_growth_yoy))}
+            ${metricCard("EPS growth YoY", fundPct(metrics.eps_growth_yoy))}
+            ${metricCard("Gross margin", fundPct(metrics.gross_margin))}
+            ${metricCard("Operating margin", fundPct(metrics.operating_margin))}
+            ${metricCard("Free-cash-flow margin", fundPct(metrics.fcf_margin))}
+            ${metricCard("Return on equity", fundPct(metrics.roe))}
+            ${metricCard("Net cash", fundMoney(metrics.net_cash))}
+            ${metricCard("Current ratio", fundMultiple(metrics.current_ratio))}
+            ${metricCard("Debt / equity", fundMultiple(metrics.debt_to_equity))}
+            ${metricCard("P / E", fundMultiple(metrics.pe))}
+            ${metricCard("P / Sales", fundMultiple(metrics.ps))}
+            ${metricCard("P / FCF", fundMultiple(metrics.pfcf))}
+            ${metricCard("EV / EBITDA", fundMultiple(metrics.ev_ebitda))}
+            ${metricCard("FCF yield", fundPct(metrics.fcf_yield))}
+          </div>
+        </section>
+        <div class="fund-lists" style="margin-top:11px">
+          <section class="fund-subpanel"><h3>Catalysts to monitor</h3>${catalysts.length ? `<ul class="fund-list">${catalysts.map(value => `<li>${escapeHtml(value)}</li>`).join("")}</ul>` : `<div class="sub">No catalysts included.</div>`}</section>
+          <section class="fund-subpanel"><h3>Risks to monitor</h3>${risks.length ? `<ul class="fund-list">${risks.map(value => `<li>${escapeHtml(value)}</li>`).join("")}</ul>` : `<div class="sub">No risks included.</div>`}</section>
+        </div>
+        <section class="fund-subpanel" style="margin-top:11px"><h3>Recent research context</h3><div class="fund-news">${newsMarkup}</div></section>
+        <div class="fund-detail-grid">
+          <section class="fund-subpanel">
+            <h3>Data freshness</h3>
+            <div class="fund-levels">
+              <div class="fund-level-row"><span>Price</span><strong>${fundFreshLabel(freshness.price_fresh)} · ${fundAge(freshness.price_age_days)}</strong></div>
+              <div class="fund-level-row"><span>Ratios</span><strong>${fundFreshLabel(freshness.ratios_fresh)} · ${fundAge(freshness.ratio_age_days)}</strong></div>
+              <div class="fund-level-row"><span>Financials</span><strong>${fundFreshLabel(freshness.financials_fresh)} · ${fundAge(freshness.financial_age_days)}</strong></div>
+              <div class="fund-level-row"><span>Financial period end</span><strong>${fundDate(freshness.financial_period_end)}</strong></div>
+              <div class="fund-level-row"><span>TTM quarters</span><strong>${fundQuarterCoverage(freshness.quarters_complete)}</strong></div>
+            </div>
+            ${freshness.note ? `<div class="fund-note caution" style="margin-top:10px">${escapeHtml(freshness.note)}</div>` : ""}
+          </section>
+          <section class="fund-subpanel"><h3>Primary-source links</h3><div class="fund-links">${filingMarkup}</div><div class="sub" style="margin-top:12px">Latest filing date: ${fundDate(freshness.filing_date)}</div></section>
+        </div>
+      </section>`;
+    }
+    function renderFundamentalMethodology(methodology) {
+      const source = methodology && typeof methodology === "object" ? methodology : {};
+      const universe = fundTextList(source.universe);
+      const requirements = fundTextList(source.requirements);
+      const limitations = fundTextList(source.limitations);
+      const weights = source.score_weights && typeof source.score_weights === "object" && !Array.isArray(source.score_weights)
+        ? Object.entries(source.score_weights).map(([key, value]) => {
+            const numeric = fundFinite(value) ? Number(value) : null;
+            const display = numeric === null ? String(value ?? "N/A") : `${numeric > 0 && numeric <= 1 ? Math.round(numeric * 100) : fundNumber(numeric, 0)}%`;
+            return `${key.replaceAll("_", " ")}: ${display}`;
+          })
+        : fundTextList(source.score_weights);
+      const list = (values, fallback) => values.length ? `<ul class="fund-list">${values.map(value => `<li>${escapeHtml(value)}</li>`).join("")}</ul>` : `<div class="sub">${escapeHtml(fallback)}</div>`;
+      return `<section class="panel">
+        <h2>Methodology & guardrails</h2>
+        <div class="fund-detail-grid">
+          <section class="fund-subpanel"><h3>Tracked universe</h3>${list(universe, "Universe description unavailable.")}</section>
+          <section class="fund-subpanel"><h3>Score weights</h3>${list(weights, "Weight details unavailable.")}</section>
+          <section class="fund-subpanel"><h3>Ranking requirements</h3>${list(requirements, "Requirement details unavailable.")}</section>
+          <section class="fund-subpanel"><h3>Known limitations</h3>${list(limitations, "Limitation details unavailable.")}</section>
+        </div>
+        <div class="fund-note caution" style="margin-top:11px">Decision support only—not personalized investment advice, a price target, or a forecast. Scores compare the tracked universe using the stated inputs; they do not promise future returns. Reference bands are research levels, not automatic orders. Confirm live price, filings, earnings timing, taxes, liquidity, and portfolio risk before acting.</div>
+      </section>`;
+    }
+    function renderFundamentals() {
+      const root = document.getElementById("fundamentalsRoot");
+      if (!root) return;
+      const payload = state.fundamentals;
+      if (!payload) {
+        root.innerHTML = `<section class="fund-intro"><div><h2>Fundamental Research</h2><p>Longer-horizon company research for the bot's fixed tracked universe. Business quality, valuation, technical setup, and data completeness are evaluated separately.</p></div><div class="fund-freshness"><span class="label">Research feed</span><strong>Unavailable</strong><span class="sub">${escapeHtml(state.fundamentalsError || "Loading scheduled research...")}</span></div></section><section class="panel"><div class="fund-empty" role="status">No fundamental snapshot is available yet. Swing plans, positions, alerts, and returns continue to work independently.</div></section>`;
+        return;
+      }
+      const items = fundamentalItems();
+      const summary = computedFundamentalSummary(items);
+      const feedErrors = Array.isArray(payload.errors) ? payload.errors : [];
+      const errorMessages = feedErrors.map(error => typeof error === "string" ? error : error?.message || error?.error || JSON.stringify(error));
+      const warning = [state.fundamentalsError, ...errorMessages].filter(Boolean);
+      root.innerHTML = `<section class="fund-intro">
+        <div><h2>Fundamental Research</h2><p>Longer-horizon company research for the bot's fixed tracked universe. Business quality, valuation, technical setup, and data completeness stay separate so a strong company is not confused with a good price or entry setup.</p></div>
+        <div class="fund-freshness"><span class="label">Snapshot generated</span><strong>${fundDate(payload.generated_at, true)}</strong><span class="sub">Scheduled static research · no on-demand ticker lookup</span></div>
+      </section>
+      ${warning.length ? `<div class="fund-note caution" role="status">Some research inputs were unavailable or stale: ${escapeHtml(warning.join(" · "))}. Unranked companies remain visible at the bottom.</div>` : ""}
+      <section class="fund-summary" aria-label="Fundamental research summary">
+        <article class="metric"><div class="label">Tracked</div><div class="value">${fundNumber(summary.tracked, 0)}</div></article>
+        <article class="metric"><div class="label">Ranked</div><div class="value">${fundNumber(summary.ranked, 0)}</div></article>
+        <article class="metric"><div class="label">Actionable</div><div class="value">${fundNumber(summary.actionable, 0)}</div></article>
+        <article class="metric"><div class="label">Watch</div><div class="value">${fundNumber(summary.watch, 0)}</div></article>
+        <article class="metric"><div class="label">Top ranked</div><div class="value">${escapeHtml(summary.topTicker)}${fundFinite(summary.topScore) ? ` · ${fundScore(summary.topScore)}` : ""}</div><div class="sub">${fundNumber(summary.unavailable, 0)} unranked</div></article>
+      </section>
+      <section class="panel">
+        <div class="fund-toolbar">
+          <label>Search tracked companies<input id="fundamentalSearch" type="search" autocomplete="off" placeholder="Ticker, company, or sector" value="${escapeHtml(state.fundamentalQuery)}"></label>
+          <label>Sort ranked companies<select id="fundamentalSort"><option value="overall">Overall score</option><option value="business">Business quality</option><option value="valuation">Valuation</option><option value="technical">Technical setup</option><option value="completeness">Data completeness</option><option value="name">Company name</option></select></label>
+        </div>
+        <div class="sub" id="fundamentalResultsLabel" aria-live="polite"></div>
+        <div class="fund-rank-cards" id="fundamentalCards" style="margin-top:10px"></div>
+      </section>
+      <div id="fundamentalDetail"></div>
+      ${renderFundamentalMethodology(payload.methodology)}`;
+      const search = document.getElementById("fundamentalSearch");
+      const sort = document.getElementById("fundamentalSort");
+      sort.value = state.fundamentalSort;
+      search.addEventListener("input", () => {
+        state.fundamentalQuery = search.value;
+        renderFundamentalCards();
+      });
+      sort.addEventListener("change", () => {
+        state.fundamentalSort = sort.value;
+        renderFundamentalCards();
+      });
+      renderFundamentalCards();
+    }
+    function syncActiveView() {
+      const fundamentalsActive = state.activeView === "fundamentals";
+      document.querySelectorAll(".tab").forEach(button => {
+        const active = button.dataset.view === state.activeView;
+        button.classList.toggle("active", active);
+        button.setAttribute("aria-pressed", String(active));
+      });
+      document.querySelectorAll(".view").forEach(view => view.classList.toggle("hidden", view.id !== `view-${state.activeView}`));
+      document.getElementById("rulesPanel")?.classList.toggle("hidden", fundamentalsActive);
+      document.getElementById("portfolioMetrics")?.classList.toggle("hidden", fundamentalsActive);
+      document.getElementById("appLayout")?.classList.toggle("fundamentals-active", fundamentalsActive);
+    }
     function renderShell() {
-      document.getElementById("reportDate").textContent = state.reportUpdated;
-      document.getElementById("weekLabel").textContent = weekKey();
-      document.getElementById("nextReview").textContent = "Mon/Wed/Fri";
-      document.getElementById("actionLabel").textContent = cashSlots() > 0 ? "Review Adds" : "Manage Exits";
+      if (state.activeView === "fundamentals") {
+        const generated = state.fundamentals?.generated_at ? new Date(state.fundamentals.generated_at) : null;
+        document.getElementById("reportDate").textContent = generated && !Number.isNaN(generated.getTime()) ? generated.toLocaleDateString() : "N/A";
+        document.getElementById("weekLabel").textContent = "Long-term";
+        document.getElementById("nextReview").textContent = "After refresh";
+        document.getElementById("actionLabel").textContent = "Research";
+      } else {
+        document.getElementById("reportDate").textContent = state.reportUpdated;
+        document.getElementById("weekLabel").textContent = weekKey();
+        document.getElementById("nextReview").textContent = "Mon/Wed/Fri";
+        document.getElementById("actionLabel").textContent = cashSlots() > 0 ? "Review Adds" : "Manage Exits";
+      }
       const installBtn = document.getElementById("installAppBtn");
       if (installBtn) installBtn.textContent = deferredInstallPrompt ? "Install App" : "Install Help";
     }
@@ -928,12 +1489,15 @@
       renderPositions();
       renderAlerts();
       renderJournal();
+      renderFundamentals();
+      syncActiveView();
     }
     document.querySelectorAll(".tab").forEach(button => {
       button.addEventListener("click", () => {
         state.activeView = button.dataset.view;
-        document.querySelectorAll(".tab").forEach(b => b.classList.toggle("active", b === button));
-        document.querySelectorAll(".view").forEach(view => view.classList.toggle("hidden", view.id !== `view-${state.activeView}`));
+        if (window.history?.replaceState) window.history.replaceState(null, "", `#${state.activeView}`);
+        renderShell();
+        syncActiveView();
       });
     });
     window.addEventListener("beforeinstallprompt", event => {

@@ -6,6 +6,16 @@ Static HTML swing-trading reports for:
 - `mag7` for the Mag 7 basket
 - `market` for the top 500 liquid U.S. stocks from a broader dollar-volume universe
 
+The installable `swing-command-center.html` app combines the Weekly Plan, Positions,
+Alerts, Returns, and Fundamentals tabs. The Fundamentals tab ranks a curated 12-company
+research universe, separates business quality from valuation and technical setup, and
+shows current reference levels, financial strength, catalysts, risks, recent news, and
+SEC filing links. Missing, stale, foreign-issuer, and unsupported-sector data is withheld
+instead of being converted into a false positive score.
+
+`fundamentals-data.json` is generated during the scheduled GitHub Actions build. The
+Massive API key remains a server-side build secret and is never sent to the browser.
+
 ## Local use
 
 Generate a local report:
@@ -34,6 +44,7 @@ The report is written to:
 After that, GitHub Actions will:
 
 - regenerate the report on schedule
+- rebuild and test the Fundamentals research snapshot
 - publish the latest `index.html` to GitHub Pages
 - show the latest report time directly in the page header
 

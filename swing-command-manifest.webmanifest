@@ -1,7 +1,7 @@
 {
   "name": "Swing Trading Command Center",
   "short_name": "Swing Bot",
-  "description": "Swing Bot command center for weekly setup selection, position tracking, capital sizing, and exit alerts.",
+  "description": "Swing Bot command center for weekly setups, positions, exits, and long-term fundamental stock research.",
   "start_url": "swing-command-center.html?v=pwa",
   "scope": "./",
   "display": "standalone",
@@ -38,6 +38,11 @@
       "name": "Positions",
       "short_name": "Positions",
       "url": "swing-command-center.html?v=pwa#positions"
+    },
+    {
+      "name": "Fundamentals",
+      "short_name": "Research",
+      "url": "swing-command-center.html?v=pwa#fundamentals"
     }
   ]
 }
