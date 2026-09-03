@@ -6,8 +6,12 @@ Static HTML swing-trading reports for:
 - `mag7` for the Mag 7 basket
 - `market` for the top 500 liquid U.S. stocks from a broader dollar-volume universe
 
-The installable `swing-command-center.html` app combines the Weekly Plan, Positions,
-Alerts, Returns, and Fundamentals tabs. The Fundamentals tab ranks a curated 12-company
+The installable `swing-command-center.html` app combines the Weekly Plan, Long-term Portfolio,
+Positions, Alerts, Returns, and Fundamentals tabs. The Portfolio tab keeps the monthly
+ETF/stock allocation separate from swing trades, tracks contribution lots and free cash,
+uses scheduled delayed market marks, and requires actual broker fills before calculating P/L.
+Its private ledger is stored on the current device and is included in the app's JSON backup.
+The Fundamentals tab ranks a curated 12-company
 research universe, separates business quality from valuation and technical setup, and
 shows current reference levels, financial strength, catalysts, risks, recent news, and
 SEC filing links. Missing, stale, foreign-issuer, and unsupported-sector data is withheld

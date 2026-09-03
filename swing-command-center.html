@@ -9,6 +9,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="manifest" href="swing-command-manifest.webmanifest">
   <link rel="apple-touch-icon" href="swing-command-icon-192.png">
+  <link rel="stylesheet" href="portfolio-tracker.css">
   <title>Swing Trading Command Center</title>
   <style>
     :root {
@@ -388,6 +389,7 @@
         <div class="tabs">
           <button class="tab active" type="button" data-view="plan" aria-pressed="true">Weekly Plan</button>
           <button class="tab" type="button" data-view="fundamentals" aria-pressed="false">Fundamentals</button>
+          <button class="tab" type="button" data-view="portfolio" aria-pressed="false">Portfolio</button>
           <button class="tab" type="button" data-view="positions" aria-pressed="false">Positions</button>
           <button class="tab" type="button" data-view="alerts" aria-pressed="false">Alerts</button>
           <button class="tab" type="button" data-view="journal" aria-pressed="false">Returns</button>
@@ -434,6 +436,12 @@
         <section id="view-fundamentals" class="view hidden">
           <div id="fundamentalsRoot" class="fund-shell">
             <section class="panel"><div class="fund-empty" role="status">Loading fundamental research...</div></section>
+          </div>
+        </section>
+
+        <section id="view-portfolio" class="view hidden">
+          <div id="longTermPortfolioRoot">
+            <section class="panel"><div class="fund-empty" role="status">Loading long-term portfolio…</div></section>
           </div>
         </section>
 
@@ -518,6 +526,48 @@
     </form>
   </dialog>
 
+  <dialog id="longTermTransactionDialog">
+    <form id="longTermTransactionForm" method="dialog">
+      <h2 id="ltDialogTitle">Add contribution</h2>
+      <div class="form-grid">
+        <label>Transaction type
+          <select id="ltFormKind">
+            <option value="buy">Investment buy</option>
+            <option value="cash-add">Add free cash</option>
+            <option value="cash-use">Withdraw free cash</option>
+          </select>
+        </label>
+        <label data-lt-buy-field>Asset
+          <select id="ltFormTicker">
+            <option value="QQQM">QQQM</option>
+            <option value="XMMO">XMMO</option>
+            <option value="SCHA">SCHA</option>
+            <option value="GOOGL">GOOGL</option>
+            <option value="AMZN">AMZN</option>
+          </select>
+        </label>
+        <label data-lt-buy-field>Funding source
+          <select id="ltFormFunding">
+            <option value="contribution">New contribution</option>
+            <option value="cash">Existing free cash</option>
+          </select>
+        </label>
+        <label>Date <input id="ltFormDate" type="date" required></label>
+        <label id="ltAmountLabel">Amount invested <input id="ltFormAmount" type="number" min=".01" step=".01" inputmode="decimal" required></label>
+        <label data-lt-buy-field>Actual shares <input id="ltFormShares" type="number" min=".000001" step=".000001" inputmode="decimal" placeholder="Optional"></label>
+        <label data-lt-buy-field>Average broker fill <input id="ltFormFill" type="number" min=".0001" step=".0001" inputmode="decimal" placeholder="Optional"></label>
+        <label class="lt-form-wide">Note <input id="ltFormNote" maxlength="500" placeholder="Monthly contribution, broker, or reminder"></label>
+      </div>
+      <input id="ltFormId" type="hidden">
+      <div class="lt-dialog-note" id="ltFillHint">Enter either shares or the average broker fill price to unlock valuation and P/L.</div>
+      <div class="row-actions">
+        <button class="good" type="submit">Save contribution</button>
+        <button class="secondary" type="button" onclick="document.getElementById('longTermTransactionDialog').close()">Cancel</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="portfolio-tracker.js"></script>
   <script>
     const REPORT_URL = "https://swaroopsathuluri.github.io/-Swing-Bot/stocks-edge.html?v=";
     const ENRICH_URL = "https://swaroopsathuluri.github.io/-Swing-Bot/swingbot-pro-v2-data.json?v=";
@@ -571,7 +621,7 @@
       saveJson(STORAGE.settings, state.settings);
     }
     const requestedView = window.location.hash.slice(1);
-    if (["plan", "fundamentals", "positions", "alerts", "journal"].includes(requestedView)) state.activeView = requestedView;
+    if (["plan", "fundamentals", "portfolio", "positions", "alerts", "journal"].includes(requestedView)) state.activeView = requestedView;
 
     function loadJson(key, fallback) {
       try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch (_) { return fallback; }
@@ -868,10 +918,11 @@
     async function refreshReports() {
       document.getElementById("actionLabel").textContent = "Loading";
       const stamp = Date.now();
-      const [reportResult, enrichResult, fundamentalsResult] = await Promise.allSettled([
+      const [reportResult, enrichResult, fundamentalsResult, portfolioMarketResult] = await Promise.allSettled([
         fetch(REPORT_URL + stamp, { cache: "no-store" }),
         fetch(ENRICH_URL + stamp, { cache: "no-store" }),
-        fetchFundamentals(stamp)
+        fetchFundamentals(stamp),
+        SwingLongTermPortfolio.fetchMarket(stamp)
       ]);
       if (fundamentalsResult.status === "fulfilled") {
         state.fundamentals = fundamentalsResult.value;
@@ -880,6 +931,9 @@
         if (!available.some(item => item.ticker === state.fundamentalTicker)) state.fundamentalTicker = available[0]?.ticker || "";
       } else {
         state.fundamentalsError = fundamentalsResult.reason?.message || "Fundamental research is unavailable.";
+      }
+      if (portfolioMarketResult.status === "rejected") {
+        console.warn(portfolioMarketResult.reason?.message || "Portfolio price feed is unavailable.");
       }
       if (reportResult.status === "rejected") throw reportResult.reason;
       const reportResp = reportResult.value;
@@ -1127,7 +1181,13 @@
       renderAlerts();
     }
     function exportJournal() {
-      const payload = JSON.stringify({ settings: state.settings, positions: state.positions, journal: state.journal, plans: state.plans }, null, 2);
+      const payload = JSON.stringify({
+        settings: state.settings,
+        positions: state.positions,
+        journal: state.journal,
+        plans: state.plans,
+        portfolio: SwingLongTermPortfolio.exportData()
+      }, null, 2);
       const blob = new Blob([payload], { type: "application/json" });
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
@@ -1142,17 +1202,29 @@
       input.onchange = async () => {
         const file = input.files[0];
         if (!file) return;
-        const payload = JSON.parse(await file.text());
-        state.settings = payload.settings || state.settings;
-        state.positions = payload.positions || [];
-        state.journal = payload.journal || [];
-        state.plans = payload.plans || {};
-        saveJson(STORAGE.settings, state.settings);
-        saveJson(STORAGE.positions, state.positions);
-        saveJson(STORAGE.journal, state.journal);
-        saveJson(STORAGE.plans, state.plans);
-        applySettingsToInputs();
-        render();
+        try {
+          const payload = JSON.parse(await file.text());
+          if (!payload || typeof payload !== "object" || Array.isArray(payload)) throw new Error("Backup must contain a JSON object.");
+          if (payload.settings !== undefined && (!payload.settings || typeof payload.settings !== "object" || Array.isArray(payload.settings))) throw new Error("Backup settings are invalid.");
+          if (payload.positions !== undefined && !Array.isArray(payload.positions)) throw new Error("Backup positions are invalid.");
+          if (payload.journal !== undefined && !Array.isArray(payload.journal)) throw new Error("Backup returns are invalid.");
+          if (payload.plans !== undefined && (!payload.plans || typeof payload.plans !== "object" || Array.isArray(payload.plans))) throw new Error("Backup plans are invalid.");
+          if (payload.portfolio) SwingLongTermPortfolio.importData(payload.portfolio);
+          state.settings = payload.settings || state.settings;
+          state.positions = payload.positions || [];
+          state.journal = payload.journal || [];
+          state.plans = payload.plans || {};
+          saveJson(STORAGE.settings, state.settings);
+          saveJson(STORAGE.positions, state.positions);
+          saveJson(STORAGE.journal, state.journal);
+          saveJson(STORAGE.plans, state.plans);
+          applySettingsToInputs();
+          addAlert("good", "Backup imported", "Swing trades and the long-term portfolio were restored from the selected file.");
+          render();
+        } catch (error) {
+          addAlert("bad", "Backup import failed", error?.message || "The selected file is not a valid Swing Bot backup.");
+          renderAlerts();
+        }
       };
       input.click();
     }
@@ -1469,16 +1541,16 @@
       renderFundamentalCards();
     }
     function syncActiveView() {
-      const fundamentalsActive = state.activeView === "fundamentals";
+      const wideViewActive = ["fundamentals", "portfolio"].includes(state.activeView);
       document.querySelectorAll(".tab").forEach(button => {
         const active = button.dataset.view === state.activeView;
         button.classList.toggle("active", active);
         button.setAttribute("aria-pressed", String(active));
       });
       document.querySelectorAll(".view").forEach(view => view.classList.toggle("hidden", view.id !== `view-${state.activeView}`));
-      document.getElementById("rulesPanel")?.classList.toggle("hidden", fundamentalsActive);
-      document.getElementById("portfolioMetrics")?.classList.toggle("hidden", fundamentalsActive);
-      document.getElementById("appLayout")?.classList.toggle("fundamentals-active", fundamentalsActive);
+      document.getElementById("rulesPanel")?.classList.toggle("hidden", wideViewActive);
+      document.getElementById("portfolioMetrics")?.classList.toggle("hidden", wideViewActive);
+      document.getElementById("appLayout")?.classList.toggle("fundamentals-active", wideViewActive);
     }
     function renderShell() {
       if (state.activeView === "fundamentals") {
@@ -1487,6 +1559,11 @@
         document.getElementById("weekLabel").textContent = "Long-term";
         document.getElementById("nextReview").textContent = "After refresh";
         document.getElementById("actionLabel").textContent = "Research";
+      } else if (state.activeView === "portfolio") {
+        document.getElementById("reportDate").textContent = SwingLongTermPortfolio.currentMarketDate();
+        document.getElementById("weekLabel").textContent = "Long-term";
+        document.getElementById("nextReview").textContent = "Monthly";
+        document.getElementById("actionLabel").textContent = "Track & Hold";
       } else {
         document.getElementById("reportDate").textContent = state.reportUpdated;
         document.getElementById("weekLabel").textContent = weekKey();
@@ -1509,6 +1586,7 @@
       renderAlerts();
       renderJournal();
       renderFundamentals();
+      SwingLongTermPortfolio.render();
       syncActiveView();
     }
     document.querySelectorAll(".tab").forEach(button => {
@@ -1537,6 +1615,7 @@
         renderAll();
       });
     });
+    SwingLongTermPortfolio.init();
     applySettingsToInputs();
     refreshReports().catch(error => {
       addAlert("bad", "Signal load failed", error.message);

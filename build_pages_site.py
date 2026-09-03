@@ -6,6 +6,7 @@ from pathlib import Path
 from etf_scanner import generate_report as generate_etf_report
 from fundamentals_research import build_fundamentals_feed
 from mag7_scanner import generate_report as generate_stock_report
+from portfolio_market_data import build_portfolio_market_feed, write_portfolio_market_feed
 from pro_v2_enrichment import build as build_pro_v2_data
 from seasonality_report import generate_report as generate_seasonality_report
 
@@ -123,7 +124,7 @@ def build_home_page(stock_result: dict, etf_result: dict, seasonality_result: di
       </a>
       <a class="link-card" href="swing-command-center.html?v={asset_version}">
         <h2>Swing Command Center</h2>
-        <p>Installable app with the Monday plan, positions, target/stop alerts, return journal, and a scheduled Fundamentals research tab with current stock levels.</p>
+        <p>Installable app with the Monday plan, a long-term contribution and cash tracker, positions, target/stop alerts, return journal, and scheduled Fundamentals research.</p>
       </a>
       <a class="link-card" href="stocks.html?v={asset_version}">
         <h2>Stocks Classic</h2>
@@ -153,6 +154,7 @@ def main() -> int:
     stock_edge_result = generate_stock_report("market", include_edge=True, output_filename="swing_trading_stock_edge_report.html", pages_filename=None)
     build_pro_v2_data(stock_edge_result["top_rows"], limit=10)
     build_fundamentals_feed(minimum_ranked=6)
+    write_portfolio_market_feed(build_portfolio_market_feed())
     etf_result = generate_etf_report()
     seasonality_result = generate_seasonality_report()
     PAGES_INDEX.write_text(build_home_page(stock_result, etf_result, seasonality_result), encoding="utf-8")

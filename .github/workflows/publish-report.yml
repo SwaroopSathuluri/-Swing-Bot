@@ -31,8 +31,11 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Test fundamentals feed
-        run: python -m unittest -v test_fundamentals_research.py
+      - name: Test scheduled data feeds
+        run: python -m unittest -v test_fundamentals_research.py test_portfolio_market_data.py
+
+      - name: Test portfolio tracker
+        run: node --test test_portfolio_tracker.js
 
       - name: Generate reports and home page
         run: python build_pages_site.py
@@ -45,7 +48,10 @@ jobs:
           cp swingbot-pro-v2.html site/swingbot-pro-v2.html
           cp swingbot-pro-v2-data.json site/swingbot-pro-v2-data.json
           cp fundamentals-data.json site/fundamentals-data.json
+          cp portfolio-market-data.json site/portfolio-market-data.json
           cp swing-command-center.html site/swing-command-center.html
+          cp portfolio-tracker.css site/portfolio-tracker.css
+          cp portfolio-tracker.js site/portfolio-tracker.js
           cp swing-command-manifest.webmanifest site/swing-command-manifest.webmanifest
           cp swing-command-sw.js site/swing-command-sw.js
           cp swing-command-icon.svg site/swing-command-icon.svg

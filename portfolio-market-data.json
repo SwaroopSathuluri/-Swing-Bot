@@ -1,0 +1,70 @@
+{
+  "generated_at": "2026-09-03T17:31:02.537682+00:00",
+  "market_date": "2026-09-02",
+  "price_type": "Latest available daily close; scheduled and delayed, not a broker fill or live quote",
+  "quotes": {
+    "AMZN": {
+      "asset_type": "Stock",
+      "change_pct": 0.0235,
+      "currency": "USD",
+      "market_date": "2026-09-02",
+      "monthly_target": 600,
+      "name": "Amazon",
+      "previous_close": 254.92,
+      "price": 254.98,
+      "target_pct": 12,
+      "ticker": "AMZN"
+    },
+    "GOOGL": {
+      "asset_type": "Stock",
+      "change_pct": 0.6268,
+      "currency": "USD",
+      "market_date": "2026-09-02",
+      "monthly_target": 600,
+      "name": "Alphabet Class A",
+      "previous_close": 335.02,
+      "price": 337.12,
+      "target_pct": 12,
+      "ticker": "GOOGL"
+    },
+    "QQQM": {
+      "asset_type": "ETF",
+      "change_pct": 0.2128,
+      "currency": "USD",
+      "market_date": "2026-09-02",
+      "monthly_target": 1500,
+      "name": "Invesco NASDAQ 100 ETF",
+      "previous_close": 291.4,
+      "price": 292.02,
+      "target_pct": 30,
+      "ticker": "QQQM"
+    },
+    "SCHA": {
+      "asset_type": "ETF",
+      "change_pct": 0.9191,
+      "currency": "USD",
+      "market_date": "2026-09-02",
+      "monthly_target": 600,
+      "name": "Schwab U.S. Small-Cap ETF",
+      "previous_close": 33.73,
+      "price": 34.04,
+      "target_pct": 12,
+      "ticker": "SCHA"
+    },
+    "XMMO": {
+      "asset_type": "ETF",
+      "change_pct": 0.444,
+      "currency": "USD",
+      "market_date": "2026-09-02",
+      "monthly_target": 900,
+      "name": "Invesco S&P MidCap Momentum ETF",
+      "previous_close": 150.91,
+      "price": 151.58,
+      "target_pct": 18,
+      "ticker": "XMMO"
+    }
+  },
+  "requested_through": "2026-09-03",
+  "schema_version": 1,
+  "source": "Massive raw daily aggregates from the validated Swing Bot backtest cache"
+}
