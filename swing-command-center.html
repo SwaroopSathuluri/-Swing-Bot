@@ -339,13 +339,13 @@
         <div class="settings">
           <label>Default Plan Size
             <select id="planSize">
-              <option value="2" selected>Top 2</option>
-              <option value="3">Top 3</option>
               <option value="1">Top 1</option>
+              <option value="2">Top 2</option>
+              <option value="3">Top 3</option>
             </select>
           </label>
           <label>Max Open Positions
-            <input id="maxOpen" type="number" min="1" max="10" value="3">
+            <input id="maxOpen" type="number" min="1" max="10" value="1">
           </label>
           <label>Minimum Conviction
             <input id="minConviction" type="number" min="45" max="95" value="65">
@@ -354,7 +354,10 @@
             <input id="minWin" type="number" min="0" max="100" value="45">
           </label>
           <label>Max ATR %
-            <input id="maxAtr" type="number" min="1" max="15" step=".5" value="6">
+            <input id="maxAtr" type="number" min="1" max="15" step=".5" value="4.5">
+          </label>
+          <label>Tested Max Hold Days
+            <input id="testedMaxHold" type="number" min="2" max="30" step="1" value="5">
           </label>
           <label>Account Size
             <input id="accountSize" type="number" min="0" step="100" value="15000">
@@ -540,11 +543,12 @@
       fundamentalQuery: "",
       fundamentalSort: "overall",
       settings: loadJson(STORAGE.settings, {
-        planSize: 2,
-        maxOpen: 3,
+        planSize: 1,
+        maxOpen: 1,
         minConviction: 65,
         minWin: 45,
-        maxAtr: 6,
+        maxAtr: 4.5,
+        testedMaxHold: 5,
         accountSize: 15000,
         riskPct: 1,
         swingCapitalPct: 100,
@@ -556,6 +560,16 @@
       plans: loadJson(STORAGE.plans, {}),
       alerts: loadJson(STORAGE.alerts, [])
     };
+    if (state.settings.testedMaxHold == null) {
+      state.settings = {
+        ...state.settings,
+        planSize: 1,
+        maxOpen: 1,
+        maxAtr: 4.5,
+        testedMaxHold: 5
+      };
+      saveJson(STORAGE.settings, state.settings);
+    }
     const requestedView = window.location.hash.slice(1);
     if (["plan", "fundamentals", "positions", "alerts", "journal"].includes(requestedView)) state.activeView = requestedView;
 
@@ -634,7 +648,9 @@
       return match ? Number(match[2]) : 10;
     }
     function tradingHoldDate(entryDate, holdWindow) {
-      return addDaysIso(entryDate, Math.ceil(maxHoldDays(holdWindow) * 1.45));
+      const tested = Number(state.settings.testedMaxHold || 0);
+      const holdDays = tested > 0 ? tested : maxHoldDays(holdWindow);
+      return addDaysIso(entryDate, Math.ceil(holdDays * 1.45));
     }
     function extractRows(html) {
       const match = html.match(/const rows = (\[.*?\]);\n\s*const state/s);
@@ -740,6 +756,7 @@
         minConviction: Number(document.getElementById("minConviction").value),
         minWin: Number(document.getElementById("minWin").value),
         maxAtr: Number(document.getElementById("maxAtr").value),
+        testedMaxHold: Number(document.getElementById("testedMaxHold").value),
         accountSize: Number(document.getElementById("accountSize").value),
         riskPct: Number(document.getElementById("riskPct").value),
         swingCapitalPct: Number(document.getElementById("swingCapitalPct").value),
@@ -886,6 +903,7 @@
       if (row.atrPct > s.maxAtr) return false;
       if (row.setupConfidence == null) return false;
       if (row.setupConfidence < s.minWin) return false;
+      if (row.daysInList !== 1) return false;
       if (row.entryChangePct < -3 || row.entryChangePct > 2) return false;
       if (news === "Negative" || opt.label === "Bearish OI") return false;
       return true;
@@ -941,7 +959,7 @@
         <div class="scorebar"><span style="width:${row.conviction}%"></span></div>
         <div class="signal-line"><span class="tag ${row.passCore ? "" : "warn"}">${mode}</span><span class="tag ${opt.cls}">${opt.label}</span><span class="tag ${newsGrade(row) === "Negative" ? "bad" : newsGrade(row) === "Positive" ? "" : "warn"}">News ${newsGrade(row)}</span></div>
         <div class="sub">Conviction ${row.conviction} | ${row.setup} | Win ${row.confidenceLabel || "N/A"} | Edge ${row.edgeScore ?? 0} | Entry ${fmt(row.entryChangePct)}%</div>
-        <div class="sub">Stop ${fmt(row.stopLoss)} | T1 ${fmt(row.target1)} | T2 ${fmt(row.target2)} | ${row.holdWindow}</div>
+        <div class="sub">Stop ${fmt(row.stopLoss)} | T1 ${fmt(row.target1)} | T2 ${fmt(row.target2)} | tested max hold ${state.settings.testedMaxHold || 5} trading days</div>
         <div class="sub">Suggested ${size.shares} shares (${money(dollars)}), max trade risk ${money(size.tradeRisk)}. ${entry.reason}</div>
         <div class="sub">${opt.reason}</div>
         <div class="sub">${row.reasons.join("; ") || "balanced setup"}</div>
@@ -1167,14 +1185,15 @@
         <div class="mini"><span class="label">Deploy Monthly</span><strong>${money(cap.monthlySwing)}</strong><div class="sub">${cap.deployPct}% of each ${money(cap.monthly)} add</div></div>
         <div class="mini"><span class="label">Reserve Monthly</span><strong>${money(cap.monthlyReserve)}</strong><div class="sub">Kept for ETFs/cash or better entries</div></div>
         <div class="mini"><span class="label">Per Position</span><strong>${money(cap.perSlot)}</strong><div class="sub">${cap.maxOpen} max open positions</div></div>
-        <div class="mini"><span class="label">Risk Cap</span><strong>${money(cap.riskDollars)}</strong><div class="sub">${fmt(state.settings.riskPct, 1)}% account risk per trade</div></div>`;
+        <div class="mini"><span class="label">Risk Cap</span><strong>${money(cap.riskDollars)}</strong><div class="sub">${fmt(state.settings.riskPct, 1)}% account risk per trade</div></div>
+        <div class="mini"><span class="label">Tested Rule</span><strong>Top 1 / ${state.settings.testedMaxHold || 5}d</strong><div class="sub">Enter first-day names only; replace after exit</div></div>`;
       document.getElementById("weeklyPlan").innerHTML = plan.length ? plan.map(row => candidateCard(row, open.has(row.ticker) ? "Holding" : "Core")).join("") : `<article class="card"><div class="ticker">No Core Trade</div><div class="sub">The current rules did not produce a clean Monday plan. Keep cash available.</div></article>`;
       const planTickers = new Set(plan.map(p => p.ticker));
       const add = state.candidates.filter(c => c.passCore && !planTickers.has(c.ticker) && !open.has(c.ticker)).slice(0, cashSlots() || 3);
       document.getElementById("newCandidates").innerHTML = add.length ? add.map(row => candidateCard(row, "Cash Free")).join("") : `<article class="card"><div class="ticker">No Add</div><div class="sub">No fresh add-on candidate, or no cash slot available.</div></article>`;
       const ignored = state.candidates.filter(c => !c.passCore).slice(0, 18);
       document.getElementById("ignoreRows").innerHTML = ignored.map(row => {
-        const reason = row.entryChangePct > 2 ? "Chase risk" : row.entryChangePct < -3 ? "Broken pullback" : row.atrPct > state.settings.maxAtr ? "ATR too high" : row.setupConfidence == null ? "No history" : row.setupConfidence < state.settings.minWin ? "Weak history" : row.conviction < state.settings.minConviction ? "Low conviction" : "News/options/risk";
+        const reason = row.daysInList !== 1 ? "Not first day in list" : row.entryChangePct > 2 ? "Chase risk" : row.entryChangePct < -3 ? "Broken pullback" : row.atrPct > state.settings.maxAtr ? "ATR too high" : row.setupConfidence == null ? "No history" : row.setupConfidence < state.settings.minWin ? "Weak history" : row.conviction < state.settings.minConviction ? "Low conviction" : "News/options/risk";
         const opt = optionsGrade(row);
         return `<tr><td><strong>${row.ticker}</strong></td><td>${row.setup}</td><td>${row.conviction}</td><td>${reason}</td><td><span class="tag ${opt.cls}">${opt.label}</span><br><span class="sub">${opt.reason}</span></td><td>${fmt(row.entryChangePct)}%</td><td>${fmt(row.atrPct)}%</td></tr>`;
       }).join("");
@@ -1510,7 +1529,7 @@
         navigator.serviceWorker.register("swing-command-sw.js").catch(() => {});
       });
     }
-    ["planSize","maxOpen","minConviction","minWin","maxAtr","accountSize","riskPct","swingCapitalPct","monthlyContribution","deployPct"].forEach(id => {
+    ["planSize","maxOpen","minConviction","minWin","maxAtr","testedMaxHold","accountSize","riskPct","swingCapitalPct","monthlyContribution","deployPct"].forEach(id => {
       document.getElementById(id).addEventListener("input", () => {
         state.settings = settingsFromInputs();
         saveJson(STORAGE.settings, state.settings);
