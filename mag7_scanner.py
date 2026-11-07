@@ -11,6 +11,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from universe_lists import UNIVERSE_CONFIG
+from report_freshness import fetch_market_json, history_is_current, report_market_date, require_current_history
 
 
 MIN_PRICE = 10.0
@@ -46,12 +47,11 @@ def get_api_key() -> str:
 
 
 def fetch_json(url: str) -> dict:
-    with urllib.request.urlopen(url) as response:
-        return json.loads(response.read().decode("utf-8"))
+    return fetch_market_json(url)
 
 
 def fetch_spy_dates(api_key: str) -> list[str]:
-    end_date = datetime.now()
+    end_date = report_market_date()
     start_date = end_date - timedelta(days=420)
     url = (
         "https://api.massive.com/v2/aggs/ticker/SPY/range/1/day/"
@@ -59,6 +59,7 @@ def fetch_spy_dates(api_key: str) -> list[str]:
     )
     payload = fetch_json(url)
     dates = [datetime.fromtimestamp(row["t"] / 1000, UTC).strftime("%Y-%m-%d") for row in payload.get("results", [])]
+    require_current_history("SPY", payload.get("results", []), end_date.isoformat())
     return dates[-HISTORY_DAYS:]
 
 
@@ -662,11 +663,15 @@ def generate_report(
     }
 
     spy_history = fetch_history("SPY", start_date, latest_date, api_key)
+    require_current_history("SPY", spy_history, latest_date)
     spy_closes = [float(row["c"]) for row in spy_history]
 
     rows = []
     for ticker, payload in tradable.items():
         history = fetch_history(ticker, start_date, latest_date, api_key)
+        if not history_is_current(history, latest_date):
+            print(f"Skipping {ticker}: no completed bar for {latest_date}", flush=True)
+            continue
         row = classify_stock(ticker, payload, history, spy_closes, latest_date)
         if row:
             rows.append(add_edge_score(enrich_signal_context(row, history, spy_closes, payload)))

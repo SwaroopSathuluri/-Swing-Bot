@@ -13,6 +13,7 @@ from pathlib import Path
 
 from etf_scanner import classify_etf, fetch_reference_tickers
 from market_context import SECTOR_ETFS, build_market_regime, build_sector_rotation, event_calendar
+from report_freshness import fetch_market_json, report_market_date, require_current_history
 
 
 OUTPUT_FILENAME = "qqq_tqqq_seasonality.html"
@@ -40,8 +41,7 @@ def get_api_key() -> str:
 
 
 def fetch_json(url: str) -> dict:
-    with urllib.request.urlopen(url) as response:
-        return json.loads(response.read().decode("utf-8"))
+    return fetch_market_json(url)
 
 
 def fetch_history(ticker: str, start_date: str, end_date: str, api_key: str) -> list[dict]:
@@ -409,11 +409,13 @@ def build_html(
 
 def generate_report() -> dict:
     api_key = get_api_key()
-    end_date = datetime.now()
+    end_date = datetime.combine(report_market_date(), datetime.min.time())
     qqq_start = end_date - timedelta(days=365 * 20 + 40)
     tqqq_start = datetime(2010, 1, 1)
     qqq_history = fetch_history("QQQ", qqq_start.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"), api_key)
     tqqq_history = fetch_history("TQQQ", tqqq_start.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"), api_key)
+    require_current_history("QQQ", qqq_history, end_date.strftime("%Y-%m-%d"))
+    require_current_history("TQQQ", tqqq_history, end_date.strftime("%Y-%m-%d"))
     qqq_months = compute_monthly_stats(qqq_history)
     tqqq_months = compute_monthly_stats(tqqq_history)
     qqq_now = current_factor_summary(qqq_history, "QQQ", qqq_months)

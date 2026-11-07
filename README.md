@@ -60,10 +60,26 @@ Important: GitHub Pages is effectively public unless you use GitHub Enterprise-s
 
 ## Schedule
 
-The workflow currently refreshes on weekdays at:
+The workflow refreshes after the US market close on weekdays at:
 
-- `13:00 UTC`
-- `18:00 UTC`
-- `23:00 UTC`
+- `22:17 UTC` (4:17 p.m. Central standard time / 5:17 p.m. daylight time)
+- `23:47 UTC` backup (5:47 p.m. Central standard time / 6:47 p.m. daylight time)
 
-You can also trigger it manually from the GitHub Actions tab and choose `qqq`, `mag7`, or `market`.
+GitHub may delay scheduled starts. Both runs build all existing report versions.
+You can also trigger `Publish Swing Report` manually from GitHub Actions.
+
+The exchange calendar handles holidays, weekends, early closes, and daylight saving.
+Only completed-session daily bars are eligible. Missing benchmark bars or stale/mixed
+report dates fail the build; individual symbols without a current bar are omitted.
+After deployment, the workflow fetches all three public scanner reports and verifies
+their dates and SHA-256 hashes against `report-status.json`. Failures create or update
+a GitHub issue rather than being silently reported as success. Reports show an overdue
+warning if the next trading session's publication is more than four hours after close.
+
+Successful verified deployments commit `runtime/latest-publication.json`, a small audit
+record containing the market date, source revision, run ID, and content hashes. This
+repository activity prevents GitHub's 60-day inactivity auto-disable from recurring.
+The audit-only commit does not trigger another build. API keys stay in Actions secrets.
+
+For local full-site builds, install `python -m pip install -r requirements-pages.txt`
+first, then run `python build_pages_site.py` with `MASSIVE_API_KEY` configured.

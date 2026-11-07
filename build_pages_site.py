@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+import os
 from pathlib import Path
 
 from etf_scanner import generate_report as generate_etf_report
@@ -9,6 +10,7 @@ from mag7_scanner import generate_report as generate_stock_report
 from portfolio_market_data import build_portfolio_market_feed, write_portfolio_market_feed
 from pro_v2_enrichment import build as build_pro_v2_data
 from seasonality_report import generate_report as generate_seasonality_report
+from report_freshness import latest_completed_session, write_publication_status
 
 
 PROJECT_DIR = Path(__file__).parent
@@ -150,17 +152,21 @@ def build_home_page(stock_result: dict, etf_result: dict, seasonality_result: di
 
 
 def main() -> int:
+    expected = latest_completed_session()
+    os.environ["SWINGBOT_MARKET_DATE"] = expected.isoformat()
+    print(f"Building completed market session {expected}", flush=True)
     stock_result = generate_stock_report("market", include_edge=False, output_filename="swing_trading_mag7_report.html", pages_filename=None)
     stock_edge_result = generate_stock_report("market", include_edge=True, output_filename="swing_trading_stock_edge_report.html", pages_filename=None)
     build_pro_v2_data(stock_edge_result["top_rows"], limit=10)
     build_fundamentals_feed(minimum_ranked=6)
-    write_portfolio_market_feed(build_portfolio_market_feed())
+    write_portfolio_market_feed(build_portfolio_market_feed(as_of=expected))
     etf_result = generate_etf_report()
     seasonality_result = generate_seasonality_report()
     PAGES_INDEX.write_text(build_home_page(stock_result, etf_result, seasonality_result), encoding="utf-8")
     STOCKS_INDEX.write_text((PROJECT_DIR / "swing_trading_mag7_report.html").read_text(encoding="utf-8"), encoding="utf-8")
     STOCKS_EDGE_INDEX.write_text((PROJECT_DIR / "swing_trading_stock_edge_report.html").read_text(encoding="utf-8"), encoding="utf-8")
     ETFS_INDEX.write_text((PROJECT_DIR / "swing_trading_etf_report.html").read_text(encoding="utf-8"), encoding="utf-8")
+    write_publication_status(PROJECT_DIR, expected)
     print(f"Built {PAGES_INDEX}")
     return 0
 

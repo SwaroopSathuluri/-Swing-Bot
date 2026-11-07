@@ -8,6 +8,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from datetime import UTC, datetime, timedelta
+from report_freshness import fetch_market_json, history_is_current, report_market_date, require_current_history
 from pathlib import Path
 
 from market_context import (
@@ -148,12 +149,11 @@ def get_api_key() -> str:
 
 
 def fetch_json(url: str) -> dict:
-    with urllib.request.urlopen(url) as response:
-        return json.loads(response.read().decode("utf-8"))
+    return fetch_market_json(url)
 
 
 def fetch_spy_dates(api_key: str) -> list[str]:
-    end_date = datetime.now()
+    end_date = report_market_date()
     start_date = end_date - timedelta(days=420)
     url = (
         "https://api.massive.com/v2/aggs/ticker/SPY/range/1/day/"
@@ -161,6 +161,7 @@ def fetch_spy_dates(api_key: str) -> list[str]:
     )
     payload = fetch_json(url)
     dates = [datetime.fromtimestamp(row["t"] / 1000, UTC).strftime("%Y-%m-%d") for row in payload.get("results", [])]
+    require_current_history("SPY", payload.get("results", []), end_date.isoformat())
     return dates[-HISTORY_DAYS:]
 
 
@@ -776,12 +777,17 @@ def generate_report() -> dict:
 
     spy_history = fetch_history("SPY", start_date, latest_date, api_key)
     qqq_history = fetch_history("QQQ", start_date, latest_date, api_key)
+    require_current_history("SPY", spy_history, latest_date)
+    require_current_history("QQQ", qqq_history, latest_date)
     spy_closes = [float(row["c"]) for row in spy_history]
     qqq_closes = [float(row["c"]) for row in qqq_history]
 
     rows = []
     for ticker, payload in candidate_map.items():
         history = fetch_history(ticker, start_date, latest_date, api_key)
+        if not history_is_current(history, latest_date):
+            print(f"Skipping {ticker}: no completed bar for {latest_date}", flush=True)
+            continue
         row = classify_etf(ticker, payload, history, spy_closes, qqq_closes, latest_date)
         if row:
             rows.append(enrich_signal_context(row, history, spy_closes, qqq_closes, payload))

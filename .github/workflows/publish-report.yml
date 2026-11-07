@@ -4,9 +4,13 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - runtime/latest-publication.json
   workflow_dispatch:
   schedule:
-    - cron: "0 13,18,23 * * 1-5"
+    # Both runs are after the US close in standard and daylight time.
+    - cron: "17 22 * * 1-5"
+    - cron: "47 23 * * 1-5"
 
 permissions:
   contents: read
@@ -15,11 +19,12 @@ permissions:
 
 concurrency:
   group: "pages"
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     env:
       MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
     steps:
@@ -31,14 +36,24 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install publication dependencies
+        run: python -m pip install -r requirements-pages.txt
+
       - name: Test scheduled data feeds
-        run: python -m unittest -v test_fundamentals_research.py test_portfolio_market_data.py
+        run: python -m unittest -v test_fundamentals_research.py test_portfolio_market_data.py test_report_freshness.py
 
       - name: Test portfolio tracker
         run: node --test test_portfolio_tracker.js
 
       - name: Generate reports and home page
         run: python build_pages_site.py
+
+      - name: Save validated publication manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: publication-status
+          path: report-status.json
+          retention-days: 7
 
       - name: Prepare Pages artifact
         run: |
@@ -65,6 +80,8 @@ jobs:
           cp swing_trading_stock_edge_report.html site/swing_trading_stock_edge_report.html
           cp swing_trading_etf_report.html site/swing_trading_etf_report.html
           cp qqq_tqqq_seasonality.html site/qqq_tqqq_seasonality.html
+          cp report-status.json site/report-status.json
+          cp report-freshness.js site/report-freshness.js
           touch site/.nojekyll
 
       - name: Configure Pages
@@ -85,3 +102,65 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  verify:
+    needs: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -r requirements-pages.txt
+      - uses: actions/download-artifact@v4
+        with:
+          name: publication-status
+          path: verified-status
+      - name: Verify the public reports match this completed-session build
+        run: python verify_publication.py --url https://swaroopsathuluri.github.io/-Swing-Bot/ --status verified-status/report-status.json
+      - name: Record the successful publication
+        # A real deployment audit record also prevents 60-day inactivity disabling.
+        run: |
+          mkdir -p runtime
+          cp verified-status/report-status.json runtime/latest-publication.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add runtime/latest-publication.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Record verified Swing Bot publication [skip ci]"
+            git push origin HEAD:main
+          fi
+
+  publication-alert:
+    needs: [build, deploy, verify]
+    if: ${{ always() && !cancelled() }}
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Open a failure issue or close a resolved alert
+        uses: actions/github-script@v7
+        env:
+          BUILD_RESULT: ${{ needs.build.result }}
+          DEPLOY_RESULT: ${{ needs.deploy.result }}
+          VERIFY_RESULT: ${{ needs.verify.result }}
+        with:
+          script: |
+            const title = 'Swing Bot publication needs attention';
+            const {owner, repo} = context.repo;
+            const issues = await github.paginate(github.rest.issues.listForRepo, {owner, repo, state: 'open'});
+            const existing = issues.find(i => i.title === title && i.user.login === 'github-actions[bot]');
+            const failed = [process.env.BUILD_RESULT, process.env.DEPLOY_RESULT, process.env.VERIFY_RESULT].some(r => r !== 'success');
+            if (failed) {
+              const body = `Automatic publication failed or could not be verified. Do not assume the live reports are current.\n\nRun: https://github.com/${owner}/${repo}/actions/runs/${context.runId}`;
+              if (existing) await github.rest.issues.update({owner, repo, issue_number: existing.number, body});
+              else await github.rest.issues.create({owner, repo, title, body});
+              core.setFailed('Swing Bot publication needs attention');
+            } else if (existing) {
+              await github.rest.issues.update({owner, repo, issue_number: existing.number, state: 'closed'});
+            }
