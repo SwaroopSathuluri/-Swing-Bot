@@ -1,25 +1,25 @@
 {
   "schema_version": 1,
-  "market_date": "2026-11-12",
-  "generated_at": "2026-11-13T03:38:23+00:00",
-  "next_refresh_due_at": "2026-11-14T01:00:00+00:00",
-  "source_commit": "04c7dbb5ab11e1be6cab0f227e70221569a36a7b",
-  "run_id": "43360017178",
+  "market_date": "2026-11-13",
+  "generated_at": "2026-11-14T02:32:24+00:00",
+  "next_refresh_due_at": "2026-11-17T01:00:00+00:00",
+  "source_commit": "1c7b04b0bfe1b552c2afc8e1b74551f2c1da3a92",
+  "run_id": "43546441377",
   "reports": {
     "stocks.html": {
-      "market_date": "2026-11-12",
+      "market_date": "2026-11-13",
       "rows": 500,
-      "sha256": "41ca998b099ff95674367567650b84a91eb6a4686415a0632d31a871a0f23ddb"
+      "sha256": "88da0239d757f9ce6e18e5efe60b7fcee3c32257b7d191a0f39eae8f45e2bac2"
     },
     "stocks-edge.html": {
-      "market_date": "2026-11-12",
+      "market_date": "2026-11-13",
       "rows": 500,
-      "sha256": "49e39ad0cf2adfb431e0e06235f234ba523b798f3e5ddff95517d2d800c5d9ab"
+      "sha256": "4e8f2b0ce98d93bc5e2e41078426c250f8ece70c07c6f767a9cd592078e3db43"
     },
     "etfs.html": {
-      "market_date": "2026-11-12",
-      "rows": 154,
-      "sha256": "40b390e4ccd4a0436483eece4b4f1cb6cc91ac36b01264eb038430ddfa04d212"
+      "market_date": "2026-11-13",
+      "rows": 151,
+      "sha256": "f25c9d25c43dadd8ac2fe382498a9cf8f638b35d5656a76760ca4bf4d9d0f35e"
     }
   }
 }
